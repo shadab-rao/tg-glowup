@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -11,7 +12,7 @@ const Header = () => {
     setIsMenuOpen((prev) => !prev);
   };
   const closeMenu = () => {
-    setIsMenuOpen(false); 
+    setIsMenuOpen(false);
   };
   return (
     <header id="header">
@@ -74,15 +75,139 @@ const Header = () => {
                   </div>
                 </div>
                 <div className="d-flex gap-4">
-                  <div className>
+                  <a href="whishlist.html" className>
                     <img src="assets/img/svg/heart.svg" alt />
+                  </a>
+                  <div className="dropdown">
+                    <button
+                      className="bg-transparent border-0"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <img src="assets/img/svg/user.svg" alt />
+                    </button>
+                    <div
+                      className="dropdown-menu user-dropdown"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <div className="my-account">
+                        <div className="user-box">
+                          <div className="d-flex justify-content-between">
+                            <div>
+                              <h5 className="text text-white">Aman Singh</h5>
+                              <p className="comman-small-text">
+                                amansingh.miller@email.com
+                              </p>
+                            </div>
+                            <div className="mt-2">
+                              <Link to={"/my-profile"} className="edit-btn">
+                                Edit
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                        <div className>
+                          <h5 className="text fw-semibold mb-4">My Account</h5>
+                          <div className="list-box-wrapper">
+                            <Link to={"/my-order"} className="list-box">
+                              <div className="icon active">
+                                <img src="assets/img/svg/box.svg" alt />
+                              </div>
+                              <div className="text-wrapper active border-bottom border-2">
+                                <p className>My Order</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"my-address"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/location.svg" alt />
+                              </div>
+                              <div className="text-wrapper border-bottom border-2">
+                                <p className>My address</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"/my-wishlist"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/heart-light.svg" alt />
+                              </div>
+                              <div className="text-wrapper">
+                                <p className>My Wishlist</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                          </div>
+                        </div>
+                        <div className>
+                          <h5 className="text fw-semibold mb-4">Others</h5>
+                          <div className="list-box-wrapper">
+                          <Link to={"/referral-program"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/link-circle.svg" alt />
+                              </div>
+                              <div className="text-wrapper border-bottom border-2">
+                                <p className>Referral Program</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"/settings"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/setting-2.svg" alt />
+                              </div>
+                              <div className="text-wrapper border-bottom border-2">
+                                <p className>Settings</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"/about-us"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/file-lines.svg" alt />
+                              </div>
+                              <div className="text-wrapper border-bottom border-2">
+                                <p className>About us</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"/terms-conditions"}
+                              className="list-box"
+                            >
+                              <div className="icon">
+                                <img src="assets/img/svg/file-minus.svg" alt />
+                              </div>
+                              <div className="text-wrapper border-bottom border-2">
+                                <p className>Terms &amp; Conditions</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"/help-support"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/call.svg" alt />
+                              </div>
+                              <div className="text-wrapper border-bottom border-2">
+                                <p className>Help &amp; Support</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                            <Link to={"/privacy-policy"} className="list-box">
+                              <div className="icon">
+                                <img src="assets/img/svg/file-sheild.svg" alt />
+                              </div>
+                              <div className="text-wrapper">
+                                <p className>Privacy Policy</p>
+                                <i className="fa fa-angle-right" />
+                              </div>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className>
-                    <img src="assets/img/svg/user.svg" alt />
-                  </div>
-                  <div className>
+                  <Link to={"/your-bag"} className>
                     <img src="assets/img/svg/bag-2.svg" alt />
-                  </div>
+                  </Link>
                   <div className="d-md-none">
                     <button className="bg-white px-2" onClick={openMenu}>
                       <i className="fa fa-bars" />
