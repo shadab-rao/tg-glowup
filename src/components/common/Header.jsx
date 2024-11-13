@@ -70,14 +70,14 @@ const Header = () => {
                   />
                   <div className="search-icon">
                     <div className="position-relative w-100 h-100">
-                      <img src="assets/img/svg/search-normal.svg" alt />
+                      <img src="../../../assets/img/svg/search-normal.svg" alt />
                     </div>
                   </div>
                 </div>
                 <div className="d-flex gap-4">
-                  <a href="whishlist.html" className>
-                    <img src="assets/img/svg/heart.svg" alt />
-                  </a>
+                  <Link to={"/my-wishlist"} className>
+                    <img src="../../../assets/img/svg/heart.svg" alt />
+                  </Link>
                   <div className="dropdown">
                     <button
                       className="bg-transparent border-0"
@@ -87,7 +87,7 @@ const Header = () => {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <img src="assets/img/svg/user.svg" alt />
+                      <img src="../../../assets/img/svg/user.svg" alt />
                     </button>
                     <div
                       className="dropdown-menu user-dropdown"
@@ -114,7 +114,7 @@ const Header = () => {
                           <div className="list-box-wrapper">
                             <Link to={"/my-order"} className="list-box">
                               <div className="icon active">
-                                <img src="assets/img/svg/box.svg" alt />
+                                <img src="../../../assets/img/svg/box.svg" alt />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
                                 <p className>My Order</p>
@@ -123,7 +123,7 @@ const Header = () => {
                             </Link>
                             <Link to={"my-address"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/location.svg" alt />
+                                <img src="../../../assets/img/svg/location.svg" alt />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>My address</p>
@@ -132,7 +132,7 @@ const Header = () => {
                             </Link>
                             <Link to={"/my-wishlist"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/heart-light.svg" alt />
+                                <img src="../../../assets/img/svg/heart-light.svg" alt />
                               </div>
                               <div className="text-wrapper">
                                 <p className>My Wishlist</p>
@@ -146,7 +146,7 @@ const Header = () => {
                           <div className="list-box-wrapper">
                           <Link to={"/referral-program"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/link-circle.svg" alt />
+                                <img src="../../../assets/img/svg/link-circle.svg" alt />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Referral Program</p>
@@ -155,7 +155,7 @@ const Header = () => {
                             </Link>
                             <Link to={"/settings"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/setting-2.svg" alt />
+                                <img src="../../../assets/img/svg/setting-2.svg" alt />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Settings</p>
@@ -164,7 +164,7 @@ const Header = () => {
                             </Link>
                             <Link to={"/about-us"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/file-lines.svg" alt />
+                                <img src="../../../assets/img/svg/file-lines.svg" alt />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>About us</p>
@@ -175,7 +175,7 @@ const Header = () => {
                               className="list-box"
                             >
                               <div className="icon">
-                                <img src="assets/img/svg/file-minus.svg" alt />
+                                <img src="../../../assets/img/svg/file-minus.svg" alt />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Terms &amp; Conditions</p>
@@ -184,7 +184,7 @@ const Header = () => {
                             </Link>
                             <Link to={"/help-support"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/call.svg" alt />
+                                <img src="../../../assets/img/svg/call.svg" alt />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Help &amp; Support</p>
@@ -193,7 +193,7 @@ const Header = () => {
                             </Link>
                             <Link to={"/privacy-policy"} className="list-box">
                               <div className="icon">
-                                <img src="assets/img/svg/file-sheild.svg" alt />
+                                <img src="../../../assets/img/svg/file-sheild.svg" alt />
                               </div>
                               <div className="text-wrapper">
                                 <p className>Privacy Policy</p>
@@ -206,7 +206,7 @@ const Header = () => {
                     </div>
                   </div>
                   <Link to={"/your-bag"} className>
-                    <img src="assets/img/svg/bag-2.svg" alt />
+                    <img src="../../../assets/img/svg/bag-2.svg" alt />
                   </Link>
                   <div className="d-md-none">
                     <button className="bg-white px-2" onClick={openMenu}>

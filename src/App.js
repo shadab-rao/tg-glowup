@@ -15,6 +15,10 @@ import CheckOut from "./components/Checkout/CheckOut";
 import EditAddress from "./components/Address/EditAddress";
 import MyAddress from "./components/Address/MyAddress";
 import Profile from "./components/Profile/Profile";
+import Login from "./components/auth/Login";
+import Otp from "./components/auth/Otp";
+import SuccessVerified from "./components/auth/SuccessVerified";
+import ReferalCode from "./components/auth/ReferalCode";
 
 function App() {
   return (
@@ -36,6 +40,10 @@ function App() {
           <Route path="/checkout" element={<CheckOut/>} />
           <Route path="/edit-address" element={<EditAddress/>} />
           <Route path="/my-profile" element={<Profile/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/login/otp" element={<Otp/>} />
+          <Route path="/login/otp/success" element={<SuccessVerified/>} />
+          <Route path="/referral-code" element={<ReferalCode/>} />
         </Routes>
       </BrowserRouter>
     </div>
