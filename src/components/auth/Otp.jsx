@@ -1,8 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import OTPInput from "react-otp-input";
+import { glowLogin, verifyOTP } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import Swal from "sweetalert2";
 
 const Otp = () => {
+  const [otp, setOtp] = useState("");
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const [timer, setTimer] = useState(120);
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
+    }, 1000);
+
+    // Clean up the interval
+    return () => clearInterval(countdown);
+  }, []);
+
+
+  const formatTime = () => {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const formData = { ...state, otp };
+    try {
+      const response = await verifyOTP(formData);
+
+      console.log(response);
+      if (response?.data?.error) {
+        console.log("error");
+      } else if (response?.data) {
+        navigate("/login/otp/success")
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      const response = await glowLogin(state);
+      setTimer(120);
+      if (response?.data) {
+      }
+    } catch (error) {
+      console.error("Error resending OTP:", error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -16,43 +68,51 @@ const Otp = () => {
             Your One Time Password (OTP) has been sent via SMS to your
             registered <br /> mobile number.
           </p>
-          <div className="form-design">
-            <div className="form-group">
-              <div className="row">
-                <div className="col-2">
-                  <input type="text" cols={4} className="form-control" />
+          <form
+            className="theme-form theme-form-2 mega-form"
+            onSubmit={(e) => onSubmit(e)}
+          >
+            <div className="form-design">
+              <div className="form-group">
+                <div className="otp-input-box">
+                  <OTPInput
+                    inputType="tel"
+                    value={otp}
+                    onChange={setOtp}
+                    numInputs={6}
+                    onChangeRegex={/^([0-9]{0,})$/}
+                    renderSeparator={<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>}
+                    isInputNum
+                    inputStyle="otp-field__input"
+                    containerStyle="form-group"
+                    renderInput={(props) => <input {...props} />}
+                  />
                 </div>
-                <div className="col-2">
-                  <input type="text" cols={4} className="form-control" />
+              </div>
+              <div className="mb-2 mt-2 col-12 text-center">
+                  <p>Resend OTP in {formatTime()} minutes</p>
                 </div>
-                <div className="col-2">
-                  <input type="text" cols={4} className="form-control" />
+                <div className="mb-1 col-12">
+                  {timer === 0 && (
+                    <button
+                      type="button"
+                      className="text-primary"
+                      onClick={handleResendOTP}
+                      style={{ border: "none", background: "none" }}
+                    >
+                      Resend OTP
+                    </button>
+                  )}
                 </div>
-                <div className="col-2">
-                  <input type="text" cols={4} className="form-control" />
+              <div className="form-group">
+                <div className="mt-4">
+                  <button type="submit" className="comman-btn">
+                    Verify
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="form-group">
-              <p className="comman-small-text text-light">
-                Resend OTP in:{" "}
-                <span href className="text-primary">
-                  00
-                </span>{" "}
-                :{" "}
-                <span href className="text-primary">
-                  00
-                </span>
-              </p>
-            </div>
-            <div className="form-group">
-              <div className="mt-4">
-                <Link to={"/login/otp/success"} className="comman-btn">
-                  Verify
-                </Link>
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </>

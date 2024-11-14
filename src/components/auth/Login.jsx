@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/common/Header";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { glowLogin } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useForm } from "react-hook-form";
 
@@ -32,7 +32,7 @@ const Login = () => {
 
     const response = await glowLogin(requestData);
     if (response?.data) {
-        navigate("/login/otp");
+      navigate("/login/otp", { state: requestData });
     }
     setLoading(false);
   };

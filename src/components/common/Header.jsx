@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getUser } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { capitalize } from "../utils/CapitalLetter";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [profileData, setProfileData] = useState("");
+  const userToken = localStorage.getItem("token-user");
   const toggleSearchDropdown = () => {
     setIsSearchOpen((prev) => !prev);
   };
@@ -14,6 +18,20 @@ const Header = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+
+
+  const response = async () => {
+    const getData = await getUser(userToken);
+    if (getData?.data) {
+      const userData = getData?.data?.results?.user;
+      setProfileData(userData);
+    }
+  };
+
+  useEffect(() => {
+    response();
+  }, []);
   return (
     <header id="header">
       <div className="top-header">
@@ -97,9 +115,9 @@ const Header = () => {
                         <div className="user-box">
                           <div className="d-flex justify-content-between">
                             <div>
-                              <h5 className="text text-white">Aman Singh</h5>
+                              <h5 className="text text-white">{capitalize(profileData?.fullName)}</h5>
                               <p className="comman-small-text">
-                                amansingh.miller@email.com
+                              {capitalize(profileData?.email)}
                               </p>
                             </div>
                             <div className="mt-2">
