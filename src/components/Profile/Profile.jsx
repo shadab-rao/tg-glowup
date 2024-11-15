@@ -28,6 +28,8 @@ const Profile = () => {
     const getData = await getUser(userToken);
     if (getData?.data) {
       const userData = getData?.data?.results?.user;
+      localStorage.setItem("glow-user", JSON.stringify(userData));
+
       setProfileData(userData);
       setInfo({
         fullName: userData?.fullName,

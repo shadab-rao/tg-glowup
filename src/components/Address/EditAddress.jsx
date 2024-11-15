@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from '../common/Header'
 import Footer from '../common/Footer'
+import Sidebar from '../common/Sidebar'
 
 const EditAddress = () => {
   return (
@@ -9,115 +10,7 @@ const EditAddress = () => {
    <section className="my-order">
   <div className="container mt-4 mb-5">
     <div className="row">
-      <div className="col-lg-3 col-md-4 col-12">
-        <div className="my-account">
-          <div className="user-box">
-            <div className="d-flex gap-3">
-              <div className="user-img">
-                <img src="assets/img/user.jpg" alt />
-              </div>
-              <div>
-                <h5 className="text text-white">Aman Singh</h5>
-                <p className="comman-small-text">amansingh.miller@email.com</p>
-                <div className="mt-2">
-                  <a href className="edit-btn">Edit</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <h5 className="text fw-semibold mb-4">My Account</h5>
-            <div className="list-box-wrapper">
-              <div className="list-box">
-                <div className="icon active">
-                  <img src="assets/img/svg/box.svg" alt />
-                </div>
-                <div className="text-wrapper active border-bottom border-2">
-                  <p className>My Order</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/location.svg" alt />
-                </div>
-                <div className="text-wrapper border-bottom border-2">
-                  <p className>My address</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/heart-light.svg" alt />
-                </div>
-                <div className="text-wrapper">
-                  <p className>My Wishlist</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 mb-4">
-            <h5 className="text fw-semibold mb-4">Others</h5>
-            <div className="list-box-wrapper">
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/link-circle.svg" alt />
-                </div>
-                <div className="text-wrapper border-bottom border-2">
-                  <p className>Referral Program</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/setting-2.svg" alt />
-                </div>
-                <div className="text-wrapper border-bottom border-2">
-                  <p className>Settings</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/file-lines.svg" alt />
-                </div>
-                <div className="text-wrapper border-bottom border-2">
-                  <p className>About us</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/file-minus.svg" alt />
-                </div>
-                <div className="text-wrapper border-bottom border-2">
-                  <p className>Terms &amp; Conditions</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/call.svg" alt />
-                </div>
-                <div className="text-wrapper border-bottom border-2">
-                  <p className>Help &amp; Support</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-              <div className="list-box">
-                <div className="icon">
-                  <img src="assets/img/svg/file-sheild.svg" alt />
-                </div>
-                <div className="text-wrapper">
-                  <p className>Privacy Policy</p>
-                  <i className="fa fa-angle-right" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Sidebar/>
       <div className="col-lg-9 col-md-8 col-12">
         <div className>
           <div className>

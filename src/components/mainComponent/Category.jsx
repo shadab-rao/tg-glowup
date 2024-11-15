@@ -1,163 +1,78 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Swiper from "swiper";
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-
-
+import { getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 
 const Category = () => {
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
-    // Register Swiper modules
-    Swiper.use([Navigation, Pagination, Autoplay]);
-
-    // Initialize Swiper after component mounts
-    const swiperCategory = new Swiper(".swiper-container-category", {
-      slidesPerView: 2,
-      spaceBetween: 0,
-      autoplay: { delay: 3000 },
-      loop: true,
-      pagination: {
-        el: ".swiper-container-category .swiper-pagination",
-        clickable: true,
-      },
-      navigation: {
-        nextEl: ".swiper-container-category .swiper-button-next",
-        prevEl: ".swiper-container-category .swiper-button-prev",
-      },
-      breakpoints: {
-        768: {
-          slidesPerView: 6,
-        },
-        1024: {
-          slidesPerView: 8,
-        },
-        1280: {
-          slidesPerView: 9,
-        },
-      },
-    });
-
-    const swiperPopularRight = new Swiper(".swiper-container-popular-right", {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      autoplay: { delay: 6000 },
-      loop: true,
-      pagination: {
-        el: ".swiper-container-popular-right .swiper-pagination",
-        clickable: true,
-      },
-      navigation: {
-        nextEl: ".swiper-container-popular-right .swiper-button-next",
-        prevEl: ".swiper-container-popular-right .swiper-button-prev",
-      },
-      breakpoints: {
-        768: {
-          slidesPerView: 3,
-        },
-        1024: {
-          slidesPerView: 3,
-        },
-        1280: {
-          slidesPerView: 4,
-        },
-      },
-    });
+    handleCategory();
   }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      Swiper.use([Navigation, Pagination, Autoplay]);
+
+      const swiperCategory = new Swiper(".swiper-container-category", {
+        slidesPerView: categories.length === 1 ? 1 : 2, // Single slide view if only one product
+        spaceBetween: 0,
+        centeredSlides: categories.length === 1, // Center the single product
+        autoplay: categories.length > 1 ? { delay: 3000 } : false, // Disable autoplay if only one product
+        loop: categories.length > 1, // Disable loop for a single product
+        pagination: {
+          el: ".swiper-container-category .swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-container-category .swiper-button-next",
+          prevEl: ".swiper-container-category .swiper-button-prev",
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: categories.length === 1 ? 1 : 6,
+          },
+          1024: {
+            slidesPerView: categories.length === 1 ? 1 : 8,
+          },
+          1280: {
+            slidesPerView: categories.length === 1 ? 1 : 9,
+          },
+        },
+      });
+    }
+  }, [categories]);
+
+  const handleCategory = async () => {
+    try {
+      const response = await getCategory();
+      setCategories(response?.data?.results?.categories || []);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
   return (
-    <>
-      {/* <section className="category-slider"> */}
-        <div className="category-slider-wrapper mx-auto my-5">
-          <div className="swiper-container-category overflow-hidden">
-            <div className="swiper-wrapper">
-              {/* Slides (total 9) */}
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/makeup.png" alt />
-                </div>
-                <p className="slider-text">Makeup</p>
+    <div className="category-slider-wrapper mx-auto my-5">
+      <div className="swiper-container-category overflow-hidden">
+        <div className="swiper-wrapper">
+          {categories?.map((cat, index) => (
+            <div className="swiper-slide" key={index}>
+              <div className="cate-img-slider-wrapper">
+                <img src={cat?.image} alt={cat?.name_en} />
               </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Skincare.png" alt />
-                </div>
-                <p className="slider-text">Skincare</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Haircare.png" alt />
-                </div>
-                <p className="slider-text">Haircare</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Fragrance.png" alt />
-                </div>
-                <p className="slider-text">Fragrance</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Bath_Body.png" alt />
-                </div>
-                <p className="slider-text">Bath &amp; Body</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Wellness.png" alt />
-                </div>
-                <p className="slider-text">Wellness</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Men.png" alt />
-                </div>
-                <p className="slider-text">Men</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Combo.png" alt />
-                </div>
-                <p className="slider-text">Combo</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Mom_Baby.png" alt />
-                </div>
-                <p className="slider-text">Mom &amp; Baby</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Wellness.png" alt />
-                </div>
-                <p className="slider-text">Wellness</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Men.png" alt />
-                </div>
-                <p className="slider-text">Men</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Combo.png" alt />
-                </div>
-                <p className="slider-text">Combo</p>
-              </div>
-              <div className="swiper-slide">
-                <div className="cate-img-slider-wrapper">
-                  <img src="../../../assets/img/products/Mom_Baby.png" alt />
-                </div>
-                <p className="slider-text">Mom &amp; Baby</p>
-              </div>
+              <p className="slider-text">{cat?.name_en}</p>
             </div>
-            <div className="swiper-button-next" />
-          <div className="swiper-button-prev" />
-          <div className="swiper-pagination" />
-          </div>
+          ))}
         </div>
-      {/* </section> */}
-    </>
+        <div className="swiper-button-next" />
+        <div className="swiper-button-prev" />
+        <div className="swiper-pagination" />
+      </div>
+    </div>
   );
 };
 

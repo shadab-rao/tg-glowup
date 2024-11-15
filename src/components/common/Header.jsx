@@ -54,9 +54,9 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <a className="nav-link active" href="index.html">
+                      <Link to={"/"} className="nav-link active">
                         Home
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" href="#">
@@ -139,7 +139,7 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <Link to={"my-address"} className="list-box">
+                            <Link to={"/my-address"} className="list-box">
                               <div className="icon">
                                 <img src="../../../assets/img/svg/location.svg" alt />
                               </div>

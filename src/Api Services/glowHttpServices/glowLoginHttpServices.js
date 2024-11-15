@@ -10,7 +10,7 @@ export async function glowLogin(formData) {
 
     console.log(JSON.stringify(formData));
     if (!data?.error) {
-      localStorage.setItem("glow-user", JSON.stringify(data?.results));
+      // localStorage.setItem("glow-user", JSON.stringify(data?.results));
       Swal.fire({
         toast: true,
         icon: "success",
@@ -54,12 +54,12 @@ export async function verifyOTP(formData) {
       formData,
       {
         headers: {
-          'x-auth-language': 'English',
-        }
+          "x-auth-language": "English",
+        },
       }
     );
-    
-    const { data } = response; 
+
+    const { data } = response;
 
     if (!data.error) {
       Swal.fire({
@@ -75,9 +75,8 @@ export async function verifyOTP(formData) {
       const token = data.results.token;
       if (token) {
         await localStorage.removeItem("token-user");
-        await localStorage.setItem("token-user", token); 
+        await localStorage.setItem("token-user", token);
       }
-
     } else {
       Swal.fire({
         toast: true,
@@ -110,10 +109,10 @@ export async function editProfile(formData) {
   try {
     const response = await glowHttpServie.put(
       `${process.env.REACT_APP_APIENDPOINT}/auth/editUserProfile`,
-      formData,
+      formData
     );
-    
-    const { data } = response; 
+
+    const { data } = response;
 
     if (!data.error) {
       Swal.fire({
@@ -153,13 +152,120 @@ export async function editProfile(formData) {
   }
 }
 
-
 export async function getUser() {
   try {
     const { data } = await glowHttpServie.get(
       `${process.env.REACT_APP_APIENDPOINT}/auth/getUser`
     );
     return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function getCart() {
+  try {
+    const { data } = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/cart/getMyCart`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+
+export async function getContent(requestData) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/platform/getUserContent`,
+      requestData
+    );
+
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function getCategory(requestData) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/category/getAllCategories`,
+      requestData
+    );
+
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function removeCartItem(id) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/cart/removeProduct`,
+      id
+    );
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+
   } catch (error) {
     if (error.response)
       Swal.fire({
