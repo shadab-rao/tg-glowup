@@ -33,7 +33,7 @@ const ReferalCode = () => {
             </div>
             <div className="form-group">
               <div className="mt-4">
-                <Link to={"/your-bag"} className="comman-btn">
+                <Link to={"/"} className="comman-btn">
                   Continue
                 </Link>
               </div>

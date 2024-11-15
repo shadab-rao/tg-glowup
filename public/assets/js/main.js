@@ -93,3 +93,10 @@ function closeMenu() {
 searchDropdown.on('click',function(){
     searchDropdown.removeClass("d-block");
 });
+
+function openCategoryList(element) {
+    const categoryList = document.querySelector(".category-list");
+    element.classList.toggle('active');
+    categoryList.classList.toggle('open');
+    console.log(element);
+}

@@ -2441,3 +2441,21 @@ img {
     border-radius: 10px;
     background-color: #f7f7f8;
   }
+
+  .category-list{
+    height: 0px !important;
+    overflow: hidden;
+    transition: all .3s ease-in-out;
+    &.open{
+        height: 60px !important;
+    }
+}
+.navbar {
+    & .navbar-nav {
+        & .nav-item {
+            & .nav-link {
+                margin: 0 .5rem;
+            }
+        }
+    }
+}

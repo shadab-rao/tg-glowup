@@ -7,10 +7,13 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profileData, setProfileData] = useState("");
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const userToken = localStorage.getItem("token-user");
   const toggleSearchDropdown = () => {
     setIsSearchOpen((prev) => !prev);
   };
+
+  
 
   const openMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -19,13 +22,29 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const openCategoryList = () => {
+    setIsCategoryOpen(!isCategoryOpen);  
+  };
 
+  const dummyData = {
+    fullName: "John Doe",
+    email: "johndoe@example.com",
+  };
 
   const response = async () => {
-    const getData = await getUser(userToken);
-    if (getData?.data) {
-      const userData = getData?.data?.results?.user;
-      setProfileData(userData);
+    if (userToken) {
+      const getData = await getUser(userToken);
+      if (getData?.data) {
+        const userData = getData?.data?.results?.user;
+
+        if (!userData?.fullName) {
+          setProfileData(dummyData);
+        } else {
+          setProfileData(userData);
+        }
+      }
+    } else {
+      setProfileData(dummyData);
     }
   };
 
@@ -50,26 +69,30 @@ const Header = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-9 col-md-8 col-12 d-md-block d-none">
-              <nav className="navbar navbar-expand-lg">
-                <div className="collapse navbar-collapse" id="navbarNav">
-                  <ul className="navbar-nav">
-                    <li className="nav-item">
+              <nav class="navbar navbar-expand-lg">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+                    <li class="nav-item">
                       <Link to={"/"} className="nav-link active">
                         Home
                       </Link>
                     </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="#">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        onclick="openCategoryList(this)"
+                        href="#"
+                      >
                         Categories
                       </a>
                     </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">
                         Brands
                       </a>
                     </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="#">
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">
                         Offers
                       </a>
                     </li>
@@ -88,7 +111,10 @@ const Header = () => {
                   />
                   <div className="search-icon">
                     <div className="position-relative w-100 h-100">
-                      <img src="../../../assets/img/svg/search-normal.svg" alt />
+                      <img
+                        src="../../../assets/img/svg/search-normal.svg"
+                        alt
+                      />
                     </div>
                   </div>
                 </div>
@@ -115,9 +141,11 @@ const Header = () => {
                         <div className="user-box">
                           <div className="d-flex justify-content-between">
                             <div>
-                              <h5 className="text text-white">{capitalize(profileData?.fullName)}</h5>
+                              <h5 className="text text-white">
+                                {capitalize(profileData?.fullName)}
+                              </h5>
                               <p className="comman-small-text">
-                              {capitalize(profileData?.email)}
+                                {capitalize(profileData?.email)}
                               </p>
                             </div>
                             <div className="mt-2">
@@ -132,7 +160,10 @@ const Header = () => {
                           <div className="list-box-wrapper">
                             <Link to={"/my-order"} className="list-box">
                               <div className="icon active">
-                                <img src="../../../assets/img/svg/box.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/box.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
                                 <p className>My Order</p>
@@ -141,7 +172,10 @@ const Header = () => {
                             </Link>
                             <Link to={"/my-address"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/location.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/location.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>My address</p>
@@ -150,7 +184,10 @@ const Header = () => {
                             </Link>
                             <Link to={"/my-wishlist"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/heart-light.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/heart-light.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper">
                                 <p className>My Wishlist</p>
@@ -162,9 +199,12 @@ const Header = () => {
                         <div className>
                           <h5 className="text fw-semibold mb-4">Others</h5>
                           <div className="list-box-wrapper">
-                          <Link to={"/referral-program"} className="list-box">
+                            <Link to={"/referral-program"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/link-circle.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/link-circle.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Referral Program</p>
@@ -173,7 +213,10 @@ const Header = () => {
                             </Link>
                             <Link to={"/settings"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/setting-2.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/setting-2.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Settings</p>
@@ -182,18 +225,22 @@ const Header = () => {
                             </Link>
                             <Link to={"/about-us"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/file-lines.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/file-lines.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>About us</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <Link to={"/terms-conditions"}
-                              className="list-box"
-                            >
+                            <Link to={"/terms-conditions"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/file-minus.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/file-minus.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Terms &amp; Conditions</p>
@@ -202,7 +249,10 @@ const Header = () => {
                             </Link>
                             <Link to={"/help-support"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/call.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/call.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper border-bottom border-2">
                                 <p className>Help &amp; Support</p>
@@ -211,7 +261,10 @@ const Header = () => {
                             </Link>
                             <Link to={"/privacy-policy"} className="list-box">
                               <div className="icon">
-                                <img src="../../../assets/img/svg/file-sheild.svg" alt />
+                                <img
+                                  src="../../../assets/img/svg/file-sheild.svg"
+                                  alt
+                                />
                               </div>
                               <div className="text-wrapper">
                                 <p className>Privacy Policy</p>
@@ -389,11 +442,12 @@ const Header = () => {
                   Home
                 </a>
               </li>
-              <li className="mobile-item">
-                <a href="index.html" className="mobile-link">
-                  Category
+              <li className="nav-item">
+                <a className="nav-link" onClick={openCategoryList} href="#">
+                  Categories
                 </a>
               </li>
+
               <li className="mobile-item">
                 <a href="index.html" className="mobile-link">
                   Brands
@@ -448,7 +502,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className="bottom-header middle-header d-md-block d-none">
+      <div className={`bottom-header middle-header d-md-block d-none category-list ${isCategoryOpen ? "open" : ""}`}>
         <div className="container">
           <div className="row">
             <div className="col-12">

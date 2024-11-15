@@ -6,6 +6,7 @@ import {
   getUser,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState("");
@@ -24,28 +25,49 @@ const Profile = () => {
 
   const userToken = localStorage.getItem("token-user");
 
-  const getProfile = async () => {
-    const getData = await getUser(userToken);
-    if (getData?.data) {
-      const userData = getData?.data?.results?.user;
-      localStorage.setItem("glow-user", JSON.stringify(userData));
+  const dummyData = {
+    fullName: "John Doe",
+    email: "johndoe@example.com",
+    phoneNumber: "+123456789",
+    countryCode: "+1",
+    gender: "Male",
+    dateOfBirth: "1990-01-01",
+    profileImage: "assets/img/user.jpg", 
+  };
 
-      setProfileData(userData);
-      setInfo({
-        fullName: userData?.fullName,
-        email: userData?.email,
-        phoneNumber: userData?.phoneNumber,
-        countryCode: userData?.countryCode,
-        gender: userData?.gender || "",
-        dateOfBirth: userData?.dateOfBirth || "",
-        profileImage: userData?.profileImage || null,
-      });
+  const getProfile = async () => {
+    if (userToken) {
+      const getData = await getUser(userToken);
+      if (getData?.data) {
+        const userData = getData?.data?.results?.user;
+        if (!userData?.fullName) {
+          setProfileData(dummyData);
+          setInfo(dummyData);
+        } else {
+          localStorage.setItem("glow-user", JSON.stringify(userData));
+  
+          setProfileData(userData);
+          setInfo({
+            fullName: userData?.fullName,
+            email: userData?.email,
+            phoneNumber: userData?.phoneNumber,
+            countryCode: userData?.countryCode,
+            gender: userData?.gender || "",
+            dateOfBirth: userData?.dateOfBirth || "",
+            profileImage: userData?.profileImage || null,
+          });
+        }
+      }
+    } else {
+      // Show dummy data if no userToken
+      setProfileData(dummyData);
+      setInfo(dummyData);
     }
   };
 
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [userToken]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -93,6 +115,23 @@ const Profile = () => {
     setIsEditing(!isEditing);
   };
 
+  if (!userToken) {
+    return (
+      <>
+        <Header />
+        <section className="my_profile mt-5 mb-5">
+          <div className="container mt-4 mb-4">
+            <div className="text-center">
+              <Link className="comman-btn" to={"/login"}>
+                Login to View Profile
+              </Link>
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </>
+    );
+  }
   return (
     <>
       <Header />
@@ -432,10 +471,10 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="card-box rounded-3 mt-4">
-                    <p className="text text-dark m-0 fw-semibold">
+                    <p className="text text-dark m-0 fw-semibold text-start">
                       Delete Account{" "}
                     </p>
-                    <p className="comman-small-text text-light m-0">
+                    <p className="comman-small-text text-light m-0 text-start">
                       Delete your account and data permanently
                     </p>
                   </div>
