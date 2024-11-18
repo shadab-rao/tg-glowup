@@ -2459,3 +2459,21 @@ img {
         }
     }
 }
+
+/* FilterSidebar.css */
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.dropdown-content.open {
+  max-height: 600px; /* Adjust to fit the content */
+  opacity: 1;
+}
+
+.dropdown-content.closed {
+  max-height: 0;
+  opacity: 0;
+}

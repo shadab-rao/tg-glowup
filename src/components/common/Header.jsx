@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { getUser } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { Link, useLocation } from "react-router-dom";
+import {
+  getCategory,
+  getUser,
+} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
 
 const Header = () => {
@@ -9,11 +12,11 @@ const Header = () => {
   const [profileData, setProfileData] = useState("");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const userToken = localStorage.getItem("token-user");
+  const [categories, setCategories] = useState([]);
+  const location = useLocation();
   const toggleSearchDropdown = () => {
     setIsSearchOpen((prev) => !prev);
   };
-
-  
 
   const openMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -22,8 +25,8 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
-  const openCategoryList = () => {
-    setIsCategoryOpen(!isCategoryOpen);  
+  const toggleCategoryList = () => {
+    setIsCategoryOpen((prev) => !prev);
   };
 
   const dummyData = {
@@ -50,7 +53,18 @@ const Header = () => {
 
   useEffect(() => {
     response();
+    handleCategory();
   }, []);
+
+  const handleCategory = async () => {
+    try {
+      const response = await getCategory();
+      setCategories(response?.data?.results?.categories || []);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
   return (
     <header id="header">
       <div className="top-header">
@@ -73,15 +87,23 @@ const Header = () => {
                 <div class="collapse navbar-collapse" id="navbarNav">
                   <ul class="navbar-nav">
                     <li class="nav-item">
-                      <Link to={"/"} className="nav-link active">
+                      <Link
+                        to="/"
+                        className={`nav-link ${
+                          location.pathname === "/" ? "active" : ""
+                        }`}
+                      >
                         Home
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <a
-                        class="nav-link"
-                        onclick="openCategoryList(this)"
                         href="#"
+                        className={`nav-link ${isCategoryOpen ? "active" : ""}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleCategoryList();
+                        }}
                       >
                         Categories
                       </a>
@@ -443,7 +465,14 @@ const Header = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={openCategoryList} href="#">
+                <a
+                  className="nav-link"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleCategoryList();
+                  }}
+                >
                   Categories
                 </a>
               </li>
@@ -502,139 +531,25 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className={`bottom-header middle-header d-md-block d-none category-list ${isCategoryOpen ? "open" : ""}`}>
+      <div
+        className={`bottom-header middle-header d-md-block d-none category-list ${
+          isCategoryOpen ? "open" : ""
+        }`}
+      >
         <div className="container">
           <div className="row">
             <div className="col-12">
               <nav className="navbar navbar-expand-lg">
                 <div className="collapse navbar-collapse" id="navbarNav">
-                  <ul className="navbar-nav">
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="index.html">
-                        Makeup
-                      </a>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Skincare
-                      </a>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Haircare
-                      </a>
-                      <div className="hover-dropdown-content-bg">
-                        <div className="hover-dropdown-content">
-                          <div className="container">
-                            <div className="row">
-                              <div className="col-lg-3 col-md-4">
-                                <div className="content">
-                                  <h3 className="dropdown-heading">
-                                    Shop by product
-                                  </h3>
-                                  <ul className="dropdown-list">
-                                    <li>
-                                      <a href>Hair Treatments</a>
-                                    </li>
-                                    <li>
-                                      <a href>Styling Products</a>
-                                    </li>
-                                    <li>
-                                      <a href>Shampoo &amp; Conditioner</a>
-                                    </li>
-                                    <li>
-                                      <a href>Haircare Sets</a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                              <div className="col-lg-3 col-md-4">
-                                <div className="content">
-                                  <h3 className="dropdown-heading">
-                                    Shop by concern
-                                  </h3>
-                                  <ul className="dropdown-list">
-                                    <li>
-                                      <a href>Frizz Free</a>
-                                    </li>
-                                    <li>
-                                      <a href>Hair Repair</a>
-                                    </li>
-                                    <li>
-                                      <a href>Curl Definer</a>
-                                    </li>
-                                    <li>
-                                      <a href>Volume &amp; Thickness</a>
-                                    </li>
-                                    <li>
-                                      <a href>Moisture &amp; Shine</a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                              <div className="col-lg-3 col-md-4">
-                                <div className="content">
-                                  <h3 className="dropdown-heading">
-                                    Brands we love
-                                  </h3>
-                                  <ul className="dropdown-list">
-                                    <li>
-                                      <a href>Olaplex</a>
-                                    </li>
-                                    <li>
-                                      <a href>Kerastase</a>
-                                    </li>
-                                    <li>
-                                      <a href>Mielle Organics</a>
-                                    </li>
-                                    <li>
-                                      <a href>L'Oreal Professionel</a>
-                                    </li>
-                                    <li>
-                                      <a href>Redken</a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                              <div className="col-lg-3 col-md-4">
-                                <div className="header-dropdown-img">
-                                  <img
-                                    src="assets/img/products/glowth_elixir.png"
-                                    alt
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Fragrance
-                      </a>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Bath &amp; Body
-                      </a>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Wellness
-                      </a>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Men
-                      </a>
-                    </li>
-                    <li className="nav-item hover-dropdown">
-                      <a className="nav-link" href="#">
-                        Combo
-                      </a>
-                    </li>
-                  </ul>
+                  {categories?.map((cat) => (
+                    <ul className="navbar-nav">
+                      <li className="nav-item hover-dropdown">
+                        <Link to={"/sub-category"} className="nav-link">
+                          {cat?.name_en}
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
                 </div>
               </nav>
             </div>

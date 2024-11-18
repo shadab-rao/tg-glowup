@@ -51,7 +51,7 @@ const Footer = () => {
                 <div className="col-lg-7 col-md-6">
                   <div className="h-parent w-100 d-flex align-items-center">
                     <div className>
-                      <p className="subscribe-heading">
+                      <p className="subscribe-heading text-start">
                         Subscribe To latest updates
                       </p>
                       <p className="subscribe-text">
@@ -80,7 +80,7 @@ const Footer = () => {
                 <div className="logo-wrapper">
                   <img src="assets/img/Glow Up.png" alt />
                 </div>
-                <p className="footer-paragraph mt-3">
+                <p className="footer-paragraph mt-3 text-start">
                   Lorem ipsum dolor sit amet consectetur. Mi <br /> nibh
                   venenatis in suscipit turpis enim cursus <br />
                   vulputate amet. Lobortis mi platea aliquam <br /> senectus
@@ -89,8 +89,8 @@ const Footer = () => {
               </div>
               <div className="col-lg-2 col-md-2 col-6 mt-lg-0 mt-md-4 mt-4">
                 <div className>
-                  <h5 className="footer-heading">Product</h5>
-                  <ul className="footer-list">
+                  <h5 className="footer-heading text-start">Product</h5>
+                  <ul className="footer-list text-start">
                     <li>
                       <a href>Makeup</a>
                     </li>
@@ -108,8 +108,8 @@ const Footer = () => {
               </div>
               <div className="col-lg-3 col-md-3 col-6 mt-lg-0 mt-md-4 mt-4">
                 <div className>
-                  <h5 className="footer-heading">Popular Search</h5>
-                  <ul className="footer-list">
+                  <h5 className="footer-heading text-start">Popular Search</h5>
+                  <ul className="footer-list text-start">
                     <li>
                       <a href>Foundation</a>
                     </li>
@@ -127,7 +127,7 @@ const Footer = () => {
               </div>
               <div className="col-lg-3 col-md-3 col-12 mt-lg-0 mt-md-4 mt-4 mb-lg-0 mb-md-4 mb-4">
                 <div className>
-                  <h5 className="footer-heading">Experience App On Mobile</h5>
+                  <h5 className="footer-heading text-start">Experience App On Mobile</h5>
                 </div>
                 <div className="d-flex gap-md-3 gap-1 mt-4">
                   <a href className="download-link">

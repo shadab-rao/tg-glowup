@@ -26,7 +26,6 @@ const Bag = () => {
   };
 
   if (data.length === 0) {
-    // Render EmptyBag if the cart is empty
     return (
       <>
         <Header />

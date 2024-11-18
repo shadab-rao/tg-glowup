@@ -19,6 +19,7 @@ import Login from "./components/auth/Login";
 import Otp from "./components/auth/Otp";
 import SuccessVerified from "./components/auth/SuccessVerified";
 import ReferalCode from "./components/auth/ReferalCode";
+import Filter from "./components/filter/Filter.jsx"
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/login/otp" element={<Otp/>} />
           <Route path="/login/otp/success" element={<SuccessVerified/>} />
           <Route path="/referral-code" element={<ReferalCode/>} />
+          <Route path="/sub-category" element={<Filter/>} />
         </Routes>
       </BrowserRouter>
     </div>

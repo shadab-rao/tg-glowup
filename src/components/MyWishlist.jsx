@@ -11,7 +11,7 @@ const MyWishlist = () => {
         <div className="container">
           <div className="row mt-5 mb-5">
             <div className="heading-wrapper">
-              <h5 className="text mb-4 text-light">
+              <h5 className="text mb-4 text-light text-start">
                 Items are saved for 90 days
               </h5>
             </div>
@@ -30,7 +30,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -66,7 +66,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -102,7 +102,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -138,7 +138,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -174,7 +174,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -210,7 +210,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -246,7 +246,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -282,7 +282,7 @@ const MyWishlist = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">

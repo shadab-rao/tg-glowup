@@ -237,6 +237,28 @@ export async function getCategory(requestData) {
     return { error };
   }
 }
+export async function getSubcategory(requestData) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/category/getAllSubCategories`,
+      requestData
+    );
+
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function removeCartItem(id) {
   try {
     const { data } = await glowHttpServie.patch(

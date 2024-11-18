@@ -15,9 +15,9 @@ const BigProductsList = () => {
                   </div>
                 </div>
                 <div className="comman-card-body px-3 mt-lg-5 mt-md-2">
-                  <h4 className="bold-text">Get</h4>
-                  <h4 className="bold-text2">50%</h4>
-                  <p className="text-para mt-4">
+                  <h4 className="bold-text text-start">Get</h4>
+                  <h4 className="bold-text2 text-start">50%</h4>
+                  <p className="text-para mt-4 text-start">
                     Get inspired by these looks and create your own
                   </p>
                   <div>
@@ -42,7 +42,7 @@ const BigProductsList = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -75,7 +75,7 @@ const BigProductsList = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">
@@ -108,7 +108,7 @@ const BigProductsList = () => {
                     <h3 className="title">Plum Green </h3>
                     <h3 className="price">SAR 162</h3>
                   </div>
-                  <p className="paragraph">
+                  <p className="paragraph text-start">
                     Plum green Tea Pore Cleansing Gel Face Wash...
                   </p>
                   <div className="mt-4">

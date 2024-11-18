@@ -66,18 +66,18 @@ const AboutUs = () => {
                       offer subscription boxes or personalized product
                       deliveries based on user preferences.
                     </p> */}
-                    <div className="row">
+                    <div className="row mt-5">
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="d-flex gap-2">
                           <div className="about-icon-wrapper">
                             <img src="assets/img/icon/category.png" alt />
                           </div>
                           <div className>
-                            <p className="text text-primary m-0">12+</p>
+                            <p className="text text-primary m-0 text-start">12+</p>
                             <p className="text m-0">Categories</p>
                           </div>
                         </div>
-                        <p className="text text-light">
+                        <p className="text text-light text-start">
                           Products for women <br />
                           and men.
                         </p>
@@ -92,7 +92,7 @@ const AboutUs = () => {
                             <p className="text m-0">User</p>
                           </div>
                         </div>
-                        <p className="text text-light">
+                        <p className="text text-light text-start">
                           Download &amp; Using our <br />
                           App
                         </p>

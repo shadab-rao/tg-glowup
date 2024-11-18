@@ -58,7 +58,7 @@ const Category = () => {
   return (
     <div className="category-slider-wrapper mx-auto my-5">
       <div className="swiper-container-category overflow-hidden">
-        <div className="swiper-wrapper">
+        <div className="swiper-wrapper justify-content-center">
           {categories?.map((cat, index) => (
             <div className="swiper-slide" key={index}>
               <div className="cate-img-slider-wrapper">

@@ -1,6 +1,4 @@
-import React from "react";
-import Header from "../common/Header";
-import Footer from "../common/Footer";
+import React from "react"
 import { Link } from "react-router-dom";
 
 const EmptyBag = () => {
@@ -49,7 +47,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -80,7 +78,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -108,7 +106,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -136,7 +134,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -164,7 +162,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -195,7 +193,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -223,7 +221,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
@@ -251,7 +249,7 @@ const EmptyBag = () => {
                       <h3 className="title">Plum Green </h3>
                       <h3 className="price">SAR 162</h3>
                     </div>
-                    <p className="paragraph">
+                    <p className="paragraph text-start">
                       Plum green Tea Pore Cleansing Gel Face Wash...
                     </p>
                     <div className="mt-4">
