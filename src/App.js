@@ -27,7 +27,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/product-details" element={<ProductDetail />} />
+          <Route path="/product-details/:id" element={<ProductDetail />} />
           <Route path="/my-order" element={<MyOrders/>} />
           <Route path="/my-address" element={<MyAddress/>} />
           <Route path="/my-wishlist" element={<MyWishlist/>} />
@@ -45,7 +45,7 @@ function App() {
           <Route path="/login/otp" element={<Otp/>} />
           <Route path="/login/otp/success" element={<SuccessVerified/>} />
           <Route path="/referral-code" element={<ReferalCode/>} />
-          <Route path="/sub-category" element={<Filter/>} />
+          <Route path="/sub-category/:id" element={<Filter/>} />
         </Routes>
       </BrowserRouter>
     </div>

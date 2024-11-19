@@ -4,20 +4,31 @@ import Footer from "./common/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { getCart, removeCartItem } from "../Api Services/glowHttpServices/glowLoginHttpServices";
 import EmptyBag from "./cart/EmptyBag";
+import { useDispatch } from "react-redux";
+import { incrementCartCount, setCartCount } from "../Redux/cartSlice";
 
 const Bag = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
+  const dispatch = useDispatch();
+
+  const userToken = localStorage.getItem("token-user");
 
   useEffect(() => {
-    handleCart();
+    if(userToken){
+      handleCart()
+    }
   }, []);
 
   const handleCart = async () => {
     const response = await getCart();
+    const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
     setData(response?.data?.results?.cart?.inventory || []);
-    setCount(response?.data?.results?.cart?.totalProducts || 0);
+    setCount(response?.data?.results?.cart?.totalProducts);
+    console.log("Cart count fetched from API:", totalProducts);
+    dispatch(setCartCount(totalProducts));
+    console.log("Action dispatched with:", totalProducts);
   };
 
   const handleRemove = async (id) => {

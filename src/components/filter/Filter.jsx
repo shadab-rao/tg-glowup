@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import FilterSidebar from "./FilterSidebar";
-import { getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import {
+  addToCart,
+  getCart,
+  getCategory,
+  getSubcategory,
+  productList,
+} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCartCount } from "../../Redux/cartSlice";
 
 const Filter = () => {
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [productData, setProductData] = useState([]);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userToken = localStorage.getItem("token-user");
 
   useEffect(() => {
     handleCategory();
+    handleSubcatgeory();
+    handleProduct();
   }, []);
 
   const handleCategory = async () => {
@@ -18,6 +35,44 @@ const Filter = () => {
       console.error("Failed to fetch categories:", error);
     }
   };
+
+  const handleSubcatgeory = async () => {
+    try {
+      const response = await getSubcategory({ category: id });
+      setSubCategories(response?.data?.results?.subcategories || []);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
+  const handleProduct = async () => {
+    try {
+      const response = await productList();
+      setProductData(response?.data?.results?.products || []);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
+  const handleAddToCart = async ({ product, varient }) => {
+   if(userToken){
+    const payload = {
+      product,
+      varient,
+    };
+    const response = await addToCart(payload);
+    handleCart()
+   }else{
+    navigate("/login")
+   }
+  };
+
+  const handleCart = async () => {
+    const response = await getCart();
+    const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
+    dispatch(setCartCount(totalProducts));
+  };
+
   return (
     <>
       <Header />
@@ -30,16 +85,20 @@ const Filter = () => {
           <FilterSidebar />
           <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4">
             <div className="d-md-block d-none">
-                <div className="row mt-4  ">
-              {categories?.map((item) => (
-                  <div className="col-auto text-start ">
+              <div className="row mt-4  ">
+                {subCategories?.map((item) => (
+                  <div className="col-2 ">
                     <div className="cate-img-slider-wrapper ">
-                      <img style={{width:"50px",objectFit:"cover"}}  src={item?.image} alt />
+                      <img
+                        style={{ width: "60px", objectFit: "cover" }}
+                        src={item?.image}
+                        alt
+                      />
                     </div>
                     <p className="small-slider-text">{item?.name_en}</p>
                   </div>
-              ))}
-                </div>
+                ))}
+              </div>
             </div>
             <div className="d-md-none d-block mt-3">
               <div className="category-slider">
@@ -139,387 +198,50 @@ const Filter = () => {
               <div className="filter-box">Masks</div>
             </div>
             <div className="row mt-md-4 mt-2">
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/mac_stuio_fix.png" alt />
+              {productData?.map((item) => (
+                <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
+                  <div className="comman-card">
+                    <div className="heart-icon">
+                      <i className="fa fa-heart-o" />
                     </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
+                    <div className="comman-card-header">
+                      <div className="img-wrapper">
+                        <img src={item?.imagesWeb?.[0]} alt />
                       </div>
                     </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
+                    <div className="comman-card-body">
+                      <div className="d-flex justify-content-between">
+                        <h3 className="title">{item?.name_en}</h3>
+                        <h3 className="price">SAR {item?.price}</h3>
+                      </div>
+                      <p className="paragraph text-start">
+                        {item?.description_en}
+                      </p>
+                      <div className="mt-4">
+                        <div className="review-wrapper">
+                          <i className="fa fa-star text-warning" />
+                          <span className="review-points">4.9</span>
+                          <span className="review-text">250+ Review</span>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <button
+                          className="comman-btn"
+                          onClick={() =>
+                            handleAddToCart({
+                              product: item?._id,
+                              varient:
+                                item?.varients?.[0]?.values?.[0]?.varient_id,
+                            })
+                          }
+                        >
+                          Add to Bag
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="new-label">
-                    <p className>New</p>
-                  </div>
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/concealer.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/glue.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/kerastase.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/mac_stuio_fix.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="new-label">
-                    <p className>New</p>
-                  </div>
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/concealer.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/glow_screen.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/glow_stick.jpg" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/frizz_oil.jpg" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="new-label">
-                    <p className>New</p>
-                  </div>
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/scalp_oil.jpg" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/glue.png" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                <div className="comman-card">
-                  <div className="heart-icon">
-                    <i className="fa fa-heart-o" />
-                  </div>
-                  <div className="comman-card-header">
-                    <div className="img-wrapper">
-                      <img src="assets/img/products/tocobo.jpg" alt />
-                    </div>
-                  </div>
-                  <div className="comman-card-body">
-                    <div className="d-flex justify-content-between">
-                      <h3 className="title">Plum Green </h3>
-                      <h3 className="price">SAR 162</h3>
-                    </div>
-                    <p className="paragraph">
-                      Plum green Tea Pore Cleansing Gel Face Wash...
-                    </p>
-                    <div className="mt-4">
-                      <div className="review-wrapper">
-                        <i className="fa fa-star text-warning" />
-                        <span className="review-points">4.9</span>
-                        <span className="review-text">250+ Review</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button className="comman-btn">Add to Bag</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

@@ -151,6 +151,52 @@ export async function editProfile(formData) {
     return { error };
   }
 }
+export async function addToCart(formData) {
+  try {
+    const response = await glowHttpServie.post(
+      `${process.env.REACT_APP_APIENDPOINT}/cart/addToCart`,
+      formData
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 
 export async function getUser() {
   try {
@@ -259,6 +305,27 @@ export async function getSubcategory(requestData) {
     return { error };
   }
 }
+export async function productDetail(id) {
+  try {
+    const { data } = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/inventory/viewProduct/${id}`
+    );
+
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function removeCartItem(id) {
   try {
     const { data } = await glowHttpServie.patch(
@@ -275,6 +342,48 @@ export async function removeCartItem(id) {
         timerProgressBar: true,
         timer: 3000,
       });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function productList() {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/inventory/getProducts`
+    );
+    if (!data.error) {
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "success",
+      //   position: "top-end",
+      //   title: data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
     } else {
       Swal.fire({
         toast: true,

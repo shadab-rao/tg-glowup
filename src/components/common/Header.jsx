@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   getCategory,
+  getSubcategory,
   getUser,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -64,6 +66,15 @@ const Header = () => {
       console.error("Failed to fetch categories:", error);
     }
   };
+
+  
+
+  const cartCount = useSelector((state) => state.cart.cartCount);
+
+  useEffect(() => {
+    console.log("Header detected cart count change:", cartCount);
+  }, [cartCount]);
+  
 
   return (
     <header id="header">
@@ -298,9 +309,18 @@ const Header = () => {
                       </div>
                     </div>
                   </div>
-                  <Link to={"/your-bag"} className>
-                    <img src="../../../assets/img/svg/bag-2.svg" alt />
+                  <Link to={"/your-bag"} className="position-relative">
+                    <img src="../../../assets/img/svg/bag-2.svg" alt="Bag" />
+                    {cartCount > 0 && (
+                      <span
+                        className="badge bg-danger text-white position-absolute mt-3 top-0 start-100 translate-middle"
+                        style={{ fontSize: "0.8rem",color:"red", borderRadius: "50%" }}
+                      >
+                        {cartCount}
+                      </span>
+                    )}
                   </Link>
+
                   <div className="d-md-none">
                     <button className="bg-white px-2" onClick={openMenu}>
                       <i className="fa fa-bars" />
@@ -544,7 +564,10 @@ const Header = () => {
                   {categories?.map((cat) => (
                     <ul className="navbar-nav">
                       <li className="nav-item hover-dropdown">
-                        <Link to={"/sub-category"} className="nav-link">
+                        <Link
+                          to={`/sub-category/${cat?._id}`}
+                          className="nav-link"
+                        >
                           {cat?.name_en}
                         </Link>
                       </li>
