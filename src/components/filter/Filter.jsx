@@ -16,6 +16,8 @@ const Filter = () => {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedDescription, setExpandedDescription] = useState({});
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,28 +51,37 @@ const Filter = () => {
     try {
       const response = await productList();
       setProductData(response?.data?.results?.products || []);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      setLoading(false);
     }
   };
 
   const handleAddToCart = async ({ product, varient }) => {
-   if(userToken){
-    const payload = {
-      product,
-      varient,
-    };
-    const response = await addToCart(payload);
-    handleCart()
-   }else{
-    navigate("/login")
-   }
+    if (userToken) {
+      const payload = {
+        product,
+        varient,
+      };
+      const response = await addToCart(payload);
+      handleCart();
+    } else {
+      navigate("/login");
+    }
   };
 
   const handleCart = async () => {
     const response = await getCart();
     const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
     dispatch(setCartCount(totalProducts));
+  };
+
+  const toggleDescription = (productId) => {
+    setExpandedDescription((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
   };
 
   return (
@@ -197,52 +208,75 @@ const Filter = () => {
               <div className="filter-box">Moisturizers</div>
               <div className="filter-box">Masks</div>
             </div>
-            <div className="row mt-md-4 mt-2">
-              {productData?.map((item) => (
-                <div className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4">
-                  <div className="comman-card">
-                    <div className="heart-icon">
-                      <i className="fa fa-heart-o" />
-                    </div>
-                    <div className="comman-card-header">
-                      <div className="img-wrapper">
-                        <img src={item?.imagesWeb?.[0]} alt />
+            {loading ? (
+              <p>Loading products...</p>
+            ) : productData.length === 0 ? (
+              <p>Product is not available.</p>
+            ) : (
+              <div className="row mt-md-4 mt-2">
+                {productData?.map((item) => (
+                  <div
+                    className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4"
+                    key={item._id}
+                  >
+                    <div className="comman-card">
+                      <div className="heart-icon">
+                        <i className="fa fa-heart-o" />
                       </div>
-                    </div>
-                    <div className="comman-card-body">
-                      <div className="d-flex justify-content-between">
-                        <h3 className="title">{item?.name_en}</h3>
-                        <h3 className="price">SAR {item?.price}</h3>
-                      </div>
-                      <p className="paragraph text-start">
-                        {item?.description_en}
-                      </p>
-                      <div className="mt-4">
-                        <div className="review-wrapper">
-                          <i className="fa fa-star text-warning" />
-                          <span className="review-points">4.9</span>
-                          <span className="review-text">250+ Review</span>
+                      <div className="comman-card-header">
+                        <div className="img-wrapper">
+                          <img src={item?.imagesWeb?.[0]} alt={item?.name_en} />
                         </div>
                       </div>
-                      <div className="mt-4">
-                        <button
-                          className="comman-btn"
-                          onClick={() =>
-                            handleAddToCart({
-                              product: item?._id,
-                              varient:
-                                item?.varients?.[0]?.values?.[0]?.varient_id,
-                            })
-                          }
-                        >
-                          Add to Bag
-                        </button>
+                      <div className="comman-card-body ">
+                        <div className="d-flex justify-content-between">
+                          <h3 className="title">{item?.name_en}</h3>
+                          <h3 className="price">
+                            {item?.currency} {item?.price}
+                          </h3>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                          <p className="paragraph text-start">
+                            {item?.description_en?.slice(0, 20) + "..."}
+                          </p>
+                          {/* {item?.description_en?.length > 100 && (
+                            <button
+                              className="show-more-btn" style={{background:"none",fontSize:"12px",color:"blue",fontWeight:"500"}}
+                              onClick={() => toggleDescription(item._id)}
+                            >
+                              {expandedDescription[item._id]
+                                ? "Show Less"
+                                : "Show More"}
+                            </button>
+                          )} */}
+                        </div>
+                        <div className="mt-4">
+                          <div className="review-wrapper">
+                            <i className="fa fa-star text-warning" />
+                            <span className="review-points">4.9</span>
+                            <span className="review-text">250+ Review</span>
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <button
+                            className="comman-btn"
+                            onClick={() =>
+                              handleAddToCart({
+                                product: item?._id,
+                                varient:
+                                  item?.varients?.[0]?.values?.[0]?.varient_id,
+                              })
+                            }
+                          >
+                            Add to Bag
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

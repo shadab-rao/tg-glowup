@@ -7,7 +7,7 @@ import {
   wishList,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setWishlist } from "../../Redux/cartSlice";
 
 const Header = () => {
@@ -18,6 +18,7 @@ const Header = () => {
   const userToken = localStorage.getItem("token-user");
   const [categories, setCategories] = useState([]);
   const location = useLocation();
+  const dispatch = useDispatch();
   const wishlistCount = useSelector((state) => state.cart.wishlistCount);
   const toggleSearchDropdown = () => {
     setIsSearchOpen((prev) => !prev);
@@ -34,25 +35,13 @@ const Header = () => {
     setIsCategoryOpen((prev) => !prev);
   };
 
-  const dummyData = {
-    fullName: "John Doe",
-    email: "johndoe@example.com",
-  };
-
   const response = async () => {
     if (userToken) {
       const getData = await getUser(userToken);
       if (getData?.data) {
         const userData = getData?.data?.results?.user;
-
-        if (!userData?.fullName) {
-          setProfileData(dummyData);
-        } else {
-          setProfileData(userData);
-        }
+        setProfileData(userData);
       }
-    } else {
-      setProfileData(dummyData);
     }
   };
 
@@ -76,7 +65,15 @@ const Header = () => {
     console.log("Header detected cart count change:", cartCount);
   }, [cartCount]);
 
+  useEffect(() => {
+    handleWishList();
+  }, []);
 
+  const handleWishList = async () => {
+    const response = await wishList();
+    const wishlistData = response?.data?.results?.wishlist?.product || [];
+    dispatch(setWishlist(wishlistData));
+  };
 
   return (
     <header id="header">
@@ -103,8 +100,11 @@ const Header = () => {
                       <Link
                         to="/"
                         className={`nav-link ${
-                          location.pathname === "/" ? "active" : ""
+                          !isCategoryOpen && location.pathname === "/" ? "active" : ""
                         }`}
+                        onClick={() => {
+                          setIsCategoryOpen(false); 
+                        }}
                       >
                         Home
                       </Link>
@@ -181,27 +181,45 @@ const Header = () => {
                       <img src="../../../assets/img/svg/user.svg" alt />
                     </button>
                     <div
-                      className="dropdown-menu user-dropdown"
+                      className="dropdown-menu user-dropdown user-dropdown-menu"
                       aria-labelledby="dropdownMenuButton"
                     >
                       <div className="my-account">
-                        <div className="user-box">
-                          <div className="d-flex justify-content-between">
-                            <div>
-                              <h5 className="text text-white">
-                                {capitalize(profileData?.fullName)}
-                              </h5>
-                              <p className="comman-small-text">
-                                {capitalize(profileData?.email)}
-                              </p>
-                            </div>
-                            <div className="mt-2">
-                              <Link to={"/my-profile"} className="edit-btn">
-                                Edit
-                              </Link>
+                        {!userToken ? (
+                          // If no token, show login button
+                          <div className="text-center">
+                            <Link to="/login" className="btn btn-primary">
+                              Login
+                            </Link>
+                          </div>
+                        ) : profileData?.fullName ? (
+                          // If user token exists and completeProfile is true, show Complete Your Profile button
+                          <div className="user-box">
+                            <div className="d-flex justify-content-between">
+                              <div>
+                                <h5 className="text text-white">
+                                  {capitalize(profileData?.fullName)}
+                                </h5>
+                                <p className="comman-small-text">
+                                  {capitalize(profileData?.email)}
+                                </p>
+                              </div>
+                              <div className="mt-2">
+                                <Link to={"/my-profile"} className="edit-btn">
+                                  Edit
+                                </Link>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          // If user token exists and completeProfile is false, show profile data
+                          <div className="text-center">
+                            <Link to="/my-profile" className="btn btn-primary">
+                              Complete Profile
+                            </Link>
+                          </div>
+                        )}
+
                         <div className>
                           <h5 className="text fw-semibold mb-4">My Account</h5>
                           <div className="list-box-wrapper">
@@ -570,7 +588,7 @@ const Header = () => {
         </div>
       </div>
       <div
-        className={`bottom-header middle-header d-md-block d-none category-list ${
+        className={`bottom-header middle-header  category-list ${
           isCategoryOpen ? "open" : ""
         }`}
       >

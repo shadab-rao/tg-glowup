@@ -2488,4 +2488,18 @@ img {
     vertical-align: baseline;
     border-radius: 50%;
   }
+
+  .user-dropdown-menu {
+    max-height: 500px; 
+    overflow-y: auto;
+  }
+.navbar {
+    & .navbar-nav {
+        & .nav-item {
+            & .nav-link {
+                margin: 0 .5rem;
+            }
+        }
+    }
+}
   

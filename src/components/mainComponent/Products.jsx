@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import {
   addWishlist,
   productList,
+  wishList,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useDispatch } from "react-redux";
-import { setProducts } from "../../Redux/cartSlice";
+import { setProducts, setWishlist } from "../../Redux/cartSlice";
 
 const Products = () => {
   const navigate = useNavigate();
@@ -27,10 +28,30 @@ const Products = () => {
     }
   };
 
-  const handleWishlist = async (id) => {
-    const response = await addWishlist(id);
-    handleProduct()
+  const handleAddWishlist = async ({ productId = null, variantId = null }) => {
+    try {
+      const formData = {
+        productId,
+        variantId,
+      };
+
+      const response = await addWishlist(formData);
+      if (response) {
+        console.log("Wishlist updated successfully!");
+        handleProduct();
+        handleWishList();
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist:", error);
+    }
   };
+
+  const handleWishList = async () => {
+    const response = await wishList();
+    const wishlistData = response?.data?.results?.wishlist?.products || [];
+    dispatch(setWishlist(wishlistData));
+  };
+
   return (
     <>
       <div className="container mb-5">
@@ -44,9 +65,18 @@ const Products = () => {
               <div className="comman-card">
                 <div
                   className="heart-icon"
-                  onClick={() => handleWishlist(item?._id)}
+                  onClick={() =>
+                    handleAddWishlist({
+                      productId: item?._id,
+                      variantId: item?.variantId, 
+                    })
+                  }
                 >
-                 {item?.isFavourite === true ?  <i className="fa fa-heart" /> :  <i className="fa fa-heart-o" />}
+                  {item?.isFavourite === true ? (
+                    <i className="fa fa-heart" />
+                  ) : (
+                    <i className="fa fa-heart-o" />
+                  )}
                 </div>
                 {/* <div className="new-label">
                   <p className>New</p>
@@ -64,7 +94,9 @@ const Products = () => {
                     <h3 className="title">{item?.name_en}</h3>
                     <h3 className="price">SAR {item?.price}</h3>
                   </div>
-                  <p className="paragraph text-start">{item?.description_en}</p>
+                  <p className="paragraph text-start">
+                    {item?.description_en?.slice(0, 30) + "..."}
+                  </p>
                   <div className="mt-4">
                     <div className="review-wrapper">
                       <i className="fa fa-star text-warning" />

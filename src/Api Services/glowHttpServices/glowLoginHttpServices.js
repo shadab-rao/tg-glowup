@@ -197,10 +197,11 @@ export async function addToCart(formData) {
     return { error };
   }
 }
-export async function addWishlist(id) {
+export async function addWishlist(formData) {
   try {
     const response = await glowHttpServie.post(
-      `${process.env.REACT_APP_APIENDPOINT}//platform/addWishlist/${id}`
+      `${process.env.REACT_APP_APIENDPOINT}/platform/addWishlist`,
+      formData
     );
 
     const { data } = response;

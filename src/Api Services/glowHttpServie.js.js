@@ -11,7 +11,7 @@ const errorCallBack = (error) => {
   return Promise.reject(error);
 };
 axios.defaults.headers.common["x-auth-token-user"] =
-  localStorage.getItem("token-merchant");
+  localStorage.getItem("token-user");
 axios.interceptors.request.use(async (req) => {
   req.headers["x-auth-token-user"] = await localStorage.getItem("token-user");
   // req.headers["x-auth-token-admin"] = await localStorage.getItem("token-main-admin"); 

@@ -70,7 +70,7 @@ const Slider = () => {
             {/* Navigation Buttons */}
             <div className="swiper-button-next" />
             <div className="swiper-button-prev" />
-            <div className="swiper-pagination" />
+            <div className="swiper-pagination" style={{display:"none"}} />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Main from "./components/mainComponent/Main";
 import ProductDetail from "./components/ProductDetail";
 import MyOrders from "./components/MyOrders";
-import MyWishlist from "./components/MyWishlist";
+import MyWishlist from "./components/wishList/MyWishlist.jsx";
 import ReferalProgram from "./components/ReferalProgram";
 import Settings from "./components/Settings";
 import AboutUs from "./components/AboutUs/AboutUs";
