@@ -431,7 +431,7 @@ const ProductDetail = () => {
                         <h3 className="price">SAR 162</h3>
                       </div>
                       <p className="paragraph text-start">
-                        {item?.description_en}
+                      {item?.description_en?.slice(0, 30) + "..."}
                       </p>
                       <div className="mt-4">
                         <div className="review-wrapper">

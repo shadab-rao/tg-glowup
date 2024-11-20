@@ -8,31 +8,30 @@ import {
   getSubcategory,
   productList,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../Redux/cartSlice";
+import AllProduct from "../common/AllProduct";
+import SubsubCategories from "../SubsubCategories";
 
 const Filter = () => {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [productData, setProductData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [expandedDescription, setExpandedDescription] = useState({});
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(null);
+  const [categoryName, setCategoryName] = useState("");
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const userToken = localStorage.getItem("token-user");
 
   useEffect(() => {
     handleCategory();
     handleSubcatgeory();
-    handleProduct();
-  }, []);
+  }, [id]);
 
   const handleCategory = async () => {
     try {
       const response = await getCategory();
       setCategories(response?.data?.results?.categories || []);
+      const currentCategory = response?.data?.results?.categories.find((cat) => cat._id === id);
+      setCategoryName(currentCategory?.name_en || "Category not found");
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     }
@@ -47,41 +46,8 @@ const Filter = () => {
     }
   };
 
-  const handleProduct = async () => {
-    try {
-      const response = await productList();
-      setProductData(response?.data?.results?.products || []);
-      setLoading(false);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-      setLoading(false);
-    }
-  };
-
-  const handleAddToCart = async ({ product, varient }) => {
-    if (userToken) {
-      const payload = {
-        product,
-        varient,
-      };
-      const response = await addToCart(payload);
-      handleCart();
-    } else {
-      navigate("/login");
-    }
-  };
-
-  const handleCart = async () => {
-    const response = await getCart();
-    const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
-    dispatch(setCartCount(totalProducts));
-  };
-
-  const toggleDescription = (productId) => {
-    setExpandedDescription((prev) => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
+  const handleSubcategoryClick = (subcategoryId) => {
+    setSelectedSubcategoryId(subcategoryId);
   };
 
   return (
@@ -90,26 +56,43 @@ const Filter = () => {
       <div className="container">
         <div className="custom-breadcrum mt-4">
           <div className="custom-breadcrum-list">Home</div>
-          <div className="custom-breadcrum-list active">skincare</div>
+          <div className="custom-breadcrum-list active">{categoryName}</div>
         </div>
         <div className="row">
           <FilterSidebar />
           <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4">
             <div className="d-md-block d-none">
-              <div className="row mt-4  ">
+              <div className="row mt-4">
+                {/* <div className="col-auto text-center  "> */}
                 {subCategories?.map((item) => (
-                  <div className="col-2 ">
-                    <div className="cate-img-slider-wrapper ">
+                  <div className="col-auto text-center">
+                    <div
+                      className="cate-img-slider-wrapper"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleSubcategoryClick(item?._id)}
+                    >
                       <img
-                        style={{ width: "60px", objectFit: "cover" }}
+                        style={{
+                          width: "60px",
+                          objectFit: "cover",
+                          background: "#c8c5c5",
+                          borderRadius: "10px",
+                          padding: "1px",
+                        }}
                         src={item?.image}
                         alt
                       />
                     </div>
-                    <p className="small-slider-text">{item?.name_en}</p>
+                    <p
+                      className="mt-1"
+                      style={{ fontSize: "14px", fontWeight: "400" }}
+                    >
+                      {item?.name_en}
+                    </p>
                   </div>
                 ))}
               </div>
+              {/* </div> */}
             </div>
             <div className="d-md-none d-block mt-3">
               <div className="category-slider">
@@ -202,81 +185,10 @@ const Filter = () => {
                 </div>
               </div>
             </div>
-            <div className="d-flex gap-md-4 gap-1 mt-md-4 mt-0">
-              <div className="filter-box">Eyeshadow</div>
-              <div className="filter-box">Highlighters</div>
-              <div className="filter-box">Moisturizers</div>
-              <div className="filter-box">Masks</div>
-            </div>
-            {loading ? (
-              <p>Loading products...</p>
-            ) : productData.length === 0 ? (
-              <p>Product is not available.</p>
-            ) : (
-              <div className="row mt-md-4 mt-2">
-                {productData?.map((item) => (
-                  <div
-                    className="col-lg-4 col-md-6 col-12 mt-lg-0 mt-4"
-                    key={item._id}
-                  >
-                    <div className="comman-card">
-                      <div className="heart-icon">
-                        <i className="fa fa-heart-o" />
-                      </div>
-                      <div className="comman-card-header">
-                        <div className="img-wrapper">
-                          <img src={item?.imagesWeb?.[0]} alt={item?.name_en} />
-                        </div>
-                      </div>
-                      <div className="comman-card-body ">
-                        <div className="d-flex justify-content-between">
-                          <h3 className="title">{item?.name_en}</h3>
-                          <h3 className="price">
-                            {item?.currency} {item?.price}
-                          </h3>
-                        </div>
-                        <div className="d-flex justify-content-between">
-                          <p className="paragraph text-start">
-                            {item?.description_en?.slice(0, 20) + "..."}
-                          </p>
-                          {/* {item?.description_en?.length > 100 && (
-                            <button
-                              className="show-more-btn" style={{background:"none",fontSize:"12px",color:"blue",fontWeight:"500"}}
-                              onClick={() => toggleDescription(item._id)}
-                            >
-                              {expandedDescription[item._id]
-                                ? "Show Less"
-                                : "Show More"}
-                            </button>
-                          )} */}
-                        </div>
-                        <div className="mt-4">
-                          <div className="review-wrapper">
-                            <i className="fa fa-star text-warning" />
-                            <span className="review-points">4.9</span>
-                            <span className="review-text">250+ Review</span>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <button
-                            className="comman-btn"
-                            onClick={() =>
-                              handleAddToCart({
-                                product: item?._id,
-                                varient:
-                                  item?.varients?.[0]?.values?.[0]?.varient_id,
-                              })
-                            }
-                          >
-                            Add to Bag
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {selectedSubcategoryId && (
+              <SubsubCategories subcategoryId={selectedSubcategoryId} />
             )}
+            <AllProduct />
           </div>
         </div>
       </div>

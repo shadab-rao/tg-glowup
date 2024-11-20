@@ -73,17 +73,17 @@ const Bag = () => {
                       <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0">
                         <h6 className="Checkout-box-head">{item?.product?.name_en}</h6>
                         <p className="normal-text">{item?.product?.description_en}</p>
-                        <h5 className="checkbox-price">SAR {item?.product?.price}</h5>
+                        <h5 className="checkbox-price">SAR {item?.amount}</h5>
                         <div className="checkbox-span-text">
                           <div className="row mt-3">
                             <div className="col-md-8 col-12">
                               <select className="form-select">
-                                <option value>Size: One Size</option>
+                                <option value>Size: {item?.varient?.attribute?.name_en}</option>
                               </select>
                             </div>
                             <div className="col-md-4 col-12 mt-md-0 mt-4">
                               <select className="form-select">
-                                <option value>Qty: 2</option>
+                                <option value>Qty: {item?.varient?.quantity || 0}</option>
                               </select>
                             </div>
                           </div>

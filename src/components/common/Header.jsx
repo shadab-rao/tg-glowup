@@ -82,7 +82,7 @@ const Header = () => {
           <div className="d-flex gap-2 align-items-center justify-content-end">
             <div className="border-end pe-2">
               <div className="lang-img-wrapper">
-                <img src="assets/img/eng-flag.png" alt />
+                <img src="../../../assets/img/eng-flag.png" alt />
               </div>
             </div>
             <p className="m-0 lang-text">English</p>
@@ -391,28 +391,28 @@ const Header = () => {
                   <div className="col-lg-3 col-md-4">
                     <div className="content">
                       <h3 className="dropdown-heading">Trending Now</h3>
-                      <ul className="dropdown-list">
-                        <li>
+                      <ul className="dropdown-list text-start">
+                        <li className="text-dark">
                           <a href>advanced night repair</a>
                         </li>
-                        <li>
+                        <li className="text-dark">
                           <a href>pure color</a>
                         </li>
-                        <li>
+                        <li className="text-dark">
                           <a href>moisturizer</a>
                         </li>
-                        <li>
+                        <li className="text-dark">
                           <a href>serum</a>
                         </li>
                       </ul>
                     </div>
                     <div className="content">
                       <h3 className="dropdown-heading">Your Recent Searches</h3>
-                      <ul className="dropdown-list">
-                        <li>
+                      <ul className="dropdown-list text-start">
+                      <li className="text-dark">
                           <a href>facial serum</a>
                         </li>
-                        <li>
+                        <li className="text-dark">
                           <a href>eye cream</a>
                         </li>
                       </ul>
@@ -439,7 +439,7 @@ const Header = () => {
                           </div>
                         </div>
                         <div className="dropdown-card-body mt-3">
-                          <h5 className="dropdown-card-heading">
+                          <h5 className="dropdown-card-heading text-start">
                             Kérastase Resistance Bain Extentioniste 250ml
                           </h5>
                         </div>
@@ -455,7 +455,7 @@ const Header = () => {
                           </div>
                         </div>
                         <div className="dropdown-card-body mt-3">
-                          <h5 className="dropdown-card-heading">
+                          <h5 className="dropdown-card-heading text-start">
                             Plum Green Tea Pore Cleansing Gel Face Wash...
                           </h5>
                         </div>
@@ -471,7 +471,7 @@ const Header = () => {
                           </div>
                         </div>
                         <div className="dropdown-card-body mt-3">
-                          <h5 className="dropdown-card-heading">
+                          <h5 className="dropdown-card-heading text-start">
                             Shea Moisture Coconut and Hibiscus Curl &amp; Shine
                             Gel Style Milk 326ml
                           </h5>
@@ -488,7 +488,7 @@ const Header = () => {
                           </div>
                         </div>
                         <div className="dropdown-card-body mt-3">
-                          <h5 className="dropdown-card-heading">
+                          <h5 className="dropdown-card-heading text-start">
                             Shea Moisture Raw Shea Butter Moisture Detangler
                             237ml 250ml
                           </h5>
@@ -588,7 +588,7 @@ const Header = () => {
         </div>
       </div>
       <div
-        className={`bottom-header middle-header  category-list ${
+        className={`bottom-header middle-header  d-md-block d-none  category-list ${
           isCategoryOpen ? "open" : ""
         }`}
       >
@@ -601,8 +601,11 @@ const Header = () => {
                     <ul className="navbar-nav">
                       <li className="nav-item hover-dropdown">
                         <Link
-                          to={`/sub-category/${cat?._id}`}
-                          className="nav-link"
+                            to={{
+                              pathname: `/sub-category/${cat?._id}`
+                            }}
+                          
+                          className="nav-link" 
                         >
                           {cat?.name_en}
                         </Link>
