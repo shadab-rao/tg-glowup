@@ -5,9 +5,11 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useNavigate } from "react-router-dom";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     handleCategory();
@@ -60,7 +62,7 @@ const Category = () => {
       <div className="swiper-container-category overflow-hidden">
         <div className="swiper-wrapper justify-content-center">
           {categories?.map((cat, index) => (
-            <div className="swiper-slide" key={index}>
+            <div className="swiper-slide" style={{cursor:"pointer"}} key={index} onClick={()=>navigate(`/sub-category/${cat?._id}`)}>
               <div className="cate-img-slider-wrapper">
                 <img src={cat?.image} alt={cat?.name_en} />
               </div>

@@ -197,6 +197,51 @@ export async function addToCart(formData) {
     return { error };
   }
 }
+export async function addWishlist(id) {
+  try {
+    const response = await glowHttpServie.post(
+      `${process.env.REACT_APP_APIENDPOINT}//platform/addWishlist/${id}`
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 
 export async function getUser() {
   try {
@@ -342,6 +387,40 @@ export async function removeCartItem(id) {
         timerProgressBar: true,
         timer: 3000,
       });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function wishList(id) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/platform/getWishList`,
+      id
+    );
+    if (!data.error) {
     } else {
       Swal.fire({
         toast: true,

@@ -1,22 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { productList } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import {
+  addWishlist,
+  productList,
+} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useDispatch } from "react-redux";
+import { setProducts } from "../../Redux/cartSlice";
 
 const Products = () => {
   const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     handleProduct();
-  }, []);
+  }, [dispatch]);
 
   const handleProduct = async () => {
     try {
       const response = await productList();
+      const products = response?.data?.results?.products || [];
       setProductData(response?.data?.results?.products || []);
+      dispatch(setProducts(products));
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     }
+  };
+
+  const handleWishlist = async (id) => {
+    const response = await addWishlist(id);
+    handleProduct()
   };
   return (
     <>
@@ -27,30 +40,31 @@ const Products = () => {
         </div>
         <div className="row mt-4">
           {productData?.map((item) => (
-            <div
-              className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4"
-              onClick={() => navigate(`/product-details/${item?._id}`)}
-            >
+            <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
               <div className="comman-card">
-                <div className="heart-icon">
-                  <i className="fa fa-heart-o" />
+                <div
+                  className="heart-icon"
+                  onClick={() => handleWishlist(item?._id)}
+                >
+                 {item?.isFavourite === true ?  <i className="fa fa-heart" /> :  <i className="fa fa-heart-o" />}
                 </div>
                 {/* <div className="new-label">
                   <p className>New</p>
                 </div> */}
                 <div className="comman-card-header">
-                <div className="img-wrapper">
-                        <img src={item?.imagesWeb?.[0]} alt />
-                      </div>
+                  <div className="img-wrapper">
+                    <img src={item?.imagesWeb?.[0]} alt />
+                  </div>
                 </div>
                 <div className="comman-card-body">
-                  <div className="d-flex justify-content-between">
-                  <h3 className="title">{item?.name_en}</h3>
-                  <h3 className="price">SAR {item?.price}</h3>
+                  <div
+                    className="d-flex justify-content-between"
+                    onClick={() => navigate(`/product-details/${item?._id}`)}
+                  >
+                    <h3 className="title">{item?.name_en}</h3>
+                    <h3 className="price">SAR {item?.price}</h3>
                   </div>
-                  <p className="paragraph text-start">
-                        {item?.description_en}
-                      </p>
+                  <p className="paragraph text-start">{item?.description_en}</p>
                   <div className="mt-4">
                     <div className="review-wrapper">
                       <i className="fa fa-star text-warning" />

@@ -4,9 +4,11 @@ import {
   getCategory,
   getSubcategory,
   getUser,
+  wishList,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
 import { useSelector } from "react-redux";
+import { setWishlist } from "../../Redux/cartSlice";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -16,6 +18,7 @@ const Header = () => {
   const userToken = localStorage.getItem("token-user");
   const [categories, setCategories] = useState([]);
   const location = useLocation();
+  const wishlistCount = useSelector((state) => state.cart.wishlistCount);
   const toggleSearchDropdown = () => {
     setIsSearchOpen((prev) => !prev);
   };
@@ -67,14 +70,13 @@ const Header = () => {
     }
   };
 
-  
-
   const cartCount = useSelector((state) => state.cart.cartCount);
 
   useEffect(() => {
     console.log("Header detected cart count change:", cartCount);
   }, [cartCount]);
-  
+
+
 
   return (
     <header id="header">
@@ -152,8 +154,20 @@ const Header = () => {
                   </div>
                 </div>
                 <div className="d-flex gap-4">
-                  <Link to={"/my-wishlist"} className>
+                  <Link to={"/my-wishlist"} className="position-relative">
                     <img src="../../../assets/img/svg/heart.svg" alt />
+                    {wishlistCount > 0 && (
+                      <span
+                        className="badge bg-danger text-white position-absolute mt-3 top-0 start-100 translate-middle"
+                        style={{
+                          fontSize: "0.8rem",
+                          color: "red",
+                          borderRadius: "50%",
+                        }}
+                      >
+                        {wishlistCount}
+                      </span>
+                    )}
                   </Link>
                   <div className="dropdown">
                     <button
@@ -314,7 +328,11 @@ const Header = () => {
                     {cartCount > 0 && (
                       <span
                         className="badge bg-danger text-white position-absolute mt-3 top-0 start-100 translate-middle"
-                        style={{ fontSize: "0.8rem",color:"red", borderRadius: "50%" }}
+                        style={{
+                          fontSize: "0.8rem",
+                          color: "red",
+                          borderRadius: "50%",
+                        }}
                       >
                         {cartCount}
                       </span>
