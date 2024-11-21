@@ -11,12 +11,14 @@ const Otp = () => {
   const navigate = useNavigate();
   const [timer, setTimer] = useState(120);
 
+  const localOtp = localStorage.getItem("user-otp")
+
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
     }, 1000);
 
-    // Clean up the interval
+
     return () => clearInterval(countdown);
   }, []);
 
@@ -32,8 +34,6 @@ const Otp = () => {
     const formData = { ...state, otp };
     try {
       const response = await verifyOTP(formData);
-
-      console.log(response);
       if (response?.data?.error) {
         console.log("error");
       } else if (response?.data) {
@@ -65,8 +65,9 @@ const Otp = () => {
         <div className="login-box-body">
           <h5 className="heading">OTP Verification</h5>
           <p className="text-light mb-0 comman-small-text">
-            Your One Time Password (OTP) has been sent via SMS to your
-            registered <br /> mobile number.
+            Your One Time Password (OTP) is <span className="text-primary">{localOtp}</span>
+             {/* been sent via SMS to your
+            registered <br /> mobile number. */}
           </p>
           <form
             className="theme-form theme-form-2 mega-form"

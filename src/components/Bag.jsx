@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
 import { Link, useNavigate } from "react-router-dom";
-import { getCart, removeCartItem } from "../Api Services/glowHttpServices/glowLoginHttpServices";
+import {
+  getCart,
+  payment,
+  placeOrder,
+  removeCartItem,
+} from "../Api Services/glowHttpServices/glowLoginHttpServices";
 import EmptyBag from "./cart/EmptyBag";
 import { useDispatch } from "react-redux";
 import { incrementCartCount, setCartCount } from "../Redux/cartSlice";
@@ -12,28 +17,60 @@ const Bag = () => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const dispatch = useDispatch();
-
   const userToken = localStorage.getItem("token-user");
+  const addressId = localStorage.getItem("address_id")
 
   useEffect(() => {
-    if(userToken){
-      handleCart()
+    if (userToken) {
+      handleCart();
     }
   }, []);
 
   const handleCart = async () => {
     const response = await getCart();
+    const cartItems = response?.data?.results?.cart?.inventory || [];
+    const updatedCartItems = cartItems.map((item) => ({
+      ...item,
+      quantity: item.quantity || 1,
+    }));
+    setData(updatedCartItems);
     const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
-    setData(response?.data?.results?.cart?.inventory || []);
-    setCount(response?.data?.results?.cart?.totalProducts);
-    console.log("Cart count fetched from API:", totalProducts);
+    setCount(totalProducts);
     dispatch(setCartCount(totalProducts));
-    console.log("Action dispatched with:", totalProducts);
+  };
+
+  const handleQuantityChange = (id, newQuantity) => {
+    const updatedData = data.map((item) =>
+      item.product._id === id ? { ...item, quantity: newQuantity } : item
+    );
+    setData(updatedData);
+  };
+
+  const getTotalPrice = () => {
+    return data.reduce((total, item) => {
+      return total + item.varient.price * item.quantity;
+    }, 0);
   };
 
   const handleRemove = async (id) => {
     await removeCartItem(id);
     handleCart();
+  };
+
+  const handlePlaceOrder = async (formData) => {
+    const response = await placeOrder(formData);
+    // navigate("/checkout",{state:response?.data?.results?.order})
+    navigate("/my-order")
+  };
+
+  const handlePayment = async (amount) => {
+    const response = await payment(amount);
+    const address = addressId
+    const formData = {
+      ...response?.data?.results?.obj,
+      address, 
+    };
+    handlePlaceOrder(formData);
   };
 
   if (data.length === 0) {
@@ -56,7 +93,9 @@ const Bag = () => {
       <section className="bag-section">
         <div className="container">
           <div className="d-flex gap-4 mt-4 mb-3">
-            <div className="fs-6 fw-semibold text-capitalize text-start">Your Bag</div>
+            <div className="fs-6 fw-semibold text-capitalize text-start">
+              Your Bag
+            </div>
             <div className="fs-6 fw-light">{count || "0"} Items</div>
           </div>
           <div className="row mt-md-0 mt-0 mb-4">
@@ -71,39 +110,61 @@ const Bag = () => {
                         </div>
                       </div>
                       <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0">
-                        <h6 className="Checkout-box-head">{item?.product?.name_en}</h6>
-                        <p className="normal-text">{item?.product?.description_en}</p>
-                        <h5 className="checkbox-price">SAR {item?.amount}</h5>
+                        <h6 className="Checkout-box-head">
+                          {item?.product?.name_en}
+                        </h6>
+                        <p className="normal-text">
+                          {item?.product?.description_en}
+                        </p>
+                        <h5 className="checkbox-price">
+                          {item?.product?.currency} {item?.varient?.price}
+                        </h5>
                         <div className="checkbox-span-text">
                           <div className="row mt-3">
                             <div className="col-md-8 col-12">
                               <select className="form-select">
-                                <option value>Size: {item?.varient?.attribute?.name_en}</option>
+                                <option value>
+                                  {item?.varient?.attribute?.name_en}:{" "}
+                                  {item?.varient?.values?.name_en}
+                                </option>
                               </select>
                             </div>
                             <div className="col-md-4 col-12 mt-md-0 mt-4">
-                              <select className="form-select">
-                                <option value>Qty: {item?.varient?.quantity || 0}</option>
+                              <select
+                                className="form-select"
+                                value={item.quantity}
+                                onChange={(e) =>
+                                  handleQuantityChange(
+                                    item.product._id,
+                                    parseInt(e.target.value)
+                                  )
+                                }
+                              >
+                                {[...Array(10).keys()].map((num) => (
+                                  <option key={num + 1} value={num + 1}>
+                                    {num + 1}
+                                  </option>
+                                ))}
                               </select>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="border-top mt-4 pt-2 ps-2 mb-2 d-flex gap-4">
-                      <div className="d-flex gap-2 align-items-center">
-                        <i className="fa fa-trash trash-icon" />
-                        <p
-                          className="text"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleRemove(item?.product?._id)}
-                        >
-                          Remove
-                        </p>
-                      </div>
-                      <div className="d-flex gap-2 align-items-center">
-                        <i className="fa fa-heart-o trash-icon" />
-                        <p className="text">Add To Wishlist</p>
+                      <div className="border-top mt-4 pt-2 ps-2 mb-2 d-flex gap-4">
+                        <div className="d-flex gap-2 align-items-center">
+                          <i className="fa fa-trash trash-icon" />
+                          <p
+                            className="text"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemove(item?.product?._id)}
+                          >
+                            Remove
+                          </p>
+                        </div>
+                        <div className="d-flex gap-2 align-items-center">
+                          <i className="fa fa-heart-o trash-icon" />
+                          <p className="text">Add To Wishlist</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -139,7 +200,9 @@ const Bag = () => {
                       <p className="light-text text-start">Subtotal</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">SAR 260</p>
+                      <p className="bold-text">
+                        {data[0]?.product?.currency} {getTotalPrice()}
+                      </p>
                     </div>
                   </div>
                   <div className="row">
@@ -147,7 +210,7 @@ const Bag = () => {
                       <p className="light-text text-start">Tax</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">SAR 60</p>
+                      <p className="bold-text">SAR 0</p>
                     </div>
                   </div>
                   <div className="row">
@@ -155,7 +218,9 @@ const Bag = () => {
                       <p className="light-text text-start">Grand Total</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">SAR 250</p>
+                      <p className="bold-text">
+                        {data[0]?.product?.currency} {getTotalPrice() + 0}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -163,7 +228,7 @@ const Bag = () => {
                   <div className="mb-4">
                     <button
                       className="comman-btn"
-                      onClick={() => navigate("/checkout")}
+                      onClick={() => handlePayment({ amount: getTotalPrice() })}
                     >
                       Checkout Now
                     </button>

@@ -32,6 +32,7 @@ const Login = () => {
 
     const response = await glowLogin(requestData);
     if (response?.data) {
+      localStorage.setItem("user-otp",response?.data?.results?.otp)
       navigate("/login/otp", { state: requestData });
     }
     setLoading(false);

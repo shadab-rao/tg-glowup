@@ -1,14 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  addWishlist,
-  productList,
-  wishList,
-} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
-import { useDispatch } from "react-redux";
-import { setProducts, setWishlist } from "../../Redux/cartSlice";
-import { Paginate } from "../Pagination/Paginate";
-import AllProduct from "../common/AllProduct";
+import React from "react";
+import BestSellerProduct from "./BestSellerProduct";
 
 const Products = () => {
 
@@ -19,7 +10,7 @@ const Products = () => {
           <h5 className="bold-heading">Beauty Must Haves</h5>
           <p className="light-heading">Bestsellers Products</p>
         </div>
-       <AllProduct/>
+       <BestSellerProduct/>
       </div>
     </>
   );

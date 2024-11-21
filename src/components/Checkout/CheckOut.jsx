@@ -5,6 +5,7 @@ import Footer from "../common/Footer";
 const CheckOut = () => {
   return (
     <>
+    <Header/>
       <section className="Checkout">
         <div className="bg-white">
           <div className="container pt-4">
@@ -19,7 +20,7 @@ const CheckOut = () => {
               </div>
             </div>
             <div className="row mt-5">
-              <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4">
+              <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">
                   1. Delivery Information
                 </h5>
@@ -47,7 +48,7 @@ const CheckOut = () => {
                       placeholder="Phone Number"
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group mt-3">
                     <div className="d-flex gap-1 align-items-end">
                       <img
                         src="assets/img/icon/direction.png"
@@ -107,7 +108,7 @@ const CheckOut = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4">
+              <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">
                   2. Payment Information
                 </h5>
@@ -219,7 +220,7 @@ const CheckOut = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4">
+              <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">3. Order Review</h5>
                 <p className="Checkout-paragraph">Review your order here</p>
                 <div className="Checkout-box">
@@ -229,7 +230,7 @@ const CheckOut = () => {
                         <img src="assets/img/products/face-powder.png" alt />
                       </div>
                     </div>
-                    <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0">
+                    <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
                       <h6 className="Checkout-box-head">Sunday Rain</h6>
                       <p className="normal-text">Rose Body Scrub 25 ML</p>
                       <h5 className="checkbox-price">SAR 130</h5>
@@ -250,7 +251,7 @@ const CheckOut = () => {
                         <img src="assets/img/products/lipstick.png" alt />
                       </div>
                     </div>
-                    <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0">
+                    <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
                       <h6 className="Checkout-box-head">Sunday Rain</h6>
                       <p className="normal-text">Rose Body Scrub 25 ML</p>
                       <h5 className="checkbox-price">SAR 130</h5>

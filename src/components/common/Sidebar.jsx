@@ -1,30 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { capitalize } from "../utils/CapitalLetter";
 import { Link } from "react-router-dom";
+import { getUser } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 
 const Sidebar = () => {
   const userData = JSON.parse(localStorage.getItem("glow-user"));
-  console.log(userData);
+  const userToken = localStorage.getItem("token-user");
+
+  const [profileData, setProfileData] = useState("");
+
+  const response = async () => {
+    if (userToken) {
+      const getData = await getUser(userToken);
+      if (getData?.data) {
+        const userData = getData?.data?.results?.user;
+        setProfileData(userData);
+      }
+    }
+  };
+
+  useEffect(() => {
+    response();
+  }, []);
 
   return (
     <>
       <div className="col-lg-3 col-md-4 col-12">
         <div className="my-account">
-          <div className="user-box">
-            <div className="d-flex gap-3">
-              <div className="user-img">
-                <img
-                  src={userData?.profileImage || "assets/img/user.jpg"}
-                  alt="image"
-                />
-              </div>
-              <div>
-                <h5 className="text text-white text-start">
-                  {capitalize(userData?.fullName)}
-                </h5>
-                <p className="comman-small-text">
-                  {capitalize(userData?.email)}
-                </p>
+          {!userToken ? (
+            // If no token, show login button
+            <div className="text-center">
+              <Link to="/login" className="btn btn-dark">
+                Login
+              </Link>
+            </div>
+          ) : profileData?.fullName ? (
+            // If user token exists and completeProfile is true, show Complete Your Profile button
+            <div className="user-box">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <h5 className="text text-white">
+                    {capitalize(profileData?.fullName)}
+                  </h5>
+                  <p className="comman-small-text">
+                    {capitalize(profileData?.email)}
+                  </p>
+                </div>
                 <div className="mt-2">
                   <Link to={"/my-profile"} className="edit-btn">
                     Edit
@@ -32,9 +53,17 @@ const Sidebar = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="mt-4">
-            <h5 className="text fw-semibold mb-4">My Account</h5>
+          ) : (
+            // If user token exists and completeProfile is false, show profile data
+            <div className="text-center">
+              <Link to="/my-profile" className="btn btn-dark">
+                Complete Profile
+              </Link>
+            </div>
+          )}
+
+          <div className>
+            <h5 className="text fw-semibold mb-1 mt-3 text-start">My Account</h5>
             <div className="list-box-wrapper">
               <Link to={"/my-order"} className="list-box">
                 <div className="icon active">
@@ -54,7 +83,7 @@ const Sidebar = () => {
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
-              <Link to={"/my-wishlist"} className="list-box">
+              <Link to={"/my-wishlist"} className="list-box mb-2">
                 <div className="icon">
                   <img src="../../../assets/img/svg/heart-light.svg" alt />
                 </div>
@@ -65,8 +94,8 @@ const Sidebar = () => {
               </Link>
             </div>
           </div>
-          <div className="mt-4 mb-4">
-            <h5 className="text fw-semibold mb-4">Others</h5>
+          <div className>
+            <h5 className="text fw-semibold mb-1 mt-3 text-start">Others</h5>
             <div className="list-box-wrapper">
               <Link to={"/referral-program"} className="list-box">
                 <div className="icon">

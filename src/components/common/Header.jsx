@@ -4,6 +4,7 @@ import {
   getCategory,
   getSubcategory,
   getUser,
+  logout,
   wishList,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
@@ -65,15 +66,13 @@ const Header = () => {
     console.log("Header detected cart count change:", cartCount);
   }, [cartCount]);
 
-  useEffect(() => {
-    handleWishList();
-  }, []);
-
-  const handleWishList = async () => {
-    const response = await wishList();
-    const wishlistData = response?.data?.results?.wishlist?.product || [];
-    dispatch(setWishlist(wishlistData));
-  };
+  const handleLogout = async ()=>{
+    if(userToken){
+      const response = await logout()
+    localStorage.removeItem("token-user")
+    window.location.reload()
+    }
+  }
 
   return (
     <header id="header">
@@ -100,10 +99,12 @@ const Header = () => {
                       <Link
                         to="/"
                         className={`nav-link ${
-                          !isCategoryOpen && location.pathname === "/" ? "active" : ""
+                          !isCategoryOpen && location.pathname === "/"
+                            ? "active"
+                            : ""
                         }`}
                         onClick={() => {
-                          setIsCategoryOpen(false); 
+                          setIsCategoryOpen(false);
                         }}
                       >
                         Home
@@ -188,7 +189,7 @@ const Header = () => {
                         {!userToken ? (
                           // If no token, show login button
                           <div className="text-center">
-                            <Link to="/login" className="btn btn-primary">
+                            <Link to="/login" className="btn btn-dark">
                               Login
                             </Link>
                           </div>
@@ -214,14 +215,14 @@ const Header = () => {
                         ) : (
                           // If user token exists and completeProfile is false, show profile data
                           <div className="text-center">
-                            <Link to="/my-profile" className="btn btn-primary">
+                            <Link to="/my-profile" className="btn btn-dark">
                               Complete Profile
                             </Link>
                           </div>
                         )}
 
                         <div className>
-                          <h5 className="text fw-semibold mb-4">My Account</h5>
+                          <h5 className="text fw-semibold mb-1">My Account</h5>
                           <div className="list-box-wrapper">
                             <Link to={"/my-order"} className="list-box">
                               <div className="icon active">
@@ -247,7 +248,7 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <Link to={"/my-wishlist"} className="list-box">
+                            <Link to={"/my-wishlist"} className="list-box mb-2">
                               <div className="icon">
                                 <img
                                   src="../../../assets/img/svg/heart-light.svg"
@@ -262,7 +263,7 @@ const Header = () => {
                           </div>
                         </div>
                         <div className>
-                          <h5 className="text fw-semibold mb-4">Others</h5>
+                          <h5 className="text fw-semibold mb-1">Others</h5>
                           <div className="list-box-wrapper">
                             <Link to={"/referral-program"} className="list-box">
                               <div className="icon">
@@ -336,6 +337,14 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
+                            <div  className="list-box align-items-center " style={{cursor:"pointer"}} onClick={handleLogout}>
+                              {/* <div className="icon"> */}
+                                <i className="fa fa-sign-out ms-1" />
+                              {/* </div> */}
+                              <div className="text-wrapper ms-1">
+                                <p className="text-dark">Logout</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -409,7 +418,7 @@ const Header = () => {
                     <div className="content">
                       <h3 className="dropdown-heading">Your Recent Searches</h3>
                       <ul className="dropdown-list text-start">
-                      <li className="text-dark">
+                        <li className="text-dark">
                           <a href>facial serum</a>
                         </li>
                         <li className="text-dark">
@@ -595,17 +604,16 @@ const Header = () => {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <nav className="navbar navbar-expand-lg">
-                <div className="collapse navbar-collapse" id="navbarNav">
+              <nav className="navbar">
+                <div className=" d-flex" id="navbarNav">
                   {categories?.map((cat) => (
                     <ul className="navbar-nav">
                       <li className="nav-item hover-dropdown">
                         <Link
-                            to={{
-                              pathname: `/sub-category/${cat?._id}`
-                            }}
-                          
-                          className="nav-link" 
+                          to={{
+                            pathname: `/sub-category/${cat?._id}`,
+                          }}
+                          className="nav-link"
                         >
                           {cat?.name_en}
                         </Link>

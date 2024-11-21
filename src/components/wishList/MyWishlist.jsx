@@ -22,10 +22,12 @@ const MyWishlist = () => {
   }, []);
 
   const handleWishList = async () => {
-    const response = await wishList();
-    const wishlistData = response?.data?.results?.wishlist?.products || [];
-    setWishData(response?.data?.results?.wishlist?.products);
-    dispatch(setWishlist(wishlistData));
+    if (userToken) {
+      const response = await wishList();
+      const wishlistData = response?.data?.results?.wishlist?.products || [];
+      setWishData(response?.data?.results?.wishlist?.products);
+      dispatch(setWishlist(wishlistData));
+    }
   };
 
   const handleAddToCart = async ({ product, varient }) => {
@@ -58,7 +60,6 @@ const MyWishlist = () => {
     }
   };
 
-
   return (
     <>
       <Header />
@@ -66,12 +67,12 @@ const MyWishlist = () => {
         <div className="container">
           <div className="row mt-5 mb-5">
             {wishData?.length > 0 ? (
-                <div className="heading-wrapper">
-                  <h5 className="text mb-4 text-light text-start">
-                    Items are saved for 90 days
-                  </h5>
-                </div>
-              ) : null}
+              <div className="heading-wrapper">
+                <h5 className="text mb-4 text-light text-start">
+                  Items are saved for 90 days
+                </h5>
+              </div>
+            ) : null}
             {wishData?.length > 0 ? (
               wishData?.map((item) => (
                 <div
@@ -79,12 +80,15 @@ const MyWishlist = () => {
                   key={item?.product?._id}
                 >
                   <div className="comman-card">
-                    <div className="heart-icon"  onClick={() =>
-                    handleAddWishlist({
-                      productId: item?.product?._id,
-                      variantId: item?.product?.variantId, 
-                    })
-                  }>
+                    <div
+                      className="heart-icon"
+                      onClick={() =>
+                        handleAddWishlist({
+                          productId: item?.product?._id,
+                          variantId: item?.product?.variantId,
+                        })
+                      }
+                    >
                       <img src="../../../assets/img/svg/close-icon.svg" alt />
                     </div>
                     <div className="comman-card-header">
@@ -100,7 +104,7 @@ const MyWishlist = () => {
                         </h3>
                       </div>
                       <p className="paragraph text-start">
-                      {item?.product?.description_en?.slice(0, 30) + "..."}
+                        {item?.product?.description_en?.slice(0, 30) + "..."}
                       </p>
                       <div className="mt-4">
                         <div className="review-wrapper">
@@ -121,7 +125,8 @@ const MyWishlist = () => {
                             handleAddToCart({
                               product: item?.product?._id,
                               varient:
-                                item?.product?.varients?.[0]?.values?.[0]?.varient_id,
+                                item?.product?.varients?.[0]?.values?.[0]
+                                  ?.varient_id,
                             })
                           }
                         >
@@ -138,7 +143,7 @@ const MyWishlist = () => {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </>
   );
 };
