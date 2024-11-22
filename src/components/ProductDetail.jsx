@@ -1,47 +1,80 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./common/Header";
-import { addToCart, getCart, productDetail } from "../Api Services/glowHttpServices/glowLoginHttpServices";
+import {
+  addToCart,
+  getCart,
+  productDetail,
+} from "../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCartCount } from "../Redux/cartSlice";
+import AllProduct from "../components/common/AllProduct";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
 
 const ProductDetail = () => {
   const [viewData, setViewData] = useState();
   const { id } = useParams();
   const navigate = useNavigate();
   const userToken = localStorage.getItem("token-user");
+  const [selectedVariantId, setSelectedVariantId] = useState(null);
 
   const dispatch = useDispatch();
-
+  const thumbnailsRef = useRef(null);
   const products = useSelector((state) => state.cart.products);
 
   useEffect(() => {
     handleView();
-  }, []);
+  }, [id]);
 
   const handleView = async () => {
     const response = await productDetail(id);
-    setViewData(response?.data?.results?.product);
+    const product = response?.data?.results?.product;
+    setViewData(product);
+    if (product?.varients?.length) {
+      setSelectedVariantId(product.varients[0]._id);
+    }
   };
 
-  const handleAddToCart = async ({ product, varient }) => {
-    if(userToken){
-     const payload = {
-       product,
-       varient,
-     };
-     const response = await addToCart(payload);
-     handleCart()
-    }else{
-     navigate("/login")
-    }
-   };
+  const handleVariantClick = (variantId) => {
+    setSelectedVariantId(variantId); 
+  };
 
-   const handleCart = async () => {
+
+
+  const handleAddToCart = async () => {
+    if (userToken && selectedVariantId) {
+      const payload = {
+        product: id, 
+        varient: selectedVariantId, 
+      };
+      const response = await addToCart(payload);
+      handleCart();
+    } else {
+      navigate("/login"); 
+    }
+  };
+  const handleCart = async () => {
     const response = await getCart();
     const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
     dispatch(setCartCount(totalProducts));
   };
+
+  const scrollUp = () => {
+    if (thumbnailsRef.current) {
+      thumbnailsRef.current.scrollBy({ top: -100, behavior: "smooth" });
+    }
+  };
+
+  const scrollDown = () => {
+    if (thumbnailsRef.current) {
+      thumbnailsRef.current.scrollBy({ top: 100, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <Header />
@@ -57,100 +90,115 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="row mt-4">
-                <div className="col-md-auto col-auto">
+                <div className="col-lg-auto col-auto d-lg-block d-md-none d-none ">
                   <div className="position-relative">
-                    <div
-                      className="slider-arrow slider-up"
-                      onclick="scrollUp()"
-                    >
+                    <div className="slider-arrow slider-up" onClick={scrollUp}>
                       ▲
                     </div>
                     <div
                       id="thumbnails"
                       className="product-detail-height-overflow"
+                      ref={thumbnailsRef}
                     >
-                      {viewData?.imagesWeb?.map((item) => (
-                        <div className="thumbnail active product-detail-img-wrapper">
-                          <img src={item} alt />
+                      {viewData?.imagesWeb?.map((image, index) => (
+                        <div
+                          key={index}
+                          className="thumbnail active product-detail-img-wrapper mt-5"
+                        >
+                          <img src={image} alt={`Thumbnail ${index + 1}`} />
                         </div>
                       ))}
                     </div>
                     <div
                       className="slider-arrow slider-down"
-                      onclick="scrollDown()"
+                      onClick={scrollDown}
                     >
                       ▼
                     </div>
                   </div>
                 </div>
-                <div className="col-lg-7 col-md-10 col-8">
+                <div className="col-lg-5 col-md-7 col-12">
                   <div className="product-detail-main-img">
-                    <img src={viewData?.imagesWeb?.[0]} alt />
+                    <img
+                      src={
+                        viewData?.varients?.find(
+                          (variant) => variant._id === selectedVariantId
+                        )?.imagesWeb?.[0] || viewData?.imagesWeb?.[0]
+                      }
+                      alt="Selected Variant"
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="d-lg-none d-md-block mt-4 w-100">
+                    <Swiper
+                      spaceBetween={10}
+                      slidesPerView={Math.min(products.length, 4)}
+                      navigation
+                      centeredSlides={viewData?.imagesWeb.length < 4}
+                      pagination={{ clickable: true }}
+                    >
+                      {viewData?.imagesWeb?.map((image, index) => (
+                        <SwiperSlide key={index}>
+                          <div className="product-detail-img">
+                            <img
+                              src={image}
+                              alt={`Slide ${index + 1}`}
+                              style={{ width: "100%" }}
+                            />
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
                   </div>
                 </div>
-                <div className="col-lg-4 col-md-8 col-12 mt-lg-0 mt-md-4 mt-4">
-                  <h2 className="product-main-heading text-start">
-                    {viewData?.name_en}
-                  </h2>
-                  <h6 className="small-heading text-start">
-                    {viewData?.description_en}
-                  </h6>
-                  <div className="list-span d-flex gap-3 text-start">
+                <div className="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-4 mt-4 text-start">
+                  <h2 className="product-main-heading">{viewData?.name_en}</h2>
+                  <h6 className="small-heading">{viewData?.description_en}</h6>
+                  <div className="list-span d-flex gap-3">
                     <span>all types of skin</span>
                     <span>am or pm</span>
                     <span>brightening</span>
                   </div>
-                  <p className="light-text text-start">VC_1521178</p>
-                  <h5 className="price-text text-start">
-                    {viewData?.currency} {viewData?.price}
+                  <p className="light-text">VC_1521178</p>
+                  <h5 className="price-text">
+                    SAR{" "}
+                    {viewData?.varients?.find(
+                      (variant) => variant._id === selectedVariantId
+                    )?.price || viewData?.price}
                   </h5>
                   <div>
                     <div className="row">
-                      <div className="col-auto">
-                        <div className="box">
-                          <div className="text-start">
-                            <p className>15 ML</p>
-                            <p className>SAR 130</p>
+                      <div
+                        className="col-auto d-flex gap-2"
+                        style={{ cursor: "pointer" }}
+                      >
+                        {viewData?.varients?.map((variant, index) => (
+                          <div
+                            key={variant._id}
+                            className={`box d-flex ${
+                              selectedVariantId === variant._id ? "active" : ""
+                            }`}
+                            onClick={() => handleVariantClick(variant._id)}
+                          >
+                            <div>
+                              <p>{variant.value?.[0]?.name_en}</p>
+                              <p>SAR {variant.price}</p>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        <div className="box">
-                          <div className="text-start">
-                            <p className>15 ML</p>
-                            <p className>SAR 130</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        <div className="box">
-                          <div className="text-start">
-                            <p className>15 ML</p>
-                            <p className>SAR 130</p>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                   <div className="d-flex gap-3 mt-4">
-                    <button className="comman-btn ">Add to Bag</button>
+                  <button
+                      className="comman-btn"
+                      onClick={handleAddToCart} // Call the function without passing arguments
+                    >
+                      Add to Bag
+                    </button>
                     <button className="comman-border-btn">
                       Add To wishlist
                     </button>
-                  </div>
-                  <div className="mt-4 position-relative text-start">
-                    <p className="small-heading mb-0 text-start">
-                      Check Delivery
-                    </p>
-                    <input
-                      type="text"
-                      className="check-delivery-input"
-                      placeholder={201012}
-                      readOnly
-                    />
-                    <p className="small-heading mb-0 check-delivery-text">
-                      Change
-                    </p>
                   </div>
                   <div className="mt-4">
                     <div className="d-flex gap-2 mb-3">
@@ -177,291 +225,77 @@ const ProductDetail = () => {
             </div>
           </div>
         </section>
-        {/* products-details End */}
-        {/* description start */}
         <section className="description">
           <div className="container mt-lg-5 mt-md-0 mt-4">
-            <ul
-              className="nav nav-tabs custom-tabs w-fit"
-              id="myTab"
-              role="tablist"
-            >
-              <li className="nav-item" role="presentation">
-                <a
-                  className="nav-link active"
-                  id="makeup-tab"
-                  data-toggle="tab"
-                  href="#makeup"
-                  role="tab"
-                  aria-controls="makeup"
-                  aria-selected="true"
-                >
-                  Makeup
-                </a>
-              </li>
-              <li className="nav-item" role="presentation">
-                <a
-                  className="nav-link"
-                  id="skin-tab"
-                  data-toggle="tab"
-                  href="#skin"
-                  role="tab"
-                  aria-controls="skin"
-                  aria-selected="false"
-                >
-                  Skin
-                </a>
-              </li>
-              <li className="nav-item" role="presentation">
-                <a
-                  className="nav-link"
-                  id="hair-tab"
-                  data-toggle="tab"
-                  href="#hair"
-                  role="tab"
-                  aria-controls="hair"
-                  aria-selected="false"
-                >
-                  Hair
-                </a>
-              </li>
-            </ul>
             <div className="row">
-              <div className="col-lg-10 col-md-11 col-12">
-                <div className="tab-content mt-3" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="makeup"
-                    role="tabpanel"
-                    aria-labelledby="makeup-tab"
-                  >
-                    <div className="mb-4">
-                      <p className="text-start">
-                        Beautya's 1st revitalizing serum that concentrates the
-                        double power of the Rose de Granville from the stem to
-                        the flower to revitalize the skin twice as fast (1) and
-                        visibly rejuvenate. Created after 20 years of research,
-                        the 10,000 (2) micro-pearls rich in revitalizing rose
-                        micro-nutrients are now completed by the power of the
-                        Rose sap. The next-generation, 92% natural-origin (3)
-                        formula of La Micro-Huile de Rose Advanced Serum is
-                        twice as concentrated,(4) combining the nourishing
-                        richness of an oil with the deep penetration of a serum.
-                      </p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-start">
-                        From the first application of the serum, the skin
-                        appears plumped. In 3 weeks, 2x improvement in the look
-                        or feel of skin elasticity.(5) With regular use, skin
-                        looks and feels transformed. As if replenished from
-                        within, the skin seems denser and firmer, and wrinkles
-                        appear noticeably reduced. As if lifted, facial contours
-                        appear enhanced.
-                      </p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-start">
-                        Reveal your extraordinary beauty with Beautya Prestige
-                      </p>
-                    </div>
-                    <div className="mb-4">
-                      <p className="text-start">
-                        (1) Instrumental test, 32 panelists, after 30 min.{" "}
-                        <br />
-                        (2) In a 30 ml bottle. <br />
-                        (3) Amount calculated based on the ISO 16128-1 and ISO
-                        16128-2 standard. Water percentage included. The
-                        remaining 8% of ingredients contribute to the formula’s
-                        performance, sensory appeal and stability. <br />
-                        (4) In Rose de Granville micro-nutrients compared to the
-                        previous formula. <br />
-                        (5) Clinical assessment by a dermatologist on the
-                        evolution of the product’s performance on the skin
-                        elasticity, comparison between the effect after 7 days
-                        and 28 days on 34 women.
-                      </p>
-                    </div>
+              <div className="col-lg-10 col-md-11 col-12 text-start">
+                <h4 className="text-start mt-4">Description</h4>
+                <div>
+                  <div className="mb-4">
+                    <p className>
+                      Beautya's 1st revitalizing serum that concentrates the
+                      double power of the Rose de Granville from the stem to the
+                      flower to revitalize the skin twice as fast (1) and
+                      visibly rejuvenate. Created after 20 years of research,
+                      the 10,000 (2) micro-pearls rich in revitalizing rose
+                      micro-nutrients are now completed by the power of the Rose
+                      sap. The next-generation, 92% natural-origin (3) formula
+                      of La Micro-Huile de Rose Advanced Serum is twice as
+                      concentrated,(4) combining the nourishing richness of an
+                      oil with the deep penetration of a serum.
+                    </p>
                   </div>
-                  <div
-                    className="tab-pane fade"
-                    id="skin"
-                    role="tabpanel"
-                    aria-labelledby="skin-tab"
-                  >
-                    <div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          Beautya's 1st revitalizing serum that concentrates the
-                          double power of the Rose de Granville from the stem to
-                          the flower to revitalize the skin twice as fast (1)
-                          and visibly rejuvenate. Created after 20 years of
-                          research, the 10,000 (2) micro-pearls rich in
-                          revitalizing rose micro-nutrients are now completed by
-                          the power of the Rose sap. The next-generation, 92%
-                          natural-origin (3) formula of La Micro-Huile de Rose
-                          Advanced Serum is twice as concentrated,(4) combining
-                          the nourishing richness of an oil with the deep
-                          penetration of a serum.
-                        </p>
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          From the first application of the serum, the skin
-                          appears plumped. In 3 weeks, 2x improvement in the
-                          look or feel of skin elasticity.(5) With regular use,
-                          skin looks and feels transformed. As if replenished
-                          from within, the skin seems denser and firmer, and
-                          wrinkles appear noticeably reduced. As if lifted,
-                          facial contours appear enhanced.
-                        </p>
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          Reveal your extraordinary beauty with Beautya Prestige
-                        </p>
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          (1) Instrumental test, 32 panelists, after 30 min.{" "}
-                          <br />
-                          (2) In a 30 ml bottle. <br />
-                          (3) Amount calculated based on the ISO 16128-1 and ISO
-                          16128-2 standard. Water percentage included. The
-                          remaining 8% of ingredients contribute to the
-                          formula’s performance, sensory appeal and stability.{" "}
-                          <br />
-                          (4) In Rose de Granville micro-nutrients compared to
-                          the previous formula.
-                          <br />
-                          (5) Clinical assessment by a dermatologist on the
-                          evolution of the product’s performance on the skin
-                          elasticity, comparison between the effect after 7 days
-                          and 28 days on 34 women.
-                        </p>
-                      </div>
-                    </div>
+                  <div className="mb-4">
+                    <p className>
+                      From the first application of the serum, the skin appears
+                      plumped. In 3 weeks, 2x improvement in the look or feel of
+                      skin elasticity.(5) With regular use, skin looks and feels
+                      transformed. As if replenished from within, the skin seems
+                      denser and firmer, and wrinkles appear noticeably reduced.
+                      As if lifted, facial contours appear enhanced.
+                    </p>
                   </div>
-                  <div
-                    className="tab-pane fade"
-                    id="hair"
-                    role="tabpanel"
-                    aria-labelledby="hair-tab"
-                  >
-                    <div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          Beautya's 1st revitalizing serum that concentrates the
-                          double power of the Rose de Granville from the stem to
-                          the flower to revitalize the skin twice as fast (1)
-                          and visibly rejuvenate. Created after 20 years of
-                          research, the 10,000 (2) micro-pearls rich in
-                          revitalizing rose micro-nutrients are now completed by
-                          the power of the Rose sap. The next-generation, 92%
-                          natural-origin (3) formula of La Micro-Huile de Rose
-                          Advanced Serum is twice as concentrated,(4) combining
-                          the nourishing richness of an oil with the deep
-                          penetration of a serum.
-                        </p>
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          From the first application of the serum, the skin
-                          appears plumped. In 3 weeks, 2x improvement in the
-                          look or feel of skin elasticity.(5) With regular use,
-                          skin looks and feels transformed. As if replenished
-                          from within, the skin seems denser and firmer, and
-                          wrinkles appear noticeably reduced. As if lifted,
-                          facial contours appear enhanced.
-                        </p>
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          Reveal your extraordinary beauty with Beautya Prestige
-                        </p>
-                      </div>
-                      <div className="mb-4">
-                        <p className="text-start">
-                          (1) Instrumental test, 32 panelists, after 30 min.{" "}
-                          <br />
-                          (2) In a 30 ml bottle. <br />
-                          (3) Amount calculated based on the ISO 16128-1 and ISO
-                          16128-2 standard. Water percentage included. The
-                          remaining 8% of ingredients contribute to the
-                          formula’s performance, sensory appeal and stability.{" "}
-                          <br />
-                          (4) In Rose de Granville micro-nutrients compared to
-                          the previous formula.
-                          <br />
-                          (5) Clinical assessment by a dermatologist on the
-                          evolution of the product’s performance on the skin
-                          elasticity, comparison between the effect after 7 days
-                          and 28 days on 34 women.
-                        </p>
-                      </div>
-                    </div>
+                  <div className="mb-4">
+                    <p className>
+                      Reveal your extraordinary beauty with Beautya Prestige
+                    </p>
+                  </div>
+                  <div className="mb-4">
+                    <p className>
+                      (1) Instrumental test, 32 panelists, after 30 min. <br />
+                      (2) In a 30 ml bottle. <br />
+                      (3) Amount calculated based on the ISO 16128-1 and ISO
+                      16128-2 standard. Water percentage included. The remaining
+                      8% of ingredients contribute to the formula’s performance,
+                      sensory appeal and stability. <br />
+                      (4) In Rose de Granville micro-nutrients compared to the
+                      previous formula.
+                      <br />
+                      (5) Clinical assessment by a dermatologist on the
+                      evolution of the product’s performance on the skin
+                      elasticity, comparison between the effect after 7 days and
+                      28 days on 34 women.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        {/* description End */}
-        {/* similar Product start */}
-        <section className="similar-product">
-          <div className="container pb-5">
-            <div className="heading-wrapper">
-              <h5 className="bold-heading text-start">Similar Products</h5>
-            </div>
-            <div className="row mt-4 mb-5">
-              {products?.map((item) => (
-                <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
-                  <div className="comman-card">
-                    <div className="heart-icon">
-                      <i className="fa fa-heart-o" />
-                    </div>
-                    <div className="comman-card-header">
-                      <div className="img-wrapper">
-                        <img src={item?.imagesWeb?.[0]} alt />
-                      </div>
-                    </div>
-                    <div className="comman-card-body">
-                      <div className="d-flex justify-content-between">
-                        <h3 className="title">{item?.name_en}</h3>
-                        <h3 className="price">SAR 162</h3>
-                      </div>
-                      <p className="paragraph text-start">
-                      {item?.description_en?.slice(0, 30) + "..."}
-                      </p>
-                      <div className="mt-4">
-                        <div className="review-wrapper">
-                          <i className="fa fa-star text-warning" />
-                          <span className="review-points">4.9</span>
-                          <span className="review-text">250+ Review</span>
-                        </div>
-                      </div>
-                      <div className="mt-4">
-                        <button
-                          className="comman-btn"
-                          onClick={() =>
-                            handleAddToCart({
-                              product: item?._id,
-                              varient:
-                                item?.varients?.[0]?.values?.[0]?.varient_id,
-                            })
-                          }
-                        >
-                          Add to Bag
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
       </div>
+
+      {/* description End */}
+      {/* similar Product start */}
+      <section className="similar-product">
+        <div className="container pb-5">
+          <div className="heading-wrapper">
+            <h5 className="bold-heading text-start mt-5">Similar Products</h5>
+          </div>
+          <div className="row mt-1 mb-5">
+            <AllProduct />
+          </div>
+        </div>
+      </section>
     </>
   );
 };

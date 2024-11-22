@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../common/Sidebar";
 import { getContent } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import Header from "../common/Header";
+import Footer from "../common/Footer";
 
 const AboutUs = () => {
   const [content,setContent] = useState("")
@@ -21,6 +23,7 @@ const AboutUs = () => {
   }
   return (
     <>
+    <Header/>
       <section className="about-us">
         <div className="container mt-4 mb-5">
           <div className="row">
@@ -105,6 +108,7 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+      <Footer/>
     </>
   );
 };

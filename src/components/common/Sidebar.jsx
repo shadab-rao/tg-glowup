@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { capitalize } from "../utils/CapitalLetter";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getUser } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 
 const Sidebar = () => {
   const userData = JSON.parse(localStorage.getItem("glow-user"));
   const userToken = localStorage.getItem("token-user");
+  const location = useLocation();
 
   const [profileData, setProfileData] = useState("");
 
@@ -28,33 +29,41 @@ const Sidebar = () => {
       <div className="col-lg-3 col-md-4 col-12">
         <div className="my-account">
           {!userToken ? (
-            // If no token, show login button
             <div className="text-center">
               <Link to="/login" className="btn btn-dark">
                 Login
               </Link>
             </div>
           ) : profileData?.fullName ? (
-            // If user token exists and completeProfile is true, show Complete Your Profile button
             <div className="user-box">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex gap-3">
+                <div className="user-img">
+                  <img
+                    src={
+                      profileData?.profileImage ||
+                      "assets/img/user.jpg"
+                    }
+                    alt="image"
+                  />
+                </div>
                 <div>
-                  <h5 className="text text-white">
+                  <h5 className="text text-white text-start">
                     {capitalize(profileData?.fullName)}
                   </h5>
                   <p className="comman-small-text">
                     {capitalize(profileData?.email)}
                   </p>
-                </div>
-                <div className="mt-2">
-                  <Link to={"/my-profile"} className="edit-btn">
-                    Edit
-                  </Link>
+                  <div className="mt-2 text-start">
+                    <div className="mt-2">
+                      <Link to={"/my-profile"} className="edit-btn">
+                        Edit
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           ) : (
-            // If user token exists and completeProfile is false, show profile data
             <div className="text-center">
               <Link to="/my-profile" className="btn btn-dark">
                 Complete Profile
@@ -63,10 +72,12 @@ const Sidebar = () => {
           )}
 
           <div className>
-            <h5 className="text fw-semibold mb-1 mt-3 text-start">My Account</h5>
+            <h5 className="text fw-semibold mb-1 mt-3 text-start">
+              My Account
+            </h5>
             <div className="list-box-wrapper">
               <Link to={"/my-order"} className="list-box">
-                <div className="icon active">
+                <div className="icon">
                   <img src="../../../assets/img/svg/box.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">

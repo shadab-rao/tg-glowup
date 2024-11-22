@@ -11,7 +11,7 @@ const Footer = () => {
               <div className="col-md-3 col-12 mt-md-0 mt-4">
                 <div className="d-flex gap-3 align-items-center">
                   <div className="img-wrapper">
-                    <img src="assets/img/svg/bunny.svg" alt />
+                    <img src="../../../assets/img/svg/bunny.svg" alt />
                   </div>
                   <p className="text">No tests on animals</p>
                 </div>
@@ -19,7 +19,7 @@ const Footer = () => {
               <div className="col-md-3 col-12 mt-md-0 mt-4">
                 <div className="d-flex gap-3 align-items-center">
                   <div className="img-wrapper">
-                    <img src="assets/img/svg/leave.svg" alt />
+                    <img src="../../../assets/img/svg/leave.svg" alt />
                   </div>
                   <p className="text">No animal-derived ingredients</p>
                 </div>
@@ -27,7 +27,7 @@ const Footer = () => {
               <div className="col-md-3 col-12 mt-md-0 mt-4">
                 <div className="d-flex gap-3 align-items-center">
                   <div className="img-wrapper">
-                    <img src="assets/img/svg/leaves.svg" alt />
+                    <img src="../../../assets/img/svg/leaves.svg" alt />
                   </div>
                   <p className="text">No gluten, or gluten byproducts</p>
                 </div>
@@ -35,7 +35,7 @@ const Footer = () => {
               <div className="col-md-3 col-12 mt-md-0 mt-4">
                 <div className="d-flex gap-3 align-items-center">
                   <div className="img-wrapper">
-                    <img src="assets/img/svg/bulp.svg" alt />
+                    <img src="../../../assets/img/svg/bulp.svg" alt />
                   </div>
                   <p className="text">Recyclable packaging</p>
                 </div>
@@ -78,7 +78,7 @@ const Footer = () => {
             <div className="row">
               <div className="col-lg-4 col-md-4 col-12 mt-lg-0 mt-md-4 mt-4">
                 <div className="logo-wrapper">
-                  <img src="assets/img/Glow Up.png" alt />
+                  <img src="../../../assets/img/Glow Up.png" alt />
                 </div>
                 <p className="footer-paragraph mt-3 text-start">
                   Lorem ipsum dolor sit amet consectetur. Mi <br /> nibh
@@ -131,10 +131,10 @@ const Footer = () => {
                 </div>
                 <div className="d-flex gap-md-3 gap-1 mt-4">
                   <a href className="download-link">
-                    <img src="assets/img/apple.png" alt />
+                    <img src="../../../assets/img/apple.png" alt />
                   </a>
                   <a href className="download-link">
-                    <img src="assets/img/google.png" alt />
+                    <img src="../../../assets/img/google.png" alt />
                   </a>
                 </div>
               </div>

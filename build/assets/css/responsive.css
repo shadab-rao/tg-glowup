@@ -145,6 +145,7 @@
                 width: fit-content !important;
 
                 & .nav-link {
+                    font-size: 14px !important;
                     padding: 0 .5rem;
                     line-height: 34px !important;
                 }
@@ -217,7 +218,7 @@
         line-height: 38.4px;
     }
     .check-delivery-input {
-        width: 462px;
+        width: 100%;
     }
     .light-text {
         font-size: 12px;
@@ -277,8 +278,26 @@
                 margin: 0;
             }
         }
+        .box{
+            width: 64px;
+            height: 54px;
+        }
+        .container{
+            max-width: 800px;
+        }
+        .product-detail-img{
+            width: 60px;
+            height: 60px;
+            & img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
 }
-
+@media(max-width:900px){
+   
+}
 @media(max-width:767px) {
     .form-design{
         & .form-group{

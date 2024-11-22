@@ -151,6 +151,52 @@ export async function editProfile(formData) {
     return { error };
   }
 }
+export async function helpSupport(formData) {
+  try {
+    const response = await glowHttpServie.post(
+      `${process.env.REACT_APP_APIENDPOINT}/platform/raiseTicket`,
+      formData
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 export async function addToCart(formData) {
   try {
     const response = await glowHttpServie.post(
@@ -598,7 +644,6 @@ export async function removeCartItem(id) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({
@@ -616,7 +661,7 @@ export async function removeCartItem(id) {
 export async function orderDelete(id) {
   try {
     const { data } = await glowHttpServie.delete(
-      `${process.env.REACT_APP_APIENDPOINT}/order/orderDelete/${id}`,
+      `${process.env.REACT_APP_APIENDPOINT}/order/orderDelete/${id}`
     );
     if (!data.error) {
       Swal.fire({
@@ -640,7 +685,6 @@ export async function orderDelete(id) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({
@@ -658,7 +702,7 @@ export async function orderDelete(id) {
 export async function addressDelete(id) {
   try {
     const { data } = await glowHttpServie.delete(
-      `${process.env.REACT_APP_APIENDPOINT}//user/deleteAddress/${id}`,
+      `${process.env.REACT_APP_APIENDPOINT}//user/deleteAddress/${id}`
     );
     if (!data.error) {
       Swal.fire({
@@ -682,7 +726,6 @@ export async function addressDelete(id) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({
@@ -716,7 +759,6 @@ export async function wishList(id) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({
@@ -731,13 +773,13 @@ export async function wishList(id) {
     return { error };
   }
 }
-export async function productList({ pageSize , page  }) {
+export async function productList({ pageSize, page }) {
   try {
     const { data } = await glowHttpServie.patch(
       `${process.env.REACT_APP_APIENDPOINT}/inventory/getProducts`,
       {
         pageSize,
-        page,     
+        page,
       }
     );
     if (!data.error) {
@@ -762,7 +804,6 @@ export async function productList({ pageSize , page  }) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({
@@ -805,7 +846,6 @@ export async function subSubCategories(formData) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({
@@ -848,7 +888,6 @@ export async function payment(formData) {
       });
     }
     if (!data.error) return { data };
-
   } catch (error) {
     if (error.response)
       Swal.fire({

@@ -20,6 +20,7 @@ import Otp from "./components/auth/Otp";
 import SuccessVerified from "./components/auth/SuccessVerified";
 import ReferalCode from "./components/auth/ReferalCode";
 import Filter from "./components/filter/Filter.jsx"
+import RaiseQuery from "./components/HelpSupport/RaiseQuery.jsx";
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
           <Route path="/settings" element={<Settings/>} />
           <Route path="/about-us" element={<AboutUs/>} />
           <Route path="/terms-conditions" element={<Terms/>} />
-          <Route path="/help-support" element={<HelpnSupport/>} />
+          <Route path="/help-support" element={<RaiseQuery/>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
           <Route path="/your-bag" element={<Bag/>} />
           <Route path="/checkout" element={<CheckOut/>} />

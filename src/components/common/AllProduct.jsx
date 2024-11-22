@@ -91,25 +91,27 @@ const AllProduct = () => {
         {productData?.map((item) => (
           <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
             <div className="comman-card">
-              <div
-                className="heart-icon"
-                onClick={() =>
-                  handleAddWishlist({
-                    productId: item?._id,
-                    variantId: item?.variantId,
-                  })
-                }
-              >
-                {item?.isFavourite === true ? (
-                  <i className="fa fa-heart" />
-                ) : (
-                  <i className="fa fa-heart-o" />
-                )}
-              </div>
+              {userToken ? (
+                <div
+                  className="heart-icon"
+                  onClick={() =>
+                    handleAddWishlist({
+                      productId: item?._id,
+                      variantId: item?.variantId,
+                    })
+                  }
+                >
+                  {item?.isFavourite === true ? (
+                    <i className="fa fa-heart" />
+                  ) : (
+                    <i className="fa fa-heart-o" />
+                  )}
+                </div>
+              ) : null}
               {/* <div className="new-label">
                   <p className>New</p>
                 </div> */}
-              <div className="comman-card-header">
+              <div className="comman-card-header" style={{cursor:"default"}}>
                 <div className="img-wrapper">
                   <img src={item?.imagesWeb?.[0]} alt />
                 </div>
@@ -119,7 +121,9 @@ const AllProduct = () => {
                   className="d-flex justify-content-between"
                   onClick={() => navigate(`/product-details/${item?._id}`)}
                 >
-                  <h3 className="title">{item?.name_en}</h3>
+                  <h3 className="title text-start">
+                    {item?.name_en?.slice(0, 10) + "..."}
+                  </h3>
                   <h3 className="price">SAR {item?.price}</h3>
                 </div>
                 <p className="paragraph text-start">
@@ -138,8 +142,7 @@ const AllProduct = () => {
                     onClick={() =>
                       handleAddToCart({
                         product: item?._id,
-                        varient:
-                          item?.varients?.[0]?.values?.[0]?.varient_id,
+                        varient: item?.varients?.[0]?.values?.[0]?.varient_id,
                       })
                     }
                   >

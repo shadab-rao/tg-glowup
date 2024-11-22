@@ -18,7 +18,7 @@ const Bag = () => {
   const [count, setCount] = useState(0);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("token-user");
-  const addressId = localStorage.getItem("address_id")
+  const addressId = localStorage.getItem("address_id");
 
   useEffect(() => {
     if (userToken) {
@@ -27,16 +27,18 @@ const Bag = () => {
   }, []);
 
   const handleCart = async () => {
-    const response = await getCart();
-    const cartItems = response?.data?.results?.cart?.inventory || [];
-    const updatedCartItems = cartItems.map((item) => ({
-      ...item,
-      quantity: item.quantity || 1,
-    }));
-    setData(updatedCartItems);
-    const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
-    setCount(totalProducts);
-    dispatch(setCartCount(totalProducts));
+    if (userToken) {
+      const response = await getCart();
+      const cartItems = response?.data?.results?.cart?.inventory || [];
+      const updatedCartItems = cartItems.map((item) => ({
+        ...item,
+        quantity: item.quantity || 1,
+      }));
+      setData(updatedCartItems);
+      const totalProducts = response?.data?.results?.cart?.totalProducts || 0;
+      setCount(totalProducts);
+      dispatch(setCartCount(totalProducts));
+    }
   };
 
   const handleQuantityChange = (id, newQuantity) => {
@@ -60,20 +62,20 @@ const Bag = () => {
   const handlePlaceOrder = async (formData) => {
     const response = await placeOrder(formData);
     // navigate("/checkout",{state:response?.data?.results?.order})
-    navigate("/my-order")
+    navigate("/my-order");
   };
 
   const handlePayment = async (amount) => {
     const response = await payment(amount);
-    const address = addressId
+    const address = addressId;
     const formData = {
       ...response?.data?.results?.obj,
-      address, 
+      address,
     };
     handlePlaceOrder(formData);
   };
 
-  if (data.length === 0) {
+  if (data.length === 0 || !userToken) {
     return (
       <>
         <Header />
@@ -106,10 +108,10 @@ const Bag = () => {
                     <div className="row">
                       <div className="col-md-auto col-4">
                         <div className="Checkout-box-img">
-                          <img src={item?.product?.imagesWeb?.[0]} alt="" />
+                          <img src={item?.varient?.imagesWeb?.[0]} alt="" />
                         </div>
                       </div>
-                      <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0">
+                      <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
                         <h6 className="Checkout-box-head">
                           {item?.product?.name_en}
                         </h6>
@@ -124,8 +126,8 @@ const Bag = () => {
                             <div className="col-md-8 col-12">
                               <select className="form-select">
                                 <option value>
-                                  {item?.varient?.attribute?.name_en}:{" "}
-                                  {item?.varient?.values?.name_en}
+                                  {item?.varient?.attribute?.[0]?.name_en}:{" "}
+                                  {item?.varient?.values?.[0]?.name_en}
                                 </option>
                               </select>
                             </div>

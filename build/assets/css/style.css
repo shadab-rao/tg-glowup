@@ -2517,5 +2517,9 @@ img {
     margin-left: 7px;
     border: 0.0625rem solid #E6E6E6;
   }
+  .box.active {
+    border: 2px solid #ff6600; /* Highlight the active variant with an orange border */
+    background-color: #f4f4f4; /* Optional: change background color */
+  }
 
   

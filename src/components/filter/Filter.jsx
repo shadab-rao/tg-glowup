@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { setCartCount } from "../../Redux/cartSlice";
 import AllProduct from "../common/AllProduct";
 import SubsubCategories from "../SubsubCategories";
+import Footer from "../common/Footer";
 
 const Filter = () => {
   const [categories, setCategories] = useState([]);
@@ -53,7 +54,7 @@ const Filter = () => {
   return (
     <>
       <Header />
-      <div className="container">
+      <div className="container mb-4">
         <div className="custom-breadcrum mt-4">
           <div className="custom-breadcrum-list">Home</div>
           <div className="custom-breadcrum-list active">{categoryName}</div>
@@ -192,6 +193,7 @@ const Filter = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 };
