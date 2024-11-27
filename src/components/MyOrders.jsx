@@ -43,7 +43,7 @@ const MyOrders = () => {
                     <div className="comman-card" style={{ cursor: "pointer" }}>
                       <div
                         className="heart-icon"
-                        onClick={() => handleDelete(inven?.order_id)} 
+                        onClick={() => handleDelete(inven?._id)} 
                       >
                         <img src="assets/img/svg/close-icon.svg" alt="Delete" />
                       </div>

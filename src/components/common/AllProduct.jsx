@@ -142,7 +142,7 @@ const AllProduct = () => {
                     onClick={() =>
                       handleAddToCart({
                         product: item?._id,
-                        varient: item?.varients?.[0]?.values?.[0]?.varient_id,
+                        varient: item?.varients?.[0]?._id,
                       })
                     }
                   >

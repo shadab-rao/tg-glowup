@@ -92,19 +92,26 @@ const MyWishlist = () => {
                       <img src="../../../assets/img/svg/close-icon.svg" alt />
                     </div>
                     <div className="comman-card-header">
-                      <div className="img-wrapper">
+                      <div className="img-wrapper" style={{cursor:"default"}}>
                         <img src={item?.product?.imagesWeb?.[0]} alt />
                       </div>
                     </div>
                     <div className="comman-card-body">
-                      <div className="d-flex justify-content-between">
-                        <h3 className="title">{item?.product?.name_en}</h3>
+                      <div
+                        className="d-flex justify-content-between"
+                        onClick={() =>
+                          navigate(`/product-details/${item?.product?._id}`)
+                        }
+                      >
+                        <h3 className="title text-start">
+                          {item?.product?.name_en?.slice(0, 10) + "..."}
+                        </h3>
                         <h3 className="price">
                           {item?.product?.currency} {item?.product?.price}
                         </h3>
                       </div>
                       <p className="paragraph text-start">
-                        {item?.product?.description_en?.slice(0, 30) + "..."}
+                        {item?.product?.description_en?.slice(0, 20) + "..."}
                       </p>
                       <div className="mt-4">
                         <div className="review-wrapper">

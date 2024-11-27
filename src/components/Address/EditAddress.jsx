@@ -28,7 +28,7 @@ const EditAddress = () => {
 
   const handleAddress = async () => {
     const payload = {
-      fullName: formData.fullName,
+      name: formData.name,
       phoneNumber: formData.phoneNumber,
       countryCode: formData.countryCode,
       city: formData.city,

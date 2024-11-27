@@ -31,7 +31,6 @@ const BestSellerProduct = () => {
     }
   };
 
- 
   const handleAddWishlist = async ({ productId = null, variantId = null }) => {
     try {
       const formData = {
@@ -77,68 +76,77 @@ const BestSellerProduct = () => {
   return (
     <>
       <div className="row mt-4">
-        {productData?.length > 0 ?  (productData?.map((item) => (
-          <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
-            <div className="comman-card">
-              <div
-                className="heart-icon"
-                onClick={() =>
-                  handleAddWishlist({
-                    productId: item?._id,
-                    variantId: item?.variantId,
-                  })
-                }
-              >
-                {item?.isFavourite === true ? (
-                  <i className="fa fa-heart" />
-                ) : (
-                  <i className="fa fa-heart-o" />
-                )}
-              </div>
-              {/* <div className="new-label">
-                  <p className>New</p>
-                </div> */}
-              <div className="comman-card-header">
-                <div className="img-wrapper">
-                  <img src={item?.imagesWeb?.[0]} alt />
-                </div>
-              </div>
-              <div className="comman-card-body">
-                <div
-                  className="d-flex justify-content-between"
-                  onClick={() => navigate(`/product-details/${item?._id}`)}
-                >
-                  <h3 className="title">{item?.name_en}</h3>
-                  <h3 className="price">SAR {item?.price}</h3>
-                </div>
-                <p className="paragraph text-start">
-                  {item?.description_en?.slice(0, 10) + "..."}
-                </p>
-                <div className="mt-4">
-                  <div className="review-wrapper">
-                    <i className="fa fa-star text-warning" />
-                    <span className="review-points">4.9</span>
-                    <span className="review-text">250+ Review</span>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <button
-                    className="comman-btn"
+        {productData?.length > 0 ? (
+          productData?.map((item) => (
+            <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
+              <div className="comman-card">
+                {userToken ? (
+                  <div
+                    className="heart-icon"
                     onClick={() =>
-                      handleAddToCart({
-                        product: item?._id,
-                        varient:
-                          item?.varients?.[0]?.values?.[0]?.varient_id,
+                      handleAddWishlist({
+                        productId: item?._id,
+                        variantId: item?.variantId,
                       })
                     }
                   >
-                    Add to Bag
-                  </button>
+                    {item?.isFavourite === true ? (
+                      <i className="fa fa-heart" />
+                    ) : (
+                      <i className="fa fa-heart-o" />
+                    )}
+                  </div>
+                ) : null}
+                {/* <div className="new-label">
+                  <p className>New</p>
+                </div> */}
+                <div className="comman-card-header">
+                  <div className="img-wrapper">
+                    <img src={item?.imagesWeb?.[0]} alt />
+                  </div>
+                </div>
+                <div className="comman-card-body">
+                  <div
+                    className="d-flex justify-content-between"
+                    onClick={() => navigate(`/product-details/${item?._id}`)}
+                  >
+                    <h3 className="title text-start">
+                      {item?.name_en?.slice(0, 10) + "..."}
+                    </h3>
+                    <h3 className="price">SAR {item?.price}</h3>
+                  </div>
+                  <p className="paragraph text-start">
+                    {item?.description_en?.slice(0, 10) + "..."}
+                  </p>
+                  <div className="mt-4">
+                    <div className="review-wrapper">
+                      <i className="fa fa-star text-warning" />
+                      <span className="review-points">4.9</span>
+                      <span className="review-text">250+ Review</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      className="comman-btn"
+                      onClick={() =>
+                        handleAddToCart({
+                          product: item?._id,
+                          varient: item?.varients?.[0]?.values?.[0]?.varient_id,
+                        })
+                      }
+                    >
+                      Add to Bag
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))) : <p className="comman-heading text-center text-danger" >Data Not Found</p>}
+          ))
+        ) : (
+          <p className="comman-heading text-center text-danger">
+            Data Not Found
+          </p>
+        )}
       </div>
     </>
   );

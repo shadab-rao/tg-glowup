@@ -59,11 +59,11 @@ const Bag = () => {
     handleCart();
   };
 
-  const handlePlaceOrder = async (formData) => {
-    const response = await placeOrder(formData);
-    // navigate("/checkout",{state:response?.data?.results?.order})
-    navigate("/my-order");
-  };
+  // const handlePlaceOrder = async (formData) => {
+  //   const response = await placeOrder(formData);
+  //   navigate("/checkout",{state:response?.data?.results?.order})
+  //   // navigate("/my-order");
+  // };
 
   const handlePayment = async (amount) => {
     const response = await payment(amount);
@@ -72,7 +72,8 @@ const Bag = () => {
       ...response?.data?.results?.obj,
       address,
     };
-    handlePlaceOrder(formData);
+    // handlePlaceOrder(formData);
+    navigate("/checkout",{state:response?.data?.results?.obj})
   };
 
   if (data.length === 0 || !userToken) {

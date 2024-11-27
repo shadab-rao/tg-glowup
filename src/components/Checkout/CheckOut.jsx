@@ -1,14 +1,113 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
+import { address, getAddress, placeOrder } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useLocation, useNavigate } from "react-router-dom";
+import { capitalize } from "../utils/CapitalLetter";
 
 const CheckOut = () => {
+  const[addressId,setAddressId] = useState(null)
+  const navigate = useNavigate();
+  const {state} = useLocation()
+  const [myAddress, setMyAddress] = useState([]);
+  const userToken = localStorage.getItem("token-user");
+  const [formData, setFormData] = useState({
+    name: "",
+    phoneNumber: "",
+    street: "",
+    countryCode: "",
+    city: "",
+    state: "",
+    country: "",
+    pinCode: "",
+    type: "Home",
+  });
+
+  // Fetch address when component mounts
+  useEffect(() => {
+    handleViewAddress();
+  }, []);
+
+  // Populate form data when myAddress updates
+  useEffect(() => {
+    if (myAddress) {
+      setFormData({
+        name: myAddress.name || "",
+        phoneNumber: myAddress.phoneNumber || "",
+        street: myAddress.street || "",
+        countryCode: myAddress.countryCode || "",
+        city: myAddress.city || "",
+        state: myAddress.state || "",
+        country: myAddress.country || "",
+        pinCode: myAddress.pinCode || "",
+        type: myAddress.type || "Home",
+      });
+    }
+  }, [myAddress]);
+
+  const handleViewAddress = async () => {
+    if (userToken) {
+      const response = await getAddress();
+      const address = response?.data?.results?.address?.[0] || {};
+      
+      setMyAddress(address);
+      const addressId = address?._id;
+      if (addressId) {
+        localStorage.setItem("address_id", addressId);
+        setAddressId(addressId);
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleAddress = async () => {
+    const payload = {
+      fullName: formData.name,
+      phoneNumber: formData.phoneNumber,
+      countryCode: formData.countryCode,
+      city: formData.city,
+      street: formData.street,
+      state: formData.state,
+      country: formData.country,
+      pinCode: formData.pinCode,
+      type: formData.type,
+    };
+    try {
+      const response = await address(payload);
+      const newAddressId = response?.data?.results?.address?._id;
+      setAddressId(newAddressId);
+      handleViewAddress();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    const payload = {
+      ...state,
+      address: addressId,
+    };
+    try {
+      const response = await placeOrder(payload);
+      navigate("/my-order");
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  };
+
   return (
     <>
-    <Header/>
+      <Header />
       <section className="Checkout">
         <div className="bg-white">
-          <div className="container pt-4">
+          <div className="container pt-4 mb-4">
             <div className="d-flex justify-content-center">
               <div className="mt-4">
                 <h3 className="Checkout-heading">Checkout</h3>
@@ -29,24 +128,37 @@ const CheckOut = () => {
                 </p>
                 <div className="form-design">
                   <div className="form-group">
-                    <label htmlFor className="form-label">
-                      Full name*
-                    </label>
+                    <label className="form-label">Full Name*</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Full name"
+                      placeholder="Full Name"
+                      name="name"
+                      value={capitalize(formData.name)}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor className="form-label">
-                      Phone Number*
-                    </label>
+                    <label className="form-label">Country Code*</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Phone Number"
+                      name="countryCode"
+                      value={formData.countryCode}
+                      onChange={handleChange}
                     />
+
+                  </div>
+                    <div className="form-group">
+                      <label className="form-label">Phone Number*</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="+971 505 789 9890"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                      />
                   </div>
                   <div className="form-group mt-3">
                     <div className="d-flex gap-1 align-items-end">
@@ -61,34 +173,71 @@ const CheckOut = () => {
                     </div>
                   </div>
                   <div className="form-group">
-                    <label htmlFor className="form-label">
-                      Address (House number, Street name, Area)*
-                    </label>
+                    <label className="form-label">Street*</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Full Address"
+                      placeholder="Pincode"
+                      name="street"
+                      value={formData.street}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor className="form-label">
-                      City*
-                    </label>
+                    <label className="form-label">City*</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="City"
+                      placeholder="City Name"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                    />
+                  </div>
+                    <div className="form-group">
+                      <label className="form-label">State*</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="State Name"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleChange}
+                      />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Country*</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Country Name"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor className="form-label">
-                      State*
-                    </label>
+                    <label className="form-label">Pincode*</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="State"
+                      placeholder="Pincode Name"
+                      name="pinCode"
+                      value={formData.pinCode}
+                      onChange={handleChange}
                     />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Type*</label>
+                    <select
+                      className="form-control"
+                      name="type"
+                      value={formData.type}
+                      onChange={handleChange}
+                    >
+                      <option value="Home">Home</option>
+                      {/* <option value="Work">Work</option> */}
+                    </select>
                   </div>
                   <div className="d-flex gap-2 align-items-center">
                     <input
@@ -107,7 +256,16 @@ const CheckOut = () => {
                     <span className="form-label m-0">Save in my profile </span>
                   </div>
                 </div>
+                {/* {myAddress  && myAddress.length > 0  ?  ( */}
+                <div className="mt-4">
+                  <button className="comman-btn" onClick={handleAddress}>
+                    Save Address
+                  </button>
+                </div>
+                {/* ) : null */}
+{/* } */}
               </div>
+
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">
                   2. Payment Information
@@ -273,7 +431,7 @@ const CheckOut = () => {
                         <p className="light-text">Subtotal</p>
                       </div>
                       <div className="col-6">
-                        <p className="bold-text">SAR 260</p>
+                        <p className="bold-text">SAR {state?.amount}</p>
                       </div>
                     </div>
                     <div className="row">
@@ -281,7 +439,7 @@ const CheckOut = () => {
                         <p className="light-text">Tax</p>
                       </div>
                       <div className="col-6">
-                        <p className="bold-text">SAR 60</p>
+                        <p className="bold-text">SAR 0</p>
                       </div>
                     </div>
                     <div className="row">
@@ -289,13 +447,13 @@ const CheckOut = () => {
                         <p className="light-text">Grand Total</p>
                       </div>
                       <div className="col-6">
-                        <p className="bold-text">SAR 250</p>
+                        <p className="bold-text">SAR {state?.amount}</p>
                       </div>
                     </div>
                   </div>
                   <div className="mt-4">
                     <div className="mb-4">
-                      <button className="comman-btn">Checkout Now</button>
+                      <button className="comman-btn" onClick={handlePlaceOrder}>Checkout Now</button>
                     </div>
                   </div>
                 </div>
