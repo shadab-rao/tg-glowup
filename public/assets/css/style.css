@@ -2431,7 +2431,7 @@ img {
 .otp-input-box .form-group {
     display: flex;
     align-items: center;
-    justify-content: space-between !important;
+    justify-content: center !important;
   
   }
   .otp-input-box .form-group input {

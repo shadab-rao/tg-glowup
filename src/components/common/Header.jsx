@@ -237,25 +237,25 @@ const Header = () => {
                               </div>
                             </Link>
                             <Link to={"/my-address"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/location.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper border-bottom border-2">
+                              <div className="text-wrapper active border-bottom border-2">
                                 <p className>My address</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                             <Link to={"/my-wishlist"} className="list-box mb-2">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/heart-light.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper">
+                              <div className="text-wrapper active">
                                 <p className>My Wishlist</p>
                                 <i className="fa fa-angle-right" />
                               </div>
@@ -266,78 +266,78 @@ const Header = () => {
                           <h5 className="text fw-semibold mb-1">Others</h5>
                           <div className="list-box-wrapper">
                             <Link to={"/referral-program"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/link-circle.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper border-bottom border-2">
+                              <div className="text-wrapper active border-bottom border-2">
                                 <p className>Referral Program</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                             <Link to={"/settings"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/setting-2.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper border-bottom border-2">
+                              <div className="text-wrapper active border-bottom border-2">
                                 <p className>Settings</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                             <Link to={"/about-us"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/file-lines.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper border-bottom border-2">
+                              <div className="text-wrapper active border-bottom border-2">
                                 <p className>About us</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                             <Link to={"/terms-conditions"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/file-minus.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper border-bottom border-2">
+                              <div className="text-wrapper active border-bottom border-2">
                                 <p className>Terms &amp; Conditions</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                             <Link to={"/help-support"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/call.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper border-bottom border-2">
+                              <div className="text-wrapper active border-bottom border-2">
                                 <p className>Help &amp; Support</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                             <Link to={"/privacy-policy"} className="list-box">
-                              <div className="icon">
+                              <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/file-sheild.svg"
                                   alt
                                 />
                               </div>
-                              <div className="text-wrapper">
+                              <div className="text-wrapper active">
                                 <p className>Privacy Policy</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <div  className="list-box align-items-center " style={{cursor:"pointer"}} onClick={handleLogout}>
+                            <div  className="list-box active align-items-center " style={{cursor:"pointer"}} onClick={handleLogout}>
                               {/* <div className="icon"> */}
                                 <i className="fa fa-sign-out ms-1" />
                               {/* </div> */}

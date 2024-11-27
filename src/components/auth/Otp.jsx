@@ -80,7 +80,7 @@ const Otp = () => {
                     inputType="tel"
                     value={otp}
                     onChange={setOtp}
-                    numInputs={6}
+                    numInputs={4}
                     onChangeRegex={/^([0-9]{0,})$/}
                     renderSeparator={<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>}
                     isInputNum

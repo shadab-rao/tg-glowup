@@ -40,21 +40,19 @@ const ProductDetail = () => {
   };
 
   const handleVariantClick = (variantId) => {
-    setSelectedVariantId(variantId); 
+    setSelectedVariantId(variantId);
   };
-
-
 
   const handleAddToCart = async () => {
     if (userToken && selectedVariantId) {
       const payload = {
-        product: id, 
-        varient: selectedVariantId, 
+        product: id,
+        varient: selectedVariantId,
       };
       const response = await addToCart(payload);
       handleCart();
     } else {
-      navigate("/login"); 
+      navigate("/login");
     }
   };
   const handleCart = async () => {
@@ -92,32 +90,39 @@ const ProductDetail = () => {
               <div className="row mt-4">
                 <div className="col-lg-auto col-auto d-lg-block d-md-none d-none ">
                   <div className="position-relative">
-                    <div className="slider-arrow slider-up" onClick={scrollUp}>
-                      ▲
-                    </div>
+                    {viewData?.imagesWeb?.length >= 5 && (
+                      <div
+                        className="slider-arrow slider-up"
+                        onClick={scrollUp}
+                      >
+                        ▲
+                      </div>
+                    )}
                     <div
                       id="thumbnails"
                       className="product-detail-height-overflow"
                       ref={thumbnailsRef}
                     >
-                      {viewData?.imagesWeb?.map((image, index) => (
+                      {viewData?.imagesWeb?.length >= 5 ? (viewData?.imagesWeb?.map((image, index) => (
                         <div
                           key={index}
                           className="thumbnail active product-detail-img-wrapper mt-5"
                         >
                           <img src={image} alt={`Thumbnail ${index + 1}`} />
                         </div>
-                      ))}
+                      ))) : null}
                     </div>
-                    <div
-                      className="slider-arrow slider-down"
-                      onClick={scrollDown}
-                    >
-                      ▼
-                    </div>
+                    {viewData?.imagesWeb?.length >= 5 && (
+                      <div
+                        className="slider-arrow slider-down"
+                        onClick={scrollDown}
+                      >
+                        ▼
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="col-lg-5 col-md-7 col-12">
+                <div className="col-lg-5 col-md-7 col-12 me-5">
                   <div className="product-detail-main-img">
                     <img
                       src={
@@ -190,7 +195,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="d-flex gap-3 mt-4">
-                  <button
+                    <button
                       className="comman-btn"
                       onClick={handleAddToCart} // Call the function without passing arguments
                     >

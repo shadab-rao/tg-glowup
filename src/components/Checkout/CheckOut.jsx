@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
-import { address, getAddress, placeOrder } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import {
+  address,
+  getAddress,
+  placeOrder,
+} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useLocation, useNavigate } from "react-router-dom";
 import { capitalize } from "../utils/CapitalLetter";
 
 const CheckOut = () => {
-  const[addressId,setAddressId] = useState(null)
+  const [addressId, setAddressId] = useState(null);
   const navigate = useNavigate();
-  const {state} = useLocation()
+  const { state } = useLocation();
   const [myAddress, setMyAddress] = useState([]);
   const userToken = localStorage.getItem("token-user");
   const [formData, setFormData] = useState({
@@ -49,7 +53,7 @@ const CheckOut = () => {
     if (userToken) {
       const response = await getAddress();
       const address = response?.data?.results?.address?.[0] || {};
-      
+
       setMyAddress(address);
       const addressId = address?._id;
       if (addressId) {
@@ -96,7 +100,9 @@ const CheckOut = () => {
     };
     try {
       const response = await placeOrder(payload);
-      navigate("/my-order");
+      if (myAddress.length > 0) {
+        navigate("/my-order");
+      }
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -147,18 +153,17 @@ const CheckOut = () => {
                       value={formData.countryCode}
                       onChange={handleChange}
                     />
-
                   </div>
-                    <div className="form-group">
-                      <label className="form-label">Phone Number*</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        placeholder="+971 505 789 9890"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                      />
+                  <div className="form-group">
+                    <label className="form-label">Phone Number*</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="+971 505 789 9890"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="form-group mt-3">
                     <div className="d-flex gap-1 align-items-end">
@@ -194,16 +199,16 @@ const CheckOut = () => {
                       onChange={handleChange}
                     />
                   </div>
-                    <div className="form-group">
-                      <label className="form-label">State*</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="State Name"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                      />
+                  <div className="form-group">
+                    <label className="form-label">State*</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="State Name"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleChange}
+                    />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Country*</label>
@@ -263,7 +268,7 @@ const CheckOut = () => {
                   </button>
                 </div>
                 {/* ) : null */}
-{/* } */}
+                {/* } */}
               </div>
 
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
@@ -453,7 +458,9 @@ const CheckOut = () => {
                   </div>
                   <div className="mt-4">
                     <div className="mb-4">
-                      <button className="comman-btn" onClick={handlePlaceOrder}>Checkout Now</button>
+                      <button className="comman-btn" onClick={handlePlaceOrder}>
+                        Checkout Now
+                      </button>
                     </div>
                   </div>
                 </div>
