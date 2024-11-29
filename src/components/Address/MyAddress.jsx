@@ -39,7 +39,7 @@ const MyAddress = () => {
             <Sidebar />
             <div className="col-lg-9 col-md-8 col-12">
               <div className>
-                <div className>
+                <div className="ms-5">
                   {myAddress?.length > 0 ? (
                     <h5 className="text fw-bold mb-4 text-start">
                       Your Address
@@ -50,15 +50,15 @@ const MyAddress = () => {
                     </p>
                   )}
                 </div>
-                <div className="mt-4">
-                  <div className="row">
-                    <div className="col-lg-6 col-md-12 col-12 mt-lg-0 mt-4">
+                {/* <div className="mt-4"> */}
+                  {/* <div className="row"> */}
+                    <div className="col-lg-12 ms-5 col-md-12 col-12 mt-lg-0 mt-4 d-flex gap-4" style={{flexWrap:"wrap"}}>
                       {myAddress?.map((item) => (
-                        <div className="card-box">
+                        <div className="card-box col-lg-4 col-md-4 col-4">
                           <div className="border-bottom">
-                            <button className="btn btn-dark mb-2">
+                            {/* <button className="btn btn-dark mb-2">
                               Default
-                            </button>
+                            </button> */}
                             <p className="text text-dark fw-semibold"></p>
                             <p className="text-light mb-0">{item?.street}</p>
                             <p className="text-light mb-2">
@@ -84,8 +84,8 @@ const MyAddress = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
-                </div>
+                  {/* </div> */}
+                {/* </div> */}
                 <div className="mt-4 ">
                   {userToken ? (
                     <div

@@ -2,7 +2,6 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Main from "./components/mainComponent/Main";
 import ProductDetail from "./components/ProductDetail";
-import MyOrders from "./components/MyOrders";
 import MyWishlist from "./components/wishList/MyWishlist.jsx";
 import ReferalProgram from "./components/ReferalProgram";
 import Settings from "./components/Settings";
@@ -21,6 +20,8 @@ import SuccessVerified from "./components/auth/SuccessVerified";
 import ReferalCode from "./components/auth/ReferalCode";
 import Filter from "./components/filter/Filter.jsx"
 import RaiseQuery from "./components/HelpSupport/RaiseQuery.jsx";
+import MyOrders from "./components/Order/MyOrders.jsx";
+import OrderDetails from "./components/Order/OrderDetails.jsx";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/product-details/:id" element={<ProductDetail />} />
           <Route path="/my-order" element={<MyOrders/>} />
+          <Route path="/my-order/details/:id" element={<OrderDetails/>} />
           <Route path="/my-address" element={<MyAddress/>} />
           <Route path="/my-wishlist" element={<MyWishlist/>} />
           <Route path="/referral-program" element={<ReferalProgram/>} />

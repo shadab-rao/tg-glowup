@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
+import "react-phone-input-2/lib/style.css";
+
 import {
   address,
   getAddress,
@@ -8,6 +10,7 @@ import {
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useLocation, useNavigate } from "react-router-dom";
 import { capitalize } from "../utils/CapitalLetter";
+import PhoneInput from "react-phone-input-2";
 
 const CheckOut = () => {
   const [addressId, setAddressId] = useState(null);
@@ -15,6 +18,7 @@ const CheckOut = () => {
   const { state } = useLocation();
   const [myAddress, setMyAddress] = useState([]);
   const userToken = localStorage.getItem("token-user");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -74,7 +78,7 @@ const CheckOut = () => {
   const handleAddress = async () => {
     const payload = {
       fullName: formData.name,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: phoneNumber,
       countryCode: formData.countryCode,
       city: formData.city,
       street: formData.street,
@@ -106,6 +110,14 @@ const CheckOut = () => {
     } catch (error) {
       console.error("Error placing order:", error);
     }
+  };
+
+  const handlePhoneChange = (value, country) => {
+    setPhoneNumber(value);
+    setFormData((prev) => ({
+      ...prev,
+      countryCode: country.dialCode,
+    }));
   };
 
   return (
@@ -145,16 +157,23 @@ const CheckOut = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Country Code*</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="countryCode"
-                      value={formData.countryCode}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group">
+              <label className="form-label">Phone Number*</label>
+              <PhoneInput
+                country={"us"} // Default country
+                value={phoneNumber}
+                onChange={handlePhoneChange}
+                enableSearch={true} // Allows search in the dropdown
+                disableSearchIcon={false} // Keeps the search icon visible
+                inputClass="form-control" // Applies custom styling
+                buttonClass="phone-input-button" // Adds styles for the dropdown
+                inputProps={{
+                  name: "phone",
+                  required: true,
+                  autoFocus: true,
+                }}
+              />
+            </div>
+                  {/* <div className="form-group">
                     <label className="form-label">Phone Number*</label>
                     <input
                       type="number"
@@ -164,7 +183,7 @@ const CheckOut = () => {
                       value={formData.phoneNumber}
                       onChange={handleChange}
                     />
-                  </div>
+                  </div> */}
                   <div className="form-group mt-3">
                     <div className="d-flex gap-1 align-items-end">
                       <img
@@ -233,7 +252,7 @@ const CheckOut = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Type*</label>
+                    <label className="form-label">Address Type*</label>
                     <select
                       className="form-control"
                       name="type"
@@ -241,6 +260,7 @@ const CheckOut = () => {
                       onChange={handleChange}
                     >
                       <option value="Home">Home</option>
+                      <option value="Office">Office</option>
                       {/* <option value="Work">Work</option> */}
                     </select>
                   </div>

@@ -427,6 +427,51 @@ export async function logout(formData) {
     return { error };
   }
 }
+export async function getOrderDetails(id) {
+  try {
+    const response = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/order/viewOrderDetails/${id}`,
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 
 export async function getUser() {
   try {

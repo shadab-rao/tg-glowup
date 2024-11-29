@@ -35,6 +35,9 @@ const AllProduct = () => {
     }
   };
 
+  console.log(productData);
+  
+
   const totalPages = pageData?.totalPages || 1;
   const totalDocs = pageData?.total || 1;
   const itemsPerPage = 10;
