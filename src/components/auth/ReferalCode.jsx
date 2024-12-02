@@ -26,14 +26,24 @@ const ReferalCode = () => {
             <div className="form-group">
               <p className="comman-small-text text-light">
                 Don’t have a referral code?{" "}
-                <a href className="text-primary">
+                <Link
+                  to={"/"}
+                  className="text-primary"
+                  style={{}}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.2)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  }
+                >
                   Skip this step
-                </a>
+                </Link>
               </p>
             </div>
             <div className="form-group">
               <div className="mt-4">
-                <Link to={"/"} className="comman-btn">
+                <Link to={"#"} className="comman-btn">
                   Continue
                 </Link>
               </div>

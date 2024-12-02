@@ -120,11 +120,11 @@ const MyWishlist = () => {
                           <span className="review-text">250+ Review</span>
                         </div>
                       </div>
-                      <div className="mt-3">
+                      {/* <div className="mt-3">
                         <select className="form-select bg-transparent">
                           <option value>Size: One Size</option>
                         </select>
-                      </div>
+                      </div> */}
                       <div className="mt-3">
                         <button
                           className="comman-btn"

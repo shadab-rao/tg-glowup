@@ -65,7 +65,7 @@ const Filter = () => {
             <div className="d-md-block d-none">
               <div className="row mt-4">
                 {/* <div className="col-auto text-center  "> */}
-                {subCategories?.map((item) => (
+                {subCategories.length > 0 ? (subCategories?.map((item) => (
                   <div className="col-auto text-center">
                     <div
                       className="cate-img-slider-wrapper"
@@ -91,7 +91,7 @@ const Filter = () => {
                       {item?.name_en}
                     </p>
                   </div>
-                ))}
+                ))) : <p style={{fontWeight:"500"}}>No Sub Categories Available</p>}
               </div>
               {/* </div> */}
             </div>
@@ -186,10 +186,10 @@ const Filter = () => {
                 </div>
               </div>
             </div>
-            {selectedSubcategoryId && (
+            {/* {selectedSubcategoryId && (
               <SubsubCategories subcategoryId={selectedSubcategoryId} />
-            )}
-            <AllProduct />
+            )} */}
+            <AllProduct subcategoryId={selectedSubcategoryId}/>
           </div>
         </div>
       </div>

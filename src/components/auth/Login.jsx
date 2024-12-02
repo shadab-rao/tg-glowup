@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [countryCode, setCountryCode] = useState("91");
+  const [countryCode, setCountryCode] = useState("966");
   const {
     register,
     handleSubmit,
@@ -33,6 +33,8 @@ const Login = () => {
     const response = await glowLogin(requestData);
     if (response?.data) {
       localStorage.setItem("user-otp",response?.data?.results?.otp)
+      localStorage.setItem("user-phone",response?.data?.results?.phoneNumber)
+      localStorage.setItem("user-countryCode",response?.data?.results?.countryCode)
       navigate("/login/otp", { state: requestData });
     }
     setLoading(false);

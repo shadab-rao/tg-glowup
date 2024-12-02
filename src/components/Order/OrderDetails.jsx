@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../common/Sidebar";
 import Header from "../common/Header";
 import {
-    getOrderDetails,
+  getOrderDetails,
   getOrders,
   orderDelete,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import Footer from "../common/Footer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import moment from "moment";
 
 const OrderDetails = () => {
   const [orderList, setOrderList] = useState([]);
-  const {id} = useParams()
+  const { id } = useParams();
 
   // Fetch orders
   useEffect(() => {
@@ -20,7 +21,7 @@ const OrderDetails = () => {
 
   const handleOrders = async () => {
     const response = await getOrderDetails(id);
-    setOrderList(response?.data?.results);
+    setOrderList(response?.data?.results?.orders);
   };
 
   const handleDelete = async (orderId) => {
@@ -34,11 +35,13 @@ const OrderDetails = () => {
       <section className="my-order">
         <div className="container mt-4 mb-5">
           <div className="row">
-          <Sidebar/>
+            <Sidebar />
             <div className="col-lg-6 col-md-8 col-12 mt-md-0 mt-4">
               <div className>
                 <div className>
-                  <h5 className="text fw-bold mb-4 text-start">Order Details</h5>
+                  <h5 className="text fw-bold mb-4 text-start">
+                    Order Details
+                  </h5>
                 </div>
                 <div className="mt-4">
                   <div className="card-box">
@@ -52,7 +55,9 @@ const OrderDetails = () => {
                                   Order Date
                                 </p>
                                 <p className="comman-small-text m-0 text-dark fw-semibold">
-                                  18 Sept, 2024
+                                  {moment(orderList?.createdAt).format(
+                                    "YYYY-MM-DD"
+                                  )}
                                 </p>
                               </div>
                               <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0 text-start">
@@ -60,7 +65,7 @@ const OrderDetails = () => {
                                   Price
                                 </p>
                                 <p className="comman-small-text m-0 text-dark fw-semibold">
-                                  SAR 260
+                                  SAR {orderList?.totalAmount}
                                 </p>
                               </div>
                               <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0 text-start">
@@ -76,7 +81,7 @@ const OrderDetails = () => {
                                   Status
                                 </p>
                                 <p className="comman-small-text m-0 text-success fw-semibold">
-                                  Delivered
+                                  {orderList?.status}
                                 </p>
                               </div>
                             </div>
@@ -134,81 +139,65 @@ const OrderDetails = () => {
                   </div>
                 </div>
                 <div className="mt-4">
-                  <div className="Checkout-box mt-3 bg-white">
-                    <div className="row">
-                      <div className="col-md-auto col-4">
-                        <div className="Checkout-box-img">
-                          <img src="../../../assets/img/products/face-powder.png" alt />
+                  {orderList?.inventory?.map((item) => (
+                    <div className="Checkout-box mt-3 bg-white">
+                      <div className="row">
+                        <div className="col-md-auto col-4">
+                          <div className="Checkout-box-img">
+                            <img
+                              src={item?.product?.imagesWeb?.[0]}
+                              alt
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
-                        <h6 className="Checkout-box-head">Sunday Rain</h6>
-                        <p className="normal-text">Rose Body Scrub 25 ML</p>
-                        <h5 className="checkbox-price">SAR 130</h5>
-                        <div className="checkbox-span-text">
-                          <span className="normal-text border-end pe-1">
-                            Size: 25 ML
-                          </span>
-                          <span className="normal-text ps-1">Quantity: 02</span>
+                        <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
+                          <h6 className="Checkout-box-head">{item?.product?.name_en}</h6>
+                          <p className="normal-text">abcd</p>
+                          <h5 className="checkbox-price">SAR {item?.amount}</h5>
+                          <div className="checkbox-span-text">
+                            <span className="normal-text border-end pe-1">
+                              Size: 25 ML
+                            </span>
+                            <span className="normal-text ps-1">
+                              Quantity: 1
+                            </span>
+                          </div>
+                          <p className="normal-text">Subtotal: SAR {item?.amount}</p>
                         </div>
-                        <p className="normal-text">Subtotal: SAR 260</p>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <div className="Checkout-box mt-3 bg-white">
-                    <div className="row">
-                      <div className="col-md-auto col-4">
-                        <div className="Checkout-box-img">
-                          <img src="../../../assets/img/products/lipstick.png" alt />
-                        </div>
-                      </div>
-                      <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
-                        <h6 className="Checkout-box-head">Sunday Rain</h6>
-                        <p className="normal-text">Rose Body Scrub 25 ML</p>
-                        <h5 className="checkbox-price">SAR 130</h5>
-                        <div className="checkbox-span-text">
-                          <span className="normal-text border-end pe-1">
-                            Size: 25 ML
-                          </span>
-                          <span className="normal-text ps-1">Quantity: 02</span>
-                        </div>
-                        <p className="normal-text">Subtotal: SAR 260</p>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
             <div className="col-lg-3 col-md-6  col-12 mt-lg-0 mt-md-4 mt-4 text-start">
               <div className>
-                <h5 className="text fw-bold mb-2">Payment Method</h5>
+                <h5 className="text fw-bold mb-2 ms-1">Payment Method</h5>
               </div>
               <div className="card-box rounded-3 mb-3">
-                <p className="comman-small-text m-0">Cash On Delivery</p>
+                <p className="comman-small-text m-0">{orderList?.paymentMethod}</p>
               </div>
               <div className>
-                <h5 className="text fw-bold mb-2">Delivery Address</h5>
+                <h5 className="text fw-bold mb-1 mt-4 ms-1 mt-2">Delivery Address</h5>
               </div>
               <div className="card-box">
-                <p className="comman-small-text  fw-semibold">
+                {/* <p className="comman-small-text  fw-semibold">
                   Mohammed bin Ali
-                </p>
+                </p> */}
                 <p className="comman-small-text m-0">
-                  King Fahd Street Al-Olaya District Riyadh 12345 Saudi Arabia
+                 {orderList?.address?.street }, {orderList?.address?.city}, {orderList?.address?.pinCode}, {orderList?.address?.cpuntry}
                 </p>
                 <p className="comman-small-text">+971 34567865</p>
               </div>
               <div className="mt-3">
-                <h5 className="Checkout-main-heading">Price Details</h5>
+                <h5 className="Checkout-main-heading ms-1 mt-5">Price Details</h5>
                 <div className="Checkout-box mt-1 px-3 py-3 bg-white">
                   <div className="row">
                     <div className="col-6">
                       <p className="light-text">Subtotal</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">SAR 260</p>
+                      <p className="bold-text">SAR {orderList?.totalAmount}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -216,7 +205,7 @@ const OrderDetails = () => {
                       <p className="light-text">Tax</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">SAR 60</p>
+                      <p className="bold-text">0</p>
                     </div>
                   </div>
                   <div className="row">
@@ -224,26 +213,26 @@ const OrderDetails = () => {
                       <p className="light-text">Grand Total</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">SAR 250</p>
+                      <p className="bold-text">SAR {orderList?.totalAmount}</p>
                     </div>
                   </div>
                 </div>
                 <div className="mt-4">
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <button className="comman-btn">Checkout Now</button>
-                  </div>
-                  <div className="mb-4">
+                  </div> */}
+                  <Link className="mb-4" to={"/my-order/reason-for-cancel"}>
                     <button className="comman-border-btn bg-transparent">
                       Cancel Order
                     </button>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </>
   );
 };

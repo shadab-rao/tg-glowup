@@ -100,7 +100,7 @@ const BestSellerProduct = () => {
                 {/* <div className="new-label">
                   <p className>New</p>
                 </div> */}
-                <div className="comman-card-header">
+                <div className="comman-card-header" onClick={() => navigate(`/product-details/${item?._id}`)}>
                   <div className="img-wrapper">
                     <img src={item?.imagesWeb?.[0]} alt />
                   </div>
@@ -115,7 +115,7 @@ const BestSellerProduct = () => {
                     </h3>
                     <h3 className="price">SAR {item?.price}</h3>
                   </div>
-                  <p className="paragraph text-start">
+                  <p className="paragraph text-start" style={{cursor:"default"}}>
                     {item?.description_en?.slice(0, 10) + "..."}
                   </p>
                   <div className="mt-4">

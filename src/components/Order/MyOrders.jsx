@@ -10,10 +10,13 @@ import Footer from "../common/Footer";
 
 const MyOrders = () => {
   const [orderList, setOrderList] = useState([]);
+  const userToken = localStorage.getItem("token-user");
 
   // Fetch orders
   useEffect(() => {
-    handleOrders();
+   if(userToken){
+    handleOrders()
+   }
   }, []);
 
   const handleOrders = async () => {
@@ -30,7 +33,6 @@ const MyOrders = () => {
   };
 
   console.log(orderList);
-  
 
   return (
     <>
@@ -43,23 +45,23 @@ const MyOrders = () => {
               <div className>
                 <div className>
                   <h5 className="text fw-bold  text-start">
-                    Your latest Order
+                    Your Orders
                   </h5>
                 </div>
                 <div className="mt-2">
-                  <div className="card-box">
-                    <div className="card-box-header">
-                      {orderList?.map((item) => (
+                  {orderList?.length >0 ?  (orderList?.map((item) => (
+                    <Link className="card-box mt-3"  to={`/my-order/details/${item?.order_id}`}>
+                      <div className="card-box-header">
                         <div className="container">
                           <div className="row border-bottom pb-2">
-                            <div className="col-lg-9 col-md-11 mt-2 col-11">
+                            <div className="col-lg-11 col-md-11 mt-2 col-11">
                               <div className="row">
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
                                   <p className="comman-small-text m-0 text-light">
                                     Order Date
                                   </p>
-                                  <p className="comman-small-text m-0 text-dark fw-semibold">
-                                   {item?.createdAt}
+                                  <p className="comman-small-text ms-1 m-0 text-dark fw-semibold">
+                                    {item?.createdAt || "..."}
                                   </p>
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
@@ -67,7 +69,7 @@ const MyOrders = () => {
                                     Price
                                   </p>
                                   <p className="comman-small-text m-0 text-dark fw-semibold">
-                                    SAR {item?.amount}
+                                    SAR {parseFloat(item?.amount).toFixed(2)}
                                   </p>
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
@@ -75,7 +77,9 @@ const MyOrders = () => {
                                     Order
                                   </p>
                                   <p className="comman-small-text m-0 text-dark fw-semibold">
-                                    {item?.order_id}
+                                    {item?.order_id?.length > 10
+                                      ? `${item.order_id.slice(0, 10)}...`
+                                      : item?.order_id || "..."}
                                   </p>
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
@@ -89,27 +93,27 @@ const MyOrders = () => {
                               </div>
                             </div>
                             <Link
-                              className="col-lg-3 col-md-1 col-1 px-0 text-end"
-                              to={`/my-order/details/${item?.order_id}`}
+                              className="col-lg-1 col-md-1 col-1 px-0 text-end"
+                              // to={`/my-order/details/${item?.order_id}`}
                             >
                               <i className="fa fa-angle-right" />
                             </Link>
+                          </div>
                           <div className=" mt-4">
                             <div className="row">
                               <div className="col-lg-2 col-md-3 col-4">
                                 <img
-                                src={item?.product?.imagesWeb?.[0]}
+                                  src={item?.product?.imagesWeb?.[0]}
                                   alt
                                   className="w-100 h-fit"
                                 />
                               </div>
                             </div>
                           </div>
-                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                      </div>
+                    </Link>
+                  ))) : <p className="mt-5" style={{fontWeight:"500",fontSize:"18px"}}>Orders Not Found</p>}
                 </div>
               </div>
             </div>

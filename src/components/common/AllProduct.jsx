@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addToCart,
   addWishlist,
@@ -11,21 +11,32 @@ import { useDispatch } from "react-redux";
 import { setCartCount, setProducts, setWishlist } from "../../Redux/cartSlice";
 import { Paginate } from "../Pagination/Paginate";
 
-const AllProduct = () => {
+const AllProduct = ({subcategoryId}) => {
   const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageData, setPageData] = useState();
   const userToken = localStorage.getItem("token-user");
+  const {id} = useParams()
 
   useEffect(() => {
     handleProduct();
-  }, [dispatch, currentPage]);
+  }, [dispatch, currentPage,id,subcategoryId]);
 
   const handleProduct = async () => {
-    try {
-      const response = await productList({ pageSize: 10, page: currentPage });
+      try {
+        const payload = {
+          search: "",
+          category: id,
+          subCategory:subcategoryId,
+          // isFeatured: true,
+          // attribute: "6734a95f7ea8bf353ceade54",
+          // value: "6734a9817ea8bf353ceade63",
+          pageSize: 10,   
+          page: currentPage,
+        };
+      const response = await productList(payload)
       setPageData(response?.data?.results);
       const products = response?.data?.results?.products || [];
       setProductData(response?.data?.results?.products || []);
@@ -91,7 +102,7 @@ const AllProduct = () => {
   return (
     <>
       <div className="row mt-4">
-        {productData?.map((item) => (
+        {productData?.length > 0 ?  (productData?.map((item) => (
           <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
             <div className="comman-card">
               {userToken ? (
@@ -114,7 +125,7 @@ const AllProduct = () => {
               {/* <div className="new-label">
                   <p className>New</p>
                 </div> */}
-              <div className="comman-card-header" style={{cursor:"default"}}>
+              <div className="comman-card-header" onClick={() => navigate(`/product-details/${item?._id}`)}>
                 <div className="img-wrapper">
                   <img src={item?.imagesWeb?.[0]} alt />
                 </div>
@@ -155,7 +166,7 @@ const AllProduct = () => {
               </div>
             </div>
           </div>
-        ))}
+        ))) : <p  style={{fontWeight:"500",fontSize:"18px"}}>No Product Available</p>}
         <div className="d-flex align-items-center justify-content-between flex-wrap pt-3 pb-3">
           <Paginate
             currentPage={currentPage}

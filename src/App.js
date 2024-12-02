@@ -22,6 +22,7 @@ import Filter from "./components/filter/Filter.jsx"
 import RaiseQuery from "./components/HelpSupport/RaiseQuery.jsx";
 import MyOrders from "./components/Order/MyOrders.jsx";
 import OrderDetails from "./components/Order/OrderDetails.jsx";
+import OrderCancelReason from "./components/Order/OrderCancelReason.jsx";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/product-details/:id" element={<ProductDetail />} />
           <Route path="/my-order" element={<MyOrders/>} />
+          <Route path="/my-order/reason-for-cancel" element={<OrderCancelReason/>} />
           <Route path="/my-order/details/:id" element={<OrderDetails/>} />
           <Route path="/my-address" element={<MyAddress/>} />
           <Route path="/my-wishlist" element={<MyWishlist/>} />

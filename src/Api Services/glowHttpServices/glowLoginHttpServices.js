@@ -437,15 +437,15 @@ export async function getOrderDetails(id) {
     const { data } = response;
 
     if (!data.error) {
-      Swal.fire({
-        toast: true,
-        icon: "success",
-        position: "top-end",
-        title: data.message,
-        showConfirmButton: false,
-        timerProgressBar: true,
-        timer: 3000,
-      });
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "success",
+      //   position: "top-end",
+      //   title: data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
     } else {
       Swal.fire({
         toast: true,
@@ -819,14 +819,11 @@ export async function wishList(id) {
     return { error };
   }
 }
-export async function productList({ pageSize, page }) {
+export async function productList(formData) {
   try {
     const { data } = await glowHttpServie.patch(
       `${process.env.REACT_APP_APIENDPOINT}/inventory/getProducts`,
-      {
-        pageSize,
-        page,
-      }
+      formData
     );
     if (!data.error) {
       // Swal.fire({

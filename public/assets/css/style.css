@@ -1285,7 +1285,7 @@ img {
         line-height: 28.8px;
         color: var(--black);
         position: relative;
-        padding-right: 10px;
+        /* padding-right: 10px; */
 
         &::after {
             content: "\203A";
@@ -2521,5 +2521,6 @@ img {
     border: 2px solid #ff6600; /* Highlight the active variant with an orange border */
     background-color: #f4f4f4; /* Optional: change background color */
   }
+
 
   

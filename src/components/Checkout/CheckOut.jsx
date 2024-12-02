@@ -6,6 +6,7 @@ import "react-phone-input-2/lib/style.css";
 import {
   address,
   getAddress,
+  getCart,
   placeOrder,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,7 +19,11 @@ const CheckOut = () => {
   const { state } = useLocation();
   const [myAddress, setMyAddress] = useState([]);
   const userToken = localStorage.getItem("token-user");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const userPhone = localStorage.getItem("user-phone");
+  const userCountryCode = localStorage.getItem("user-countryCode") || "sa";
+  const [phoneNumber, setPhoneNumber] = useState(userCountryCode + userPhone);
+  const [cartData, setCartData] = useState([]);
+  const [totalPrice, setTotalPrice] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -31,17 +36,20 @@ const CheckOut = () => {
     type: "Home",
   });
 
-  // Fetch address when component mounts
+  console.log(state);
+
+  const attribute = state?.selectedOptions?.attribute;
+  const value = state?.selectedOptions?.value;
+
   useEffect(() => {
     handleViewAddress();
   }, []);
 
-  // Populate form data when myAddress updates
   useEffect(() => {
     if (myAddress) {
       setFormData({
         name: myAddress.name || "",
-        phoneNumber: myAddress.phoneNumber || "",
+        phoneNumber: myAddress.phoneNumber,
         street: myAddress.street || "",
         countryCode: myAddress.countryCode || "",
         city: myAddress.city || "",
@@ -78,7 +86,7 @@ const CheckOut = () => {
   const handleAddress = async () => {
     const payload = {
       fullName: formData.name,
-      phoneNumber: phoneNumber,
+      phoneNumber: formData.phoneNumber,
       countryCode: formData.countryCode,
       city: formData.city,
       street: formData.street,
@@ -101,11 +109,15 @@ const CheckOut = () => {
     const payload = {
       ...state,
       address: addressId,
+      attribute,
+      value,
     };
     try {
       const response = await placeOrder(payload);
-      if (myAddress.length > 0) {
+      if (myAddress.length >= 0) {
         navigate("/my-order");
+      } else {
+        navigate("/checkout");
       }
     } catch (error) {
       console.error("Error placing order:", error);
@@ -118,6 +130,21 @@ const CheckOut = () => {
       ...prev,
       countryCode: country.dialCode,
     }));
+  };
+
+  useEffect(() => {
+    if (userToken) {
+      handleCart();
+    }
+  }, []);
+
+  const handleCart = async () => {
+    if (userToken) {
+      const response = await getCart();
+      const cartItems = response?.data?.results?.cart?.inventory || [];
+      setCartData(cartItems);
+      setTotalPrice(response?.data?.results?.cart?.amount || "0");
+    }
   };
 
   return (
@@ -157,22 +184,24 @@ const CheckOut = () => {
                     />
                   </div>
                   <div className="form-group">
-              <label className="form-label">Phone Number*</label>
-              <PhoneInput
-                country={"us"} // Default country
-                value={phoneNumber}
-                onChange={handlePhoneChange}
-                enableSearch={true} // Allows search in the dropdown
-                disableSearchIcon={false} // Keeps the search icon visible
-                inputClass="form-control" // Applies custom styling
-                buttonClass="phone-input-button" // Adds styles for the dropdown
-                inputProps={{
-                  name: "phone",
-                  required: true,
-                  autoFocus: true,
-                }}
-              />
-            </div>
+                    <label className="form-label">
+                      Phone Number (Optional)
+                    </label>
+                    <PhoneInput
+                      inputClass="form-control"
+                      country="sa"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                      enableSearch={true}
+                      disableSearchIcon={false}
+                      buttonClass="phone-input-button"
+                      inputProps={{
+                        name: "phone",
+                        required: true,
+                        autoFocus: true,
+                      }}
+                    />
+                  </div>
                   {/* <div className="form-group">
                     <label className="form-label">Phone Number*</label>
                     <input
@@ -406,47 +435,41 @@ const CheckOut = () => {
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">3. Order Review</h5>
                 <p className="Checkout-paragraph">Review your order here</p>
-                <div className="Checkout-box">
-                  <div className="row">
-                    <div className="col-md-auto col-4">
-                      <div className="Checkout-box-img">
-                        <img src="assets/img/products/face-powder.png" alt />
+                <div style={{ maxHeight: "600px", overflowY: "auto",overflowX:"hidden" }}>
+                  {cartData?.map((items) => (
+                    <div className="Checkout-box mt-3">
+                      <div className="row">
+                        <div className="col-md-auto col-4">
+                          <div className="Checkout-box-img">
+                            <img src={items?.varient?.imagesWeb?.[0]} alt="" />
+                          </div>
+                        </div>
+                        <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
+                          <h6 className="Checkout-box-head">
+                            {items?.product?.name_en}
+                          </h6>
+                          <p className="normal-text">
+                            {(items?.product?.description_en).slice(0, 20)}
+                          </p>
+                          <h5 className="checkbox-price">
+                            {items?.product?.currency} {items?.varient?.price}
+                          </h5>
+                          <div className="checkbox-span-text">
+                            <span className="normal-text border-end pe-1">
+                              {items?.varient?.attribute?.[0]?.name_en}:{" "}
+                              {items?.varient?.values?.[0]?.name_en}
+                            </span>
+                            <span className="normal-text ps-1">
+                              Quantity: {items?.quantity}
+                            </span>
+                          </div>
+                          <p className="normal-text">
+                            Subtotal: {items?.product?.currency} {items?.amount}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
-                      <h6 className="Checkout-box-head">Sunday Rain</h6>
-                      <p className="normal-text">Rose Body Scrub 25 ML</p>
-                      <h5 className="checkbox-price">SAR 130</h5>
-                      <div className="checkbox-span-text">
-                        <span className="normal-text border-end pe-1">
-                          Size: 25 ML
-                        </span>
-                        <span className="normal-text ps-1">Quantity: 02</span>
-                      </div>
-                      <p className="normal-text">Subtotal: SAR 260</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="Checkout-box mt-3">
-                  <div className="row">
-                    <div className="col-md-auto col-4">
-                      <div className="Checkout-box-img">
-                        <img src="assets/img/products/lipstick.png" alt />
-                      </div>
-                    </div>
-                    <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
-                      <h6 className="Checkout-box-head">Sunday Rain</h6>
-                      <p className="normal-text">Rose Body Scrub 25 ML</p>
-                      <h5 className="checkbox-price">SAR 130</h5>
-                      <div className="checkbox-span-text">
-                        <span className="normal-text border-end pe-1">
-                          Size: 25 ML
-                        </span>
-                        <span className="normal-text ps-1">Quantity: 02</span>
-                      </div>
-                      <p className="normal-text">Subtotal: SAR 260</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 <div className="mt-3">
                   <h5 className="Checkout-main-heading">Price Details</h5>
@@ -456,7 +479,7 @@ const CheckOut = () => {
                         <p className="light-text">Subtotal</p>
                       </div>
                       <div className="col-6">
-                        <p className="bold-text">SAR {state?.amount}</p>
+                        <p className="bold-text">SAR {totalPrice}</p>
                       </div>
                     </div>
                     <div className="row">
@@ -472,7 +495,7 @@ const CheckOut = () => {
                         <p className="light-text">Grand Total</p>
                       </div>
                       <div className="col-6">
-                        <p className="bold-text">SAR {state?.amount}</p>
+                        <p className="bold-text">SAR {totalPrice}</p>
                       </div>
                     </div>
                   </div>
