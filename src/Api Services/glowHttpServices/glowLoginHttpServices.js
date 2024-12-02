@@ -427,10 +427,11 @@ export async function logout(formData) {
     return { error };
   }
 }
+// 
 export async function getOrderDetails(id) {
   try {
     const response = await glowHttpServie.get(
-      `${process.env.REACT_APP_APIENDPOINT}/order/viewOrderDetails/${id}`,
+      `${process.env.REACT_APP_APIENDPOINT}/order/viewOrder/${id}`,
     );
 
     const { data } = response;
