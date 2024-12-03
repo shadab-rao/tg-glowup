@@ -152,7 +152,7 @@ const OrderDetails = () => {
                         </div>
                         <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
                           <h6 className="Checkout-box-head">{item?.product?.name_en}</h6>
-                          <p className="normal-text">abcd</p>
+                          <p className="normal-text">{item?.product?.description_en}</p>
                           <h5 className="checkbox-price">SAR {item?.amount}</h5>
                           <div className="checkbox-span-text">
                             <span className="normal-text border-end pe-1">
@@ -221,7 +221,7 @@ const OrderDetails = () => {
                   {/* <div className="mb-4">
                     <button className="comman-btn">Checkout Now</button>
                   </div> */}
-                  <Link className="mb-4" to={"/my-order/reason-for-cancel"}>
+                  <Link className="mb-4" to={"/my-order/reason-for-cancel"} state={id}>
                     <button className="comman-border-btn bg-transparent">
                       Cancel Order
                     </button>

@@ -23,6 +23,7 @@ import RaiseQuery from "./components/HelpSupport/RaiseQuery.jsx";
 import MyOrders from "./components/Order/MyOrders.jsx";
 import OrderDetails from "./components/Order/OrderDetails.jsx";
 import OrderCancelReason from "./components/Order/OrderCancelReason.jsx";
+import AddAdress from "./components/Address/AddAdress.jsx";
 
 function App() {
   return (
@@ -44,7 +45,8 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
           <Route path="/your-bag" element={<Bag/>} />
           <Route path="/checkout" element={<CheckOut/>} />
-          <Route path="/edit-address" element={<EditAddress/>} />
+          <Route path="/edit-address/:id" element={<EditAddress/>} />
+          <Route path="/add-address" element={<AddAdress/>} />
           <Route path="/my-profile" element={<Profile/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/login/otp" element={<Otp/>} />

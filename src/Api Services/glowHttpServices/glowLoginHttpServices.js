@@ -151,6 +151,52 @@ export async function editProfile(formData) {
     return { error };
   }
 }
+export async function cancelOrder(id,formData) {
+  try {
+    const response = await glowHttpServie.put(
+      `${process.env.REACT_APP_APIENDPOINT}/order/orderCancel/${id}`,
+      formData
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 export async function helpSupport(formData) {
   try {
     const response = await glowHttpServie.post(
@@ -381,6 +427,52 @@ export async function address(formData) {
     return { error };
   }
 }
+export async function editAddress(id,formData) {
+  try {
+    const response = await glowHttpServie.put(
+      `${process.env.REACT_APP_APIENDPOINT}/user/editAddress/${id}`,
+      formData
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 export async function logout(formData) {
   try {
     const response = await glowHttpServie.get(
@@ -514,10 +606,51 @@ export async function getAddress() {
     return { error };
   }
 }
+export async function viewAddress(id) {
+  try {
+    const { data } = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/user/viewAddress/${id}`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function getOrders() {
   try {
     const { data } = await glowHttpServie.patch(
       `${process.env.REACT_APP_APIENDPOINT}/order/getMyOrders`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function updateCart(formData) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/cart/updateCart`,
+      formData
     );
     return { data };
   } catch (error) {

@@ -21,6 +21,12 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const wishlistCount = useSelector((state) => state.cart.wishlistCount);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prevState) => !prevState);
+    setIsCategoryOpen(false);
+  };
   const toggleSearchDropdown = () => {
     setIsSearchOpen((prev) => !prev);
   };
@@ -34,6 +40,7 @@ const Header = () => {
 
   const toggleCategoryList = () => {
     setIsCategoryOpen((prev) => !prev);
+    setIsDropdownOpen(false);
   };
 
   const response = async () => {
@@ -66,13 +73,13 @@ const Header = () => {
     console.log("Header detected cart count change:", cartCount);
   }, [cartCount]);
 
-  const handleLogout = async ()=>{
-    if(userToken){
-      const response = await logout()
-    localStorage.removeItem("token-user")
-    window.location.reload()
+  const handleLogout = async () => {
+    if (userToken) {
+      const response = await logout();
+      localStorage.removeItem("token-user");
+      window.location.reload();
     }
-  }
+  };
 
   return (
     <header id="header">
@@ -99,12 +106,15 @@ const Header = () => {
                       <Link
                         to="/"
                         className={`nav-link ${
-                          !isCategoryOpen && location.pathname === "/"
+                          !isCategoryOpen &&
+                          !isDropdownOpen &&
+                          location.pathname === "/"
                             ? "active"
                             : ""
                         }`}
                         onClick={() => {
                           setIsCategoryOpen(false);
+                          setIsDropdownOpen(false);
                         }}
                       >
                         Home
@@ -122,11 +132,286 @@ const Header = () => {
                         Categories
                       </a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">
+                    <li className="nav-item brand-dropdown">
+                      <a
+                        className={`nav-link ${isDropdownOpen ? "active" : ""}`}
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleDropdown();
+                        }}
+                      >
                         Brands
                       </a>
+                      <div
+                        className={`brand-dropdown-content ${
+                          isDropdownOpen ? "d-block" : "d-none"
+                        }`}
+                      >
+                        <div className="container">
+                          <div className="row">
+                            <div className="col-lg-4 col-md-4 pb-4">
+                              <div className="ps-3">
+                                <ul className="p-0 list-unstyled mt-4 brand-list">
+                                  <li className>
+                                    <a href className="text">
+                                      Maybelline New York
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Lakme
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Nykaa Cosmetics
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      M.A.C
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      The Face Shop
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      L'Oreal Paris
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Glow Up Naturals
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Biotique
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Huda Beauty
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Kama Ayurveda
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      Innisfree
+                                    </a>
+                                  </li>
+                                  <li className>
+                                    <a href className="text">
+                                      The Body Shop
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="col-lg-8 col-md-8  h-100 pb-4 bg-light">
+                              <div className="row ">
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="../../../public/assets/img/Glow Up.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="../../../assets/img/products/face-powder.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="../../../assets/img/products/"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img src="assets/img/brand/mac.png" alt />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/lorealparis.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/huda-beauty.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/Biotique_new.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/FacesCanadaa.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/TFS-logo-1.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/colorbar-logoforui.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/nyx_New.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/LOTUS-HERBALS.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/niveaa.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/clinique.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/neutrogena.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/Estee-Lauder.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/Olay_logos.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/kay-beauty.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                                <div className="col-lg-3 col-md-4 h-fit">
+                                  <a href>
+                                    <div className="brand-img-wrapper">
+                                      <img
+                                        src="assets/img/brand/Herbal-Essences.png"
+                                        alt
+                                      />
+                                    </div>
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </li>
+
                     <li class="nav-item">
                       <a class="nav-link" href="#">
                         Offers
@@ -337,9 +622,13 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <div  className="list-box active align-items-center " style={{cursor:"pointer"}} onClick={handleLogout}>
+                            <div
+                              className="list-box active align-items-center "
+                              style={{ cursor: "pointer" }}
+                              onClick={handleLogout}
+                            >
                               {/* <div className="icon"> */}
-                                <i className="fa fa-sign-out ms-1" />
+                              <i className="fa fa-sign-out ms-1" />
                               {/* </div> */}
                               <div className="text-wrapper ms-1">
                                 <p className="text-dark">Logout</p>

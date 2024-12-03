@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import Sidebar from "../common/Sidebar";
-import { address } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import {
+  address,
+  getAddress,
+  viewAddress,
+} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { type } from "@testing-library/user-event/dist/type";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { useParams } from "react-router-dom";
+
 
 const EditAddress = () => {
+  const [myAddress, setMyAddress] = useState([]);
+  const userToken = localStorage.getItem("token-user");
+  const userPhone = localStorage.getItem("user-phone");
+  const userCountryCode = localStorage.getItem("user-countryCode") || "sa";
+  const [phoneNumber, setPhoneNumber] = useState(userCountryCode + userPhone);
+  const userProfile = JSON.parse(localStorage.getItem("profileData"));
+  const {id} = useParams();
+
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -17,6 +33,46 @@ const EditAddress = () => {
     pinCode: "",
     type: "Home",
   });
+
+  useEffect(() => {
+    if (myAddress) {
+      setFormData({
+        name: userProfile?.name || "",
+        phoneNumber: myAddress.phoneNumber,
+        street: myAddress.street || "",
+        countryCode: myAddress.countryCode || "",
+        city: myAddress.city || "",
+        state: myAddress.state || "",
+        country: myAddress.country || "",
+        pinCode: myAddress.pinCode || "",
+        type: myAddress.type || "Home",
+      });
+    }
+  }, [myAddress]);
+
+  useEffect(() => {
+    handleViewAddress();
+  }, []);
+
+  const handleViewAddress = async () => {
+    if (userToken) {
+      const response = await viewAddress(id);
+      const address = response?.data?.results?.address || {};
+
+      setMyAddress(address);
+    }
+  };
+
+  const handlePhoneChange = (value, country) => {
+    setPhoneNumber(value);
+    setFormData((prev) => ({
+      ...prev,
+      countryCode: country.dialCode,
+      phoneNumber: value,  
+    }));
+  };
+
+ 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,10 +90,9 @@ const EditAddress = () => {
       city: formData.city,
       street: formData.street,
       state: formData.state,
-      country:formData.country,
-      pinCode:formData.pinCode,
-      type:formData.type,
-
+      country: formData.country,
+      pinCode: formData.pinCode,
+      type: formData.type,
     };
     try {
       const response = await address(payload);
@@ -72,7 +127,7 @@ const EditAddress = () => {
                           />
                         </div>
                       </div>
-                      <div className="col-lg-6 col-12 mt-lg-0 mt-4">
+                      {/* <div className="col-lg-6 col-12 mt-lg-0 mt-4">
                         <div className="form-group">
                           <label className="form-label">Country Code*</label>
                           <input
@@ -97,6 +152,27 @@ const EditAddress = () => {
                             onChange={handleChange}
                           />
                         </div>
+                      </div> */}
+
+                      <div className="form-group">
+                        <label className="form-label">
+                          Phone Number (Optional)
+                        </label>
+                        <PhoneInput
+                          containerClass="react-tel-input"
+                          inputClass="form-control"
+                          country="sa"
+                          value={phoneNumber}
+                          onChange={handlePhoneChange}
+                          enableSearch={true}
+                          disableSearchIcon={false}
+                          buttonClass="phone-input-button"
+                          inputProps={{
+                            name: "phone",
+                            required: true,
+                            autoFocus: true,
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -176,7 +252,7 @@ const EditAddress = () => {
                         <div className="form-group">
                           <label className="form-label">Type*</label>
                           <select
-                            className="form-control"
+                            className="form-select"
                             name="type"
                             value={formData.type}
                             onChange={handleChange}
@@ -199,7 +275,7 @@ const EditAddress = () => {
                             Save in address book
                           </span>
                         </div>
-                        <div className="d-flex gap-2 align-items-center">
+                        {/* <div className="d-flex gap-2 align-items-center">
                           <input
                             type="checkbox"
                             className="form-checkbox"
@@ -210,7 +286,7 @@ const EditAddress = () => {
                           <span className="form-label m-0">
                             Save in my profile
                           </span>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>

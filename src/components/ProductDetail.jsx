@@ -82,9 +82,9 @@ const ProductDetail = () => {
             <div className="container">
               <div className="custom-breadcrum">
                 <div className="custom-breadcrum-list">Home</div>
-                <div className="custom-breadcrum-list">Women Skincare</div>
+                <div className="custom-breadcrum-list">{viewData?.category?.[0]?.name_en}</div>
                 <div className="custom-breadcrum-list active">
-                  de rose advanced serum
+                {viewData?.subCategory?.[0]?.name_en}
                 </div>
               </div>
               <div className="row mt-4">

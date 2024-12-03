@@ -1,34 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import Sidebar from "../common/Sidebar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { cancelOrder } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 
 const OrderCancelReason = () => {
-    const navigate = useNavigate()
+  const [selectedReason, setSelectedReason] = useState("Change of Preference");
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
-    useEffect(() => {
-        const handleModalClose = () => {
-          // Remove lingering backdrop
-          const backdrops = document.querySelectorAll(".modal-backdrop");
-          backdrops.forEach((backdrop) => backdrop.remove());
-          document.body.classList.remove("modal-open"); // Remove body class
-        };
-    
-        // Attach event listeners to modals
-        const modals = document.querySelectorAll(".modal");
-        modals.forEach((modal) => {
-          modal.addEventListener("hidden.bs.modal", handleModalClose);
-        });
-    
-        return () => {
-          // Cleanup event listeners on unmount
-          modals.forEach((modal) => {
-            modal.removeEventListener("hidden.bs.modal", handleModalClose);
-          });
-        };
-      }, []);
-      
+  // useEffect(() => {
+  //   const handleModalClose = () => {
+  //     const backdrops = document.querySelectorAll(".modal-backdrop");
+  //     backdrops.forEach((backdrop) => backdrop.remove());
+  //     document.body.classList.remove("modal-open");
+  //   };
+  //   const modals = document.querySelectorAll(".modal");
+  //   modals.forEach((modal) => {
+  //     modal.addEventListener("hidden.bs.modal", handleModalClose);
+  //   });
+
+  //   return () => {
+  //     modals.forEach((modal) => {
+  //       modal.removeEventListener("hidden.bs.modal", handleModalClose);
+  //     });
+  //   };
+  // }, []);
+
+  const handleCancel = async () => {
+    const response = await cancelOrder(state, { reason: selectedReason });
+  };
+
+  const handleReasonChange = (e) => {
+    setSelectedReason(e.target.value);
+  };
 
   return (
     <>
@@ -38,96 +44,46 @@ const OrderCancelReason = () => {
           <div className="row">
             <Sidebar />
             <div className="col-lg-4 col-md-6 col-12 mt-md-0 mt-4 text-start">
-              <div className="border border-2 border-dark rounded-3 py-3 px-4">
-                <div className>
-                  <div className="form-design">
-                    <input type="radio" id="test1" name="radio-group" />
-                    <label
-                      htmlFor="test1"
-                      className="form-label fs-6 fw-semibold text-dark"
-                    >
-                      Change of Preference
-                    </label>
-                  </div>
-                  <p className="comman-small-text text-dark">
-                    I changed my mind and no longer want the <br />
-                    makeup product.
-                  </p>
-                </div>
-              </div>
-              <div className="border border-2 border-dark rounded-3 py-3 px-4 mt-3">
-                <div className>
-                  <div className="form-design">
-                    <input type="radio" id="test1" name="radio-group" />
-                    <label
-                      htmlFor="test1"
-                      className="form-label fs-6 fw-semibold text-dark"
-                    >
-                      Wrong Shade/Color
-                    </label>
-                  </div>
-                  <p className="comman-small-text text-dark">
-                    I accidentally ordered the wrong shade or <br />
-                    color.
-                  </p>
-                </div>
-              </div>
-              <div className="border border-2 border-dark rounded-3 py-3 px-4 mt-3">
-                <div className>
+              {[
+                "Change of Preference",
+                "Wrong Shade/Color",
+                "Allergic Reaction Concern",
+                "Price Concerns",
+                "Something Else",
+              ].map((reason, index) => (
+                <div
+                  key={index}
+                  className="border border-2 border-dark rounded-3 py-3 px-4 mt-3"
+                >
                   <div className="form-design">
                     <input
                       type="radio"
-                      id="test1"
+                      id={`reason-${index}`}
                       name="radio-group"
-                      defaultChecked
+                      value={reason}
+                      checked={selectedReason === reason}
+                      onChange={handleReasonChange}
                     />
                     <label
-                      htmlFor="test1"
+                      htmlFor={`reason-${index}`}
                       className="form-label fs-6 fw-semibold text-dark"
                     >
-                      Allergic Reaction Concern
+                      {reason}
                     </label>
                   </div>
                   <p className="comman-small-text text-dark">
-                    I realized I might be allergic to the ingredients <br />
-                    in the product.
+                    {reason === "Change of Preference"
+                      ? "I changed my mind and no longer want the makeup product."
+                      : reason === "Wrong Shade/Color"
+                      ? "I accidentally ordered the wrong shade or color."
+                      : reason === "Allergic Reaction Concern"
+                      ? "I realized I might be allergic to the ingredients in the product."
+                      : reason === "Price Concerns"
+                      ? "I found the same makeup product at a lower price elsewhere."
+                      : "I have another reason for canceling this order, which is not listed above."}
                   </p>
                 </div>
-              </div>
-              <div className="border border-2 border-dark rounded-3 py-3 px-4 mt-3">
-                <div className>
-                  <div className="form-design">
-                    <input type="radio" id="test1" name="radio-group" />
-                    <label
-                      htmlFor="test1"
-                      className="form-label fs-6 fw-semibold text-dark"
-                    >
-                      Price Concerns
-                    </label>
-                  </div>
-                  <p className="comman-small-text text-dark">
-                    I found the same makeup product at a lower <br />
-                    price elsewhere.
-                  </p>
-                </div>
-              </div>
-              <div className="border border-2 border-dark rounded-3 py-3 px-4 mt-3">
-                <div className>
-                  <div className="form-design">
-                    <input type="radio" id="test1" name="radio-group" />
-                    <label
-                      htmlFor="test1"
-                      className="form-label fs-6 fw-semibold text-dark"
-                    >
-                      Something Else
-                    </label>
-                  </div>
-                  <p className="comman-small-text text-dark">
-                    I have another reason for canceling this order, <br />
-                    which is not listed above.
-                  </p>
-                </div>
-              </div>
+              ))}
               <div className="mt-3">
                 <button
                   className="comman-btn"
@@ -137,7 +93,7 @@ const OrderCancelReason = () => {
                   Cancel Now
                 </button>
               </div>
-              <Link className="mt-3" onClick={(()=>navigate(-1))}>
+              <Link className="mt-3" onClick={() => navigate(-1)}>
                 <button className="comman-border-btn bg-transparent">
                   I don’t want to Cancel
                 </button>
@@ -172,6 +128,7 @@ const OrderCancelReason = () => {
                 data-bs-toggle="modal"
                 data-bs-target="#exampleConfirmModal"
                 data-bs-dismiss="modal"
+                onClick={handleCancel}
               >
                 Yes, I want to cancel
               </button>
@@ -194,7 +151,6 @@ const OrderCancelReason = () => {
         tabindex="-1"
         aria-labelledby="exampleConfirmModalLabel"
         aria-hidden="true"
-    
       >
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -205,7 +161,14 @@ const OrderCancelReason = () => {
               </p>
             </div>
             <div class="modal-footer border-0">
-              <button type="button" class="comman-btn" data-bs-dismiss="modal">
+              <button
+                type="button"
+                className="comman-btn"
+                data-bs-dismiss="modal"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+              >
                 Shop for More
               </button>
             </div>

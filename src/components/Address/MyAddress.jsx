@@ -7,6 +7,7 @@ import {
   addressDelete,
   getAddress,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { capitalize } from "../utils/CapitalLetter";
 
 const MyAddress = () => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const MyAddress = () => {
     const response = await addressDelete(id);
     handleAddress();
   };
+
+  
   return (
     <>
       <Header />
@@ -60,10 +63,14 @@ const MyAddress = () => {
                               Default
                             </button> */}
                             <p className="text text-dark fw-semibold"></p>
-                            <p className="text-light mb-0">{item?.street}</p>
-                            <p className="text-light mb-2">
+                            <p className="text-light mb-0">{capitalize(item?.street)}</p>
+                          {item?.phoneNumber !== "" ? (
+                              <p className="text-light mb-2">
                               +{item?.countryCode} {item?.phoneNumber}
                             </p>
+                          ) : <p className="text-light mb-2">
+                         ..
+                        </p>}
                           </div>
                           <div className="d-flex gap-4 pt-2">
                             <button
@@ -76,7 +83,7 @@ const MyAddress = () => {
                             </button>
                             <button
                               className="bg-transparent text-primary fw-semibold"
-                              onClick={() => navigate("/edit-address")}
+                              onClick={() => navigate(`/edit-address/${item?._id}`)}
                             >
                               Edit
                             </button>
@@ -95,7 +102,7 @@ const MyAddress = () => {
                       <a
                         href
                         className="text-primary"
-                        onClick={() => navigate("/edit-address")}
+                        onClick={() => navigate("/add-address")}
                       >
                         + Add New Address
                       </a>

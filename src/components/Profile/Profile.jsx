@@ -7,6 +7,9 @@ import {
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { capitalize } from "../utils/CapitalLetter";
 import { Link } from "react-router-dom";
+import "react-phone-input-2/lib/style.css";
+import Sidebar from "../common/Sidebar";
+import PhoneInput from "react-phone-input-2";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState("");
@@ -22,17 +25,18 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [imageData, setImageData] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const userToken = localStorage.getItem("token-user");
 
   const dummyData = {
-    fullName: "John Doe",
-    email: "johndoe@example.com",
-    phoneNumber: "+123456789",
-    countryCode: "+1",
-    gender: "Male",
-    dateOfBirth: "1990-01-01",
-    profileImage: "assets/img/user.jpg", 
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    countryCode: "",
+    gender: "",
+    dateOfBirth: "",
+    profileImage: "assets/img/user.jpg",
   };
 
   const getProfile = async () => {
@@ -43,9 +47,10 @@ const Profile = () => {
         if (!userData?.fullName) {
           setProfileData(dummyData);
           setInfo(dummyData);
+          setIsEditing(true);
         } else {
           localStorage.setItem("glow-user", JSON.stringify(userData));
-  
+
           setProfileData(userData);
           setInfo({
             fullName: userData?.fullName,
@@ -59,7 +64,6 @@ const Profile = () => {
         }
       }
     } else {
-      // Show dummy data if no userToken
       setProfileData(dummyData);
       setInfo(dummyData);
     }
@@ -82,6 +86,7 @@ const Profile = () => {
       setImageData(imageUrl);
     }
   };
+  
 
   const handleRadioChange = (e) => {
     const { value } = e.target;
@@ -104,8 +109,11 @@ const Profile = () => {
     const response = await editProfile(formData);
     if (response?.data) {
       setInfo(response.data.results);
-      getProfile()
+      getProfile();
       setIsEditing(false);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
     }
 
     setLoading(false);
@@ -114,6 +122,16 @@ const Profile = () => {
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
+
+  const handlePhoneChange = (value, country) => {
+    setPhoneNumber(value); 
+    setInfo({
+      ...info,
+      phoneNumber: value,  
+      countryCode: country?.dialCode || '', 
+    });
+  };
+  
 
   if (!userToken) {
     return (
@@ -132,13 +150,16 @@ const Profile = () => {
       </>
     );
   }
+
+ 
+
   return (
     <>
       <Header />
       <section className="my_profile">
         <div className="container mt-4 mb-4">
           <div className="row">
-            <div className="col-lg-3 col-md-4 col-12">
+          <div className="col-lg-3 col-md-4 col-12">
               <div className="my-account">
                 <div className="user-box">
                   <div className="d-flex gap-3">
@@ -174,25 +195,25 @@ const Profile = () => {
                 <div className="icon active">
                   <img src="../../../assets/img/svg/box.svg" alt />
                 </div>
-                <div className="text-wrapper active border-bottom border-2">
+                <div className="text-wrapper active active border-bottom border-2">
                   <p className>My Order</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/my-address"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/location.svg" alt />
                 </div>
-                <div className="text-wrapper border-bottom border-2">
+                <div className="text-wrapper active border-bottom border-2">
                   <p className>My address</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/my-wishlist"} className="list-box mb-2">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/heart-light.svg" alt />
                 </div>
-                <div className="text-wrapper">
+                <div className="text-wrapper active">
                   <p className>My Wishlist</p>
                   <i className="fa fa-angle-right" />
                 </div>
@@ -203,55 +224,55 @@ const Profile = () => {
             <h5 className="text fw-semibold mb-1 mt-3 text-start">Others</h5>
             <div className="list-box-wrapper">
               <Link to={"/referral-program"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/link-circle.svg" alt />
                 </div>
-                <div className="text-wrapper border-bottom border-2">
+                <div className="text-wrapper active border-bottom border-2">
                   <p className>Referral Program</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/settings"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/setting-2.svg" alt />
                 </div>
-                <div className="text-wrapper border-bottom border-2">
+                <div className="text-wrapper active border-bottom border-2">
                   <p className>Settings</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/about-us"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/file-lines.svg" alt />
                 </div>
-                <div className="text-wrapper border-bottom border-2">
+                <div className="text-wrapper active border-bottom border-2">
                   <p className>About us</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/terms-conditions"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/file-minus.svg" alt />
                 </div>
-                <div className="text-wrapper border-bottom border-2">
+                <div className="text-wrapper active border-bottom border-2">
                   <p className>Terms &amp; Conditions</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/help-support"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/call.svg" alt />
                 </div>
-                <div className="text-wrapper border-bottom border-2">
+                <div className="text-wrapper active border-bottom border-2">
                   <p className>Help &amp; Support</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
               <Link to={"/privacy-policy"} className="list-box">
-                <div className="icon">
+                <div className="icon active">
                   <img src="../../../assets/img/svg/file-sheild.svg" alt />
                 </div>
-                <div className="text-wrapper">
+                <div className="text-wrapper active">
                   <p className>Privacy Policy</p>
                   <i className="fa fa-angle-right" />
                 </div>
@@ -268,11 +289,7 @@ const Profile = () => {
                 <div className="position-relative w-fit h-fit">
                   <div className="profile-img-wrapper">
                     <img
-                      src={
-                        profileData?.profileImage ||
-                        info?.profile ||
-                        "assets/img/user.jpg"
-                      }
+                       src={imageData || profileData?.profileImage || "assets/img/user.jpg"} 
                       alt="image"
                     />
                   </div>
@@ -344,7 +361,7 @@ const Profile = () => {
                                 type="text"
                                 className="form-control"
                                 name="email"
-                                placeholder="Amansingh34@gmail.com"
+                                placeholder="example@gmail.com"
                                 value={capitalize(info.email || "")}
                                 onChange={handleInputChange}
                                 readOnly={!isEditing}
@@ -371,7 +388,31 @@ const Profile = () => {
                               />
                             </div>
                           </div>
-                          <div className="col-lg-6 col-md-12 col-12 mt-lg-0 mt-4">
+                          <div className="form-group  col-lg-6 col-md-12 col-12  mt-3">
+                            <label
+                              htmlFor
+                              className="form-label text-start d-block"
+                              style={{ fontSize: "13px" }}
+                            >
+                              Phone Number
+                            </label>
+                            <PhoneInput
+                              containerClass="react-tel-input"
+                              inputClass="form-control"
+                              country="sa"
+                              value={info?.phoneNumber}
+                              onChange={handlePhoneChange}
+                              enableSearch={true}
+                              disableSearchIcon={false}
+                              buttonClass="phone-input-button"
+                              inputProps={{
+                                name: "phone",
+                                required: true,
+                                autoFocus: true,
+                              }}
+                            />
+                          </div>
+                          {/* <div className="col-lg-6 col-md-12 col-12 mt-lg-0 mt-4">
                             <div className="form-group">
                               <label
                                 htmlFor
@@ -410,7 +451,7 @@ const Profile = () => {
                                 readOnly={!isEditing}
                               />
                             </div>
-                          </div>
+                          </div> */}
                           <div className="col-lg-12 col-md-12 col-12 mt-md-0 mt-4">
                             <div className="form-group">
                               <label

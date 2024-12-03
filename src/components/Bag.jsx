@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
-import Products from "./mainComponent/Products"
+import Products from "./mainComponent/Products";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getCart,
   payment,
   placeOrder,
   removeCartItem,
+  updateCart,
 } from "../Api Services/glowHttpServices/glowLoginHttpServices";
 import EmptyBag from "./cart/EmptyBag";
 import { useDispatch } from "react-redux";
@@ -21,12 +22,20 @@ const Bag = () => {
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("token-user");
   const addressId = localStorage.getItem("address_id");
+  const [selectedAttributes, setSelectedAttributes] = useState({});
+  const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
     if (userToken) {
       handleCart();
     }
   }, []);
+
+  useEffect(() => {
+    handleUpdate();
+  }, [selectedAttributes,quantity]);
+  console.log(quantity);
+  
 
   const handleCart = async () => {
     if (userToken) {
@@ -43,11 +52,19 @@ const Bag = () => {
     }
   };
 
+  
+  
+
   const handleQuantityChange = (id, newQuantity) => {
     const updatedData = data.map((item) =>
       item.product._id === id ? { ...item, quantity: newQuantity } : item
     );
+    
     setData(updatedData);
+  
+    // Calculate total quantity after updating
+    const updatedTotalQuantity = updatedData.reduce((total, item) => total + item.quantity, 0);
+    setQuantity(updatedTotalQuantity);  // Directly set the total quantity
   };
 
   const getTotalPrice = () => {
@@ -57,7 +74,9 @@ const Bag = () => {
   };
   const getTotalDiscount = () => {
     return data.reduce((total, item) => {
-      return total + (item.varient.price - item.varient.discount ) * item.quantity;
+      return (
+        total + (item.varient.price - item.varient.discount) * item.quantity
+      );
     }, 0);
   };
 
@@ -82,6 +101,37 @@ const Bag = () => {
     // handlePlaceOrder(formData);
     navigate("/checkout", { state: response?.data?.results?.obj });
   };
+  
+  
+  
+  const handleAttributeChange = (itemId, attributeId, valueId) => {
+    setSelectedAttributes((prevSelected) => ({
+      ...prevSelected,
+      [itemId]: {
+        [attributeId]: valueId, 
+      },
+    }));
+  };
+  
+  const handleUpdate = async () => {
+    const attributes = [];
+    const values = [];
+    Object.keys(selectedAttributes).forEach((itemId) => {
+      const itemAttributes = selectedAttributes[itemId];
+      Object.keys(itemAttributes).forEach((attributeId) => {
+        attributes.push(attributeId);
+        values.push(itemAttributes[attributeId]); 
+      });
+    });
+
+    const response = await updateCart({
+      attribute: attributes,
+      value: values,
+      quantity: quantity,
+    });
+    console.log("Cart updated:", response);
+  };
+  
 
   if (data.length === 0 || !userToken) {
     return (
@@ -97,13 +147,10 @@ const Bag = () => {
     );
   }
 
-  console.log(data);
-  
-
   return (
     <>
       <Header />
-      <section className="bag-section" style={{marginBottom:"100px"}}>
+      <section className="bag-section" style={{ marginBottom: "100px" }}>
         <div className="container">
           <div className="d-flex gap-4 mt-4 mb-3">
             <div className="fs-6 fw-semibold text-capitalize text-start">
@@ -135,20 +182,41 @@ const Bag = () => {
                         <h5 className="checkbox-price">
                           {item?.product?.currency} {item?.varient?.price}
                         </h5>
-                        <h5 className="checkbox-price mt-2" style={{color:"gray"}}>
-                        Price After Discount:  {item?.product?.currency} {item?.varient?.discount}
+                        <h5
+                          className="checkbox-price mt-2"
+                          style={{ color: "gray" }}
+                        >
+                          Price After Discount: {item?.product?.currency}{" "}
+                          {item?.varient?.discount}
                         </h5>
                         <div className="checkbox-span-text">
                           <div className="row mt-3">
-                            <div className="col-md-8 col-12">
-                              <select className="form-select">
-                                <option value>
-                                  {item?.varient?.attribute?.[0]?.name_en}:{" "}
-                                  {item?.varient?.values?.[0]?.name_en}
-                                </option>
+                            <div className="col-md-5 col-12">
+                              <select
+                                className="form-select"
+                                onChange={(e) => {
+                                  const selectedValueId = e.target.value;
+                                  const selectedAttributeId =
+                                    item.varient.values.find(
+                                      (value) => value._id === selectedValueId
+                                    )?.attribute?._id;
+
+                                  handleAttributeChange(
+                                    item.product._id,
+                                    selectedAttributeId,
+                                    selectedValueId
+                                  );
+                                }}
+                              >
+                                {item?.varient?.values.map((value) => (
+                                  <option key={value._id} value={value._id}>
+                                    {value?.attribute?.name_en} :{" "}
+                                    {value?.name_en}
+                                  </option>
+                                ))}
                               </select>
                             </div>
-                            <div className="col-md-4 col-12 mt-md-0 mt-4">
+                            <div className="col-md-3 col-12 mt-md-0 mt-4">
                               <select
                                 className="form-select"
                                 value={item.quantity}
@@ -182,10 +250,7 @@ const Bag = () => {
                         </div>
                         <div className="d-flex gap-2 align-items-center">
                           <i className="fa fa-heart-o trash-icon" />
-                          <p
-                            className="text"
-                            style={{ cursor: "pointer" }}
-                          >
+                          <p className="text" style={{ cursor: "pointer" }}>
                             Add To Wishlist
                           </p>
                         </div>
@@ -224,9 +289,7 @@ const Bag = () => {
                       <p className="light-text text-start">Subtotal</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">
-                        SAR {getTotalPrice()}
-                      </p>
+                      <p className="bold-text">SAR {getTotalPrice()}</p>
                     </div>
                   </div>
                   <div className="row">
@@ -234,9 +297,7 @@ const Bag = () => {
                       <p className="light-text text-start">Total Discount</p>
                     </div>
                     <div className="col-6">
-                      <p className="bold-text">
-                        SAR {getTotalDiscount()}
-                      </p>
+                      <p className="bold-text">SAR {getTotalDiscount()}</p>
                     </div>
                   </div>
                   <div className="row">

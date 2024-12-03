@@ -7,6 +7,7 @@ import {
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { Link } from "react-router-dom";
 import Footer from "../common/Footer";
+import moment from "moment";
 
 const MyOrders = () => {
   const [orderList, setOrderList] = useState([]);
@@ -21,18 +22,18 @@ const MyOrders = () => {
 
   const handleOrders = async () => {
     const response = await getOrders();
-    const orderLoop = response?.data?.results?.orders?.flatMap((order) =>
-      order?.inventory?.map((inven) => ({ ...inven, order_id: order?._id }))
-    );
-    setOrderList(orderLoop);
+    // const orderLoop = response?.data?.results?.orders?.flatMap((order) =>
+    //   order?.inventory?.map((inven) => ({ ...inven, order_id: order?._id }))
+    // );
+    setOrderList(response?.data?.results?.orders);
   };
 
-  const handleDelete = async (orderId) => {
-    await orderDelete(orderId);
-    handleOrders();
-  };
+  // const handleDelete = async (orderId) => {
+  //   await orderDelete(orderId);
+  //   handleOrders();
+  // };
 
-  console.log(orderList);
+  // console.log(orderList);
 
   return (
     <>
@@ -50,7 +51,7 @@ const MyOrders = () => {
                 </div>
                 <div className="mt-2">
                   {orderList?.length >0 ?  (orderList?.map((item) => (
-                    <Link className="card-box mt-3"  to={`/my-order/details/${item?.order_id}`}>
+                    <Link className="card-box mt-3"  to={`/my-order/details/${item?._id}`}>
                       <div className="card-box-header">
                         <div className="container">
                           <div className="row border-bottom pb-2">
@@ -61,7 +62,7 @@ const MyOrders = () => {
                                     Order Date
                                   </p>
                                   <p className="comman-small-text ms-1 m-0 text-dark fw-semibold">
-                                    {item?.createdAt || "..."}
+                                    {moment(item?.createdAt).format("YYYY-MM-DD") || "..."}
                                   </p>
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
@@ -69,7 +70,7 @@ const MyOrders = () => {
                                     Price
                                   </p>
                                   <p className="comman-small-text m-0 text-dark fw-semibold">
-                                    SAR {parseFloat(item?.amount).toFixed(2)}
+                                    SAR {parseFloat(item?.totalAmount).toFixed(2)}
                                   </p>
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
@@ -103,7 +104,7 @@ const MyOrders = () => {
                             <div className="row">
                               <div className="col-lg-2 col-md-3 col-4">
                                 <img
-                                  src={item?.product?.imagesWeb?.[0]}
+                                  src={item?.inventory?.[0]?.product?.imagesWeb?.[0]}
                                   alt
                                   className="w-100 h-fit"
                                 />
