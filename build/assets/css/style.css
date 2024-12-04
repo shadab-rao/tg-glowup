@@ -2579,6 +2579,7 @@ img {
     & li {
         position: relative;
         width: fit-content;
+        cursor: pointer;
         &::after {
             content: "";
             position: absolute;
@@ -2590,7 +2591,7 @@ img {
         }
         &:hover {
             &::after {
-                width: 100%;
+                width: 0%;
             }
         }
     }
@@ -2604,6 +2605,52 @@ img {
         object-fit: contain;
     }
 }
+
+/* Custom styles for the Select component */
+
+/* Styling for the selected option */
+.custom-select-container .custom-select__control {
+    border: 1px solid #ccc; /* Default border color */
+    background-color: white; /* Default background */
+  }
+  
+  .custom-select-container .custom-select__control--is-focused {
+    border-color: #333 !important; /* Focus border color */
+  }
+  
+  .custom-select-container .custom-select__menu {
+    background-color: white !important; /* Menu background color */
+    border: 1px solid #ccc !important; /* Menu border */
+  }
+  
+  /* Highlighting the selected option */
+  .custom-select-container .custom-select__option--is-selected {
+    background-color: black !important; /* Black background for selected option */
+    color: white !important; /* White text for selected option */
+  }
+  
+  /* Change color when hovering over an option */
+  .custom-select-container .custom-select__option:hover {
+    background-color: #333 !important; /* Dark gray on hover */
+    color: white !important; /* White text on hover */
+  }
+  
+  /* Placeholder and selected value text */
+  .custom-select-container .custom-select__single-value {
+    color: black !important; /* Selected value text color */
+  }
+  
+  .custom-select-container .custom-select__placeholder {
+    color: gray !important; /* Placeholder text color */
+  }
+  
+  .custom-select-container .custom-select__control:focus {
+    outline: none !important; /* Remove the default outline on focus */
+    box-shadow: none !important; /* Remove box-shadow */
+  }
+  
+
+  
 
 
 

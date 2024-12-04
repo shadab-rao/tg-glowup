@@ -303,7 +303,7 @@ const ProductDetail = () => {
             <h5 className="bold-heading text-start mt-5">Similar Products</h5>
           </div>
           <div className="row mt-1 mb-5">
-            <AllProduct />
+            <AllProduct categoryId={viewData?.category?.[0]?._id} />
           </div>
         </div>
       </section>

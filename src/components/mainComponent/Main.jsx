@@ -10,6 +10,7 @@ import Footer from "../common/Footer";
 import MobileSidebar from "../common/MobileSidebar";
 
 const Main = () => {
+  
   return (
     <>
       <Header />

@@ -14,6 +14,7 @@ import EmptyBag from "./cart/EmptyBag";
 import { useDispatch } from "react-redux";
 import { incrementCartCount, setCartCount } from "../Redux/cartSlice";
 import { capitalize } from "./utils/CapitalLetter";
+import Select from "react-select";
 
 const Bag = () => {
   const navigate = useNavigate();
@@ -174,6 +175,21 @@ const Bag = () => {
     );
   }
 
+
+  const getQuantityOptions = () => {
+    return [...Array(10).keys()].map((num) => ({
+      value: num + 1,
+      label: num + 1,
+    }));
+  };
+  
+  const getAttributeOptions = (item) => {
+    return item?.varient?.values?.map((value) => ({
+      value: value._id,
+      label: `${value?.attribute?.name_en}: ${value?.name_en}`,
+    }));
+  };
+
   return (
     <>
       <Header />
@@ -195,23 +211,38 @@ const Bag = () => {
                   <div className="Checkout-box border-0 mt-3">
                     <div className="row">
                       <div className="col-md-auto col-4">
-                        <div className="Checkout-box-img">
+                        <div className="Checkout-box-img"  style={{cursor:"pointer"}}
+                        onClick={() =>
+                          navigate(`/product-details/${item?.product?._id}`)
+                        }>
                           <img src={item?.varient?.imagesWeb?.[0]} alt="" />
                         </div>
                       </div>
                       <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
-                        <h6 className="Checkout-box-head">
+                        <h6 className="Checkout-box-head"  style={{cursor:"pointer"}}
+                        onClick={() =>
+                          navigate(`/product-details/${item?.product?._id}`)
+                        }>
                           {item?.product?.name_en}
                         </h6>
-                        <p className="normal-text">
+                        <p className="normal-text"  style={{cursor:"pointer"}}
+                        onClick={() =>
+                          navigate(`/product-details/${item?.product?._id}`)
+                        }>
                           {capitalize(item?.product?.description_en)}
                         </p>
-                        <h5 className="checkbox-price">
+                        <h5 className="checkbox-price"  style={{cursor:"pointer"}}
+                        onClick={() =>
+                          navigate(`/product-details/${item?.product?._id}`)
+                        }>
                           {item?.product?.currency} {item?.varient?.price}
                         </h5>
                         <h5
                           className="checkbox-price mt-2"
-                          style={{ color: "gray" }}
+                          style={{cursor:"pointer",color:"gray"}}
+                          onClick={() =>
+                            navigate(`/product-details/${item?.product?._id}`)
+                          }
                         >
                           Price After Discount: {item?.product?.currency}{" "}
                           {item?.varient?.discount}
@@ -219,52 +250,45 @@ const Bag = () => {
                         <div className="checkbox-span-text">
                           <div className="row mt-3">
                             <div className="col-md-5 col-12">
-                              <select
-                                className="form-select"
-                                value={
-                                  selectedAttributes[item.product._id]?.[
-                                    item.varient.values[0]?.attribute?._id
-                                  ] || item.varient.values[0]._id // Default to first value if none is selected
-                                }
-                                onChange={(e) => {
-                                  const selectedValueId = e.target.value;
+                            <Select
+                               value={
+                                selectedAttributes[item.product._id]
+                                  ? getAttributeOptions(item).find(
+                                      (option) =>
+                                        option.value ===
+                                        selectedAttributes[item.product._id]?.[item.varient.values[0]?.attribute?._id]
+                                    )
+                                  : getAttributeOptions(item)[0] 
+                              }
+                                onChange={(selectedOption) => {
+                                  const selectedValueId = selectedOption.value;
                                   const selectedAttributeId =
                                     item.varient.values.find(
                                       (value) => value._id === selectedValueId
                                     )?.attribute?._id;
-
                                   handleAttributeChange(
                                     item.product._id,
                                     selectedAttributeId,
                                     selectedValueId
                                   );
                                 }}
-                              >
-                                {item?.varient?.values.map((value) => (
-                                  <option key={value._id} value={value._id}>
-                                    {value?.attribute?.name_en}:{" "}
-                                    {value?.name_en}
-                                  </option>
-                                ))}
-                              </select>
+                                options={getAttributeOptions(item)}
+                                className="custom-select-container"  
+                                classNamePrefix="custom-select" 
+                              />
                             </div>
                             <div className="col-md-3 col-12 mt-md-0 mt-4">
-                              <select
-                                className="form-select"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                  handleQuantityChange(
-                                    item.product._id,
-                                    parseInt(e.target.value)
-                                  )
+                            <Select
+                                value={getQuantityOptions().find(
+                                  (option) => option.value === item.quantity
+                                )}
+                                onChange={(selectedOption) =>
+                                  handleQuantityChange(item.product._id, selectedOption.value)
                                 }
-                              >
-                                {[...Array(10).keys()].map((num) => (
-                                  <option key={num + 1} value={num + 1}>
-                                    {num + 1}
-                                  </option>
-                                ))}
-                              </select>
+                                options={getQuantityOptions()}
+                                className="custom-select-container"  
+                                classNamePrefix="custom-select" 
+                              />
                             </div>
                           </div>
                         </div>

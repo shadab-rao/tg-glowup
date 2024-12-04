@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { setCartCount, setProducts, setWishlist } from "../../Redux/cartSlice";
 import { Paginate } from "../Pagination/Paginate";
 
-const AllProduct = ({subcategoryId}) => {
+const AllProduct = ({subcategoryId,categoryId}) => {
   const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
   const dispatch = useDispatch();
@@ -22,13 +22,13 @@ const AllProduct = ({subcategoryId}) => {
 
   useEffect(() => {
     handleProduct();
-  }, [dispatch, currentPage,id,subcategoryId]);
+  }, [dispatch, currentPage,id,subcategoryId,categoryId]);
 
   const handleProduct = async () => {
       try {
         const payload = {
           search: "",
-          category: id,
+          category: categoryId || id,
           subCategory:subcategoryId,
           // isFeatured: true,
           // attribute: "6734a95f7ea8bf353ceade54",
@@ -138,7 +138,7 @@ const AllProduct = ({subcategoryId}) => {
                   <h3 className="title text-start">
                     {item?.name_en?.slice(0, 10) + "..."}
                   </h3>
-                  <h3 className="price">SAR {item?.price}</h3>
+                  <h3 className="price">SAR {item?.varients?.[0]?.price}</h3>
                 </div>
                 <p className="paragraph text-start">
                   {item?.description_en?.slice(0, 10) + "..."}

@@ -46,6 +46,51 @@ export async function glowLogin(formData) {
     return { error };
   }
 }
+export async function productSearch(formData) {
+  try {
+    const { data, headers } = await glowHttpServie.put(
+      `${process.env.REACT_APP_APIENDPOINT}/inventory/getSearch`,
+      formData
+    );
+
+    console.log(JSON.stringify(formData));
+    if (!data?.error) {
+      // localStorage.setItem("glow-user", JSON.stringify(data?.results));
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "success",
+      //   position: "top-end",
+      //   title: data.results?.otp,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
+
+      return { data };
+    } else
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: "error",
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 
 export async function verifyOTP(formData) {
   try {

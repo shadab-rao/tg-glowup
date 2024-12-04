@@ -495,7 +495,7 @@ const CheckOut = () => {
                   </div>
                   <div className="mt-4">
                     <div className="mb-4">
-                      <button className="comman-btn" onClick={handlePlaceOrder}>
+                      <button className="comman-btn"  style={{ opacity: selectedAddress ? 1 : 0.5 }}  onClick={handlePlaceOrder} disabled={!selectedAddress}>
                         Checkout Now
                       </button>
                     </div>
