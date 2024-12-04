@@ -4,6 +4,7 @@ import Footer from "../common/Footer";
 import Sidebar from "../common/Sidebar";
 import {
   address,
+  editAddress,
   getAddress,
   viewAddress,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
@@ -95,7 +96,7 @@ const EditAddress = () => {
       type: formData.type,
     };
     try {
-      const response = await address(payload);
+      const response = await editAddress(id,payload);
       console.log("Response:", response);
     } catch (error) {
       console.error("Error:", error);

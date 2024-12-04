@@ -9,6 +9,7 @@ import {
   getAddress,
   getCart,
   placeOrder,
+  updateCart,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useLocation, useNavigate } from "react-router-dom";
 import { capitalize } from "../utils/CapitalLetter";
@@ -84,9 +85,13 @@ const CheckOut = () => {
   //   }
   // };
 
+
   useEffect(() => {
     handleListAddress();
   }, []);
+
+
+ 
 
   const handleListAddress = async () => {
     if (userToken) {
@@ -139,6 +144,9 @@ const CheckOut = () => {
     }
   };
 
+  console.log(state);
+  
+
   const handlePlaceOrder = async () => {
     const payload = {
       ...state,
@@ -146,9 +154,10 @@ const CheckOut = () => {
       attribute,
       value,
     };
+
     try {
       const response = await placeOrder(payload);
-      if (!myAddressList) {
+      if (selectedAddress) {
         navigate("/my-order");
       } else {
         navigate("/checkout");

@@ -32,10 +32,8 @@ const Bag = () => {
   }, []);
 
   useEffect(() => {
-    handleUpdate();
-  }, [selectedAttributes,quantity]);
-  console.log(quantity);
-  
+    // hand();
+  }, [selectedAttributes, quantity]);
 
   const handleCart = async () => {
     if (userToken) {
@@ -52,19 +50,30 @@ const Bag = () => {
     }
   };
 
-  
-  
-
   const handleQuantityChange = (id, newQuantity) => {
     const updatedData = data.map((item) =>
       item.product._id === id ? { ...item, quantity: newQuantity } : item
     );
-    
     setData(updatedData);
-  
-    // Calculate total quantity after updating
-    const updatedTotalQuantity = updatedData.reduce((total, item) => total + item.quantity, 0);
-    setQuantity(updatedTotalQuantity);  // Directly set the total quantity
+
+    const updatedItem = updatedData.find((item) => item.product._id === id);
+    updateProduct(updatedItem, { quantity: newQuantity });
+  };
+
+  const handleAttributeChange = (itemId, attributeId, valueId) => {
+    setSelectedAttributes((prevSelected) => ({
+      ...prevSelected,
+      [itemId]: {
+        ...prevSelected[itemId],
+        [attributeId]: valueId,
+      },
+    }));
+
+    const updatedItem = data.find((item) => item.product._id === itemId);
+    updateProduct(updatedItem, {
+      attribute: [attributeId || updatedItem.varient.values[0].attribute._id],
+      value: [valueId || updatedItem.varient.values[0]._id],
+    });
   };
 
   const getTotalPrice = () => {
@@ -81,7 +90,7 @@ const Bag = () => {
   };
 
   const handleRemove = async (id) => {
-    await removeCartItem(id);
+    await removeCartItem({cartId:id});
     handleCart();
   };
 
@@ -93,45 +102,63 @@ const Bag = () => {
 
   const handlePayment = async (amount) => {
     const response = await payment(amount);
+    const payloadData = response?.data?.results?.obj
     const address = addressId;
     const formData = {
-      ...response?.data?.results?.obj,
+      ...payloadData,
       address,
     };
     // handlePlaceOrder(formData);
-    navigate("/checkout", { state: response?.data?.results?.obj });
+    navigate("/checkout", { state: payloadData });
   };
-  
-  
-  
-  const handleAttributeChange = (itemId, attributeId, valueId) => {
-    setSelectedAttributes((prevSelected) => ({
-      ...prevSelected,
-      [itemId]: {
-        [attributeId]: valueId, 
-      },
-    }));
-  };
-  
-  const handleUpdate = async () => {
-    const attributes = [];
-    const values = [];
-    Object.keys(selectedAttributes).forEach((itemId) => {
-      const itemAttributes = selectedAttributes[itemId];
-      Object.keys(itemAttributes).forEach((attributeId) => {
-        attributes.push(attributeId);
-        values.push(itemAttributes[attributeId]); 
-      });
-    });
 
-    const response = await updateCart({
-      attribute: attributes,
-      value: values,
-      quantity: quantity,
-    });
-    console.log("Cart updated:", response);
-  };
+
   
+
+  // const handleAttributeChange = (itemId, attributeId, valueId) => {
+  //   setSelectedAttributes((prevSelected) => ({
+  //     ...prevSelected,
+  //     [itemId]: {
+  //       [attributeId]: valueId,
+  //     },
+  //   }));
+  // };
+
+  const updateProduct = async (item, updatedFields) => {
+    const defaultAttribute = item.varient.values[0]?.attribute?._id;
+    const defaultValue = item.varient.values[0]?._id;
+
+    const payload = {
+      cartId: item?.cart_id,
+      product: item.product._id,
+      varient: item.varient._id,
+      quantity: updatedFields.quantity || item.quantity,
+      decrease: updatedFields.decrease || false,
+      attribute:
+        updatedFields.attribute?.length > 0
+          ? updatedFields.attribute
+          : [defaultAttribute],
+      value:
+        updatedFields.value?.length > 0 ? updatedFields.value : [defaultValue],
+    };
+
+    console.log("Payload:", payload);
+
+    try {
+      const response = await updateCart(payload);
+      console.log("Cart updated:", response);
+      handleCart(); // Refresh cart if needed
+    } catch (error) {
+      console.error("Failed to update cart:", error);
+    }
+
+    try {
+      const response = await updateCart(payload);
+      console.log("Cart updated:", response);
+    } catch (error) {
+      console.error("Failed to update cart:", error);
+    }
+  };
 
   if (data.length === 0 || !userToken) {
     return (
@@ -194,6 +221,11 @@ const Bag = () => {
                             <div className="col-md-5 col-12">
                               <select
                                 className="form-select"
+                                value={
+                                  selectedAttributes[item.product._id]?.[
+                                    item.varient.values[0]?.attribute?._id
+                                  ] || item.varient.values[0]._id // Default to first value if none is selected
+                                }
                                 onChange={(e) => {
                                   const selectedValueId = e.target.value;
                                   const selectedAttributeId =
@@ -210,7 +242,7 @@ const Bag = () => {
                               >
                                 {item?.varient?.values.map((value) => (
                                   <option key={value._id} value={value._id}>
-                                    {value?.attribute?.name_en} :{" "}
+                                    {value?.attribute?.name_en}:{" "}
                                     {value?.name_en}
                                   </option>
                                 ))}
@@ -240,7 +272,7 @@ const Bag = () => {
                       <div className="border-top mt-4 align-items-center col-lg-12  pt-2 ps-2 mb-2 d-flex gap-5">
                         <div
                           className="d-flex ms-1 gap-2 align-items-center"
-                          onClick={() => handleRemove(item?.product?._id)}
+                          onClick={() => handleRemove(item?.cart_id)}
                           style={{ cursor: "pointer" }}
                         >
                           <i className="fa fa-trash trash-icon" />
