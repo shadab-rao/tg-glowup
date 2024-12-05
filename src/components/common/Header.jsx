@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
+  brandList,
   getCategory,
   getSubcategory,
   getUser,
@@ -24,10 +25,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const wishlistCount = useSelector((state) => state.cart.wishlistCount);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const navigate = useNavigate();
+  const [brandListing, setBrandListing] = useState([]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
@@ -92,6 +95,7 @@ const Header = () => {
       setSearchResults([]);
       return;
     }
+    setLoading(true);
 
     try {
       const response = await productSearch({ search: debouncedSearchQuery });
@@ -101,12 +105,21 @@ const Header = () => {
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
+    setLoading(false);
   };
 
-  // Call the search function whenever the debounced search query changes
   useEffect(() => {
     handleSearch();
   }, [debouncedSearchQuery]);
+
+  useEffect(() => {
+    handleBrandList();
+  }, []);
+
+  const handleBrandList = async () => {
+    const response = await brandList({ search: "" });
+    setBrandListing(response?.data?.results?.brands);
+  };
 
   return (
     <header id="header">
@@ -180,261 +193,30 @@ const Header = () => {
                             <div className="col-lg-4 col-md-4 pb-4">
                               <div className="ps-3">
                                 <ul className="p-0 list-unstyled mt-4 brand-list">
-                                  <li className>
-                                    <a href className="text">
-                                      Maybelline New York
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Lakme
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Nykaa Cosmetics
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      M.A.C
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      The Face Shop
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      L'Oreal Paris
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Glow Up Naturals
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Biotique
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Huda Beauty
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Kama Ayurveda
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      Innisfree
-                                    </a>
-                                  </li>
-                                  <li className>
-                                    <a href className="text">
-                                      The Body Shop
-                                    </a>
-                                  </li>
+                                  {brandListing?.map((name) => (
+                                    <li className onClick={()=>navigate("/brands")}>
+                                      <a href className="text">
+                                        {name?.brandName_en}
+                                      </a>
+                                    </li>
+                                  ))}
                                 </ul>
                               </div>
                             </div>
                             <div className="col-lg-8 col-md-8  h-100 pb-4 bg-light">
                               <div className="row ">
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/Lakme.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/FacesCanadaa.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/Biotique_new.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/mac.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/lorealparis.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/huda-beauty.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/Biotique_new.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/FacesCanadaa.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/TFS-logo-1.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/colorbar-logoforui.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/nyx_New.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/LOTUS-HERBALS.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/niveaa.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/clinique.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/neutrogena.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/Estee-Lauder.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/Olay_logos.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/kay-beauty.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
-                                <div className="col-lg-3 col-md-4 h-fit">
-                                  <a href>
-                                    <div className="brand-img-wrapper">
-                                      <img
-                                        src="../../../assets/img/brand/Herbal-Essences.png"
-                                        alt
-                                      />
-                                    </div>
-                                  </a>
-                                </div>
+                                {brandListing?.map((images) => (
+                                  <div className="col-lg-3 col-md-4 h-fit">
+                                    <a href>
+                                      <div className="brand-img-wrapper">
+                                        <img
+                                          src={images?.image || "../../../assets/img/brand/Lakme.png"}
+                                          alt
+                                        />
+                                      </div>
+                                    </a>
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           </div>
@@ -443,9 +225,9 @@ const Header = () => {
                     </li>
 
                     <li class="nav-item">
-                      <a class="nav-link" href="#">
+                      <Link class="nav-link" to={"/offers"}>
                         Offers
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -760,32 +542,65 @@ const Header = () => {
                     <div
                       className="row mt-4"
                       style={{
-                        maxHeight: "380px", 
-                        overflowY: "auto", 
-                        padding: "10px", 
+                        maxHeight: "380px",
+                        overflowY: "auto",
+                        padding: "10px",
                       }}
                     >
-                      {searchResults.length > 0 ? (searchResults?.map((item) => (
-                        <div className="col-lg-3 col-md-4 mb-3" style={{cursor:"pointer"}}  onClick={() => navigate(`/product-details/${item?._id}`)}>
-                          <div className="dropdown-card">
-                            <div className="dropdown-card-header">
-                              <img
-                                src={
-                                  item?.imagesApp?.[0] ||
-                                  "../../../assets/img/products/kerastase.png"
-                                }
-                                alt
-                                className
-                              />
-                            </div>
-                          </div>
-                          <div className="dropdown-card-body mt-1">
-                            <h5 className="dropdown-card-heading text-start">
-                              {item?.name_en}
-                            </h5>
+                      {loading ? (
+                        <div style={{ textAlign: "center", width: "100%" }}>
+                          <div className="spinner-border" role="status">
+                            <span className="sr-only">Loading...</span>
                           </div>
                         </div>
-                      ))) : <p style={{fontSize:"25px",fontWeight:"400"}}>Product Not Found</p>}
+                      ) : !searchQuery ? (
+                        <p
+                          style={{
+                            fontSize: "25px",
+                            fontWeight: "400",
+                            color: "#888",
+                          }}
+                        >
+                          Search Your Products here....
+                        </p>
+                      ) : searchResults.length > 0 ? (
+                        searchResults.map((item) => (
+                          <div
+                            key={item._id}
+                            className="col-lg-3 col-md-4 mb-3"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              navigate(`/product-details/${item?._id}`)
+                            }
+                          >
+                            <div className="dropdown-card">
+                              <div className="dropdown-card-header">
+                                <img
+                                  src={
+                                    item?.imagesApp?.[0] ||
+                                    "../../../assets/img/products/kerastase.png"
+                                  }
+                                  alt={item?.name_en || "Product Image"}
+                                  className="img-fluid"
+                                />
+                              </div>
+                            </div>
+                            <div className="dropdown-card-body mt-1  ps-1 pe-1 d-flex justify-content-between align-items-center">
+                              <h5 className="dropdown-card-heading text-start">
+                                {item?.name_en}
+                              </h5>
+                            </div>
+                             <div className="d-flex ps-1 pe-1 justify-content-between" style={{marginTop:"-10px"}}>
+                              <p>{item?.description_en.slice(0,15) + "..."}</p>
+                             <p style={{fontWeight:"500"}}>SAR {item?.price}</p>
+                             </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p style={{ fontSize: "25px", fontWeight: "400" }}>
+                          Product Not Found
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

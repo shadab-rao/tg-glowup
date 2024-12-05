@@ -24,6 +24,8 @@ import MyOrders from "./components/Order/MyOrders.jsx";
 import OrderDetails from "./components/Order/OrderDetails.jsx";
 import OrderCancelReason from "./components/Order/OrderCancelReason.jsx";
 import AddAdress from "./components/Address/AddAdress.jsx";
+import Brand from "./components/Brands/Brand.jsx"
+import OfferProduct from "./components/Offer/OfferProduct.jsx";
 
 function App() {
   return (
@@ -53,6 +55,8 @@ function App() {
           <Route path="/login/otp/success" element={<SuccessVerified/>} />
           <Route path="/referral-code" element={<ReferalCode/>} />
           <Route path="/sub-category/:id" element={<Filter/>} />
+          <Route path="/brands" element={<Brand/>} />
+          <Route path="/offers" element={<OfferProduct/>} />
         </Routes>
       </BrowserRouter>
     </div>

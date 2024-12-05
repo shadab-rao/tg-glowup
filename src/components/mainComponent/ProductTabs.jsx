@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { allSubcategoriesList, getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import AllProduct from "../common/AllProduct";
 
 const ProductTabs = () => {
-  const [categories, setCategories] = useState([]);
-  const [activeCategoryId, setActiveCategoryId] = useState(null);
+  const [subCategories, setSubCategories] = useState([]);
+  const [activeSubCategoryId, setActiveSubCategoryId] = useState(null);
   
 
 
   useEffect(() => {
     const handleCategory = async () => {
       try {
-        const response = await getCategory();
-        const fetchedCategories = response?.data?.results?.categories || [];
-        setCategories(fetchedCategories);
-        if (fetchedCategories.length > 0) {
-          setActiveCategoryId(fetchedCategories[0]._id);
+        const response = await allSubcategoriesList();
+        const fetchedSubCategories = response?.data?.results?.subcategories || [];
+        setSubCategories(fetchedSubCategories);
+        if (fetchedSubCategories.length > 0) {
+          setActiveSubCategoryId(fetchedSubCategories[0]._id);
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -26,7 +26,7 @@ const ProductTabs = () => {
   }, []); 
 
   const handleTabClick = (categoryId) => {
-    setActiveCategoryId(categoryId);
+    setActiveSubCategoryId(categoryId);
   };
   return (
     <>
@@ -37,19 +37,19 @@ const ProductTabs = () => {
             id="myTab"
             role="tablist"
           >
-            {categories.map((category, index) => (
-              <li className="nav-item" role="presentation" key={category._id}>
+            {subCategories.map((subCat, index) => (
+              <li className="nav-item" role="presentation" key={subCat._id}>
                 <button
                   className={`nav-link ${
-                    activeCategoryId === category._id ? "active" : ""
+                    activeSubCategoryId === subCat._id ? "active" : ""
                   }`}
-                  id={`${category.name_en.toLowerCase()}-tab`}
-                  onClick={() => handleTabClick(category._id)}
+                  id={`${subCat.name_en.toLowerCase()}-tab`}
+                  onClick={() => handleTabClick(subCat._id)}
                   role="tab"
-                  aria-controls={category.name_en.toLowerCase()}
-                  aria-selected={activeCategoryId === category._id}
+                  aria-controls={subCat.name_en.toLowerCase()}
+                  aria-selected={activeSubCategoryId === subCat._id}
                 >
-                  {category.name_en}
+                  {(subCat.name_en).slice(0,12)}
                 </button>
               </li>
             ))}
@@ -61,7 +61,7 @@ const ProductTabs = () => {
               role="tabpanel"
             >
               <div className="row mt-4">
-                <AllProduct categoryId={activeCategoryId} />
+                <AllProduct subcategoryId={activeSubCategoryId} />
               </div>
             </div>
           </div>

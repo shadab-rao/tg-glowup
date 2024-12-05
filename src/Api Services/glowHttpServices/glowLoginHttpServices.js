@@ -150,6 +150,122 @@ export async function verifyOTP(formData) {
     return { error };
   }
 }
+export async function brandList(formData) {
+  try {
+    const response = await glowHttpServie.put(
+      `${process.env.REACT_APP_APIENDPOINT}/category/getBrandList`,
+      formData,
+      {
+        headers: {
+          "x-auth-language": "English",
+        },
+      }
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "success",
+      //   position: "top-end",
+      //   title: data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
+
+      const token = data.results.token;
+      if (token) {
+        await localStorage.removeItem("token-user");
+        await localStorage.setItem("token-user", token);
+      }
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
+export async function allSubcategoriesList(formData) {
+  try {
+    const response = await glowHttpServie.put(
+      `${process.env.REACT_APP_APIENDPOINT}/category/getSubCategoriesList`,
+      formData,
+      {
+        headers: {
+          "x-auth-language": "English",
+        },
+      }
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "success",
+      //   position: "top-end",
+      //   title: data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
+
+      const token = data.results.token;
+      if (token) {
+        await localStorage.removeItem("token-user");
+        await localStorage.setItem("token-user", token);
+      }
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 export async function editProfile(formData) {
   try {
     const response = await glowHttpServie.put(
