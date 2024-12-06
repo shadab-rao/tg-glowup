@@ -55,7 +55,7 @@ function App() {
           <Route path="/login/otp/success" element={<SuccessVerified/>} />
           <Route path="/referral-code" element={<ReferalCode/>} />
           <Route path="/sub-category/:id" element={<Filter/>} />
-          <Route path="/brands" element={<Brand/>} />
+          <Route path="/brands/:id" element={<Brand/>} />
           <Route path="/offers" element={<OfferProduct/>} />
         </Routes>
       </BrowserRouter>

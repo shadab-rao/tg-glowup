@@ -19,6 +19,7 @@ import Select from "react-select";
 const Bag = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [updatedCartData, setUpdatedCartData] = useState([]);
   const [count, setCount] = useState(0);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("token-user");
@@ -147,15 +148,7 @@ const Bag = () => {
 
     try {
       const response = await updateCart(payload);
-      console.log("Cart updated:", response);
-      handleCart(); // Refresh cart if needed
-    } catch (error) {
-      console.error("Failed to update cart:", error);
-    }
-
-    try {
-      const response = await updateCart(payload);
-      console.log("Cart updated:", response);
+      handleCart();
     } catch (error) {
       console.error("Failed to update cart:", error);
     }

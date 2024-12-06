@@ -312,6 +312,43 @@ export async function editProfile(formData) {
     return { error };
   }
 }
+export async function brnadProduct(id,formData) {
+  try {
+    const response = await glowHttpServie.put(
+      `${process.env.REACT_APP_APIENDPOINT}/category/brandByProduct/${id}`,
+      formData
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 export async function cancelOrder(id,formData) {
   try {
     const response = await glowHttpServie.put(

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   brandList,
@@ -31,6 +31,7 @@ const Header = () => {
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const navigate = useNavigate();
   const [brandListing, setBrandListing] = useState([]);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
@@ -121,6 +122,19 @@ const Header = () => {
     setBrandListing(response?.data?.results?.brands);
   };
 
+  const handleOutsideClick = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsSearchOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
     <header id="header">
       <div className="top-header">
@@ -194,7 +208,10 @@ const Header = () => {
                               <div className="ps-3">
                                 <ul className="p-0 list-unstyled mt-4 brand-list">
                                   {brandListing?.map((name) => (
-                                    <li className onClick={()=>navigate("/brands")}>
+                                    <li
+                                      className
+                                      onClick={() => navigate(`/brands/${name?._id}`)}
+                                    >
                                       <a href className="text">
                                         {name?.brandName_en}
                                       </a>
@@ -210,7 +227,10 @@ const Header = () => {
                                     <a href>
                                       <div className="brand-img-wrapper">
                                         <img
-                                          src={images?.image || "../../../assets/img/brand/Lakme.png"}
+                                          src={
+                                            images?.image ||
+                                            "../../../assets/img/brand/Lakme.png"
+                                          }
                                           alt
                                         />
                                       </div>
@@ -479,6 +499,7 @@ const Header = () => {
         </div>
         <div className>
           <div
+            ref={dropdownRef}
             className={`search-dropdown ${isSearchOpen ? "d-block" : "d-none"}`}
           >
             <div className="search-dropdown-content">
@@ -487,7 +508,7 @@ const Header = () => {
                   <div className="col-12">
                     <div className="search-wrapper-2 d-flex">
                       <div className="dropdown-search-icon">
-                        <img src="assets/img/svg/search-normal.svg" alt />
+                        <img src="../../../assets/img/svg/search-normal.svg" alt />
                       </div>
                       <input
                         type="search"
@@ -585,15 +606,24 @@ const Header = () => {
                                 />
                               </div>
                             </div>
-                            <div className="dropdown-card-body mt-1  ps-1 pe-1 d-flex justify-content-between align-items-center">
-                              <h5 className="dropdown-card-heading text-start">
-                                {item?.name_en}
+                            <div className="dropdown-card-body mt-3 ps-1 pe-1 d-flex justify-content-between align-items-center">
+                              <h5
+                                className="dropdown-card-heading text-start"
+                                style={{
+                                  display: "-webkit-box",
+                                  overflow: "hidden",
+                                  WebkitBoxOrient: "vertical",
+                                  WebkitLineClamp: 2, 
+                                }}
+                              >
+                                 {capitalize(item?.description_en)}
                               </h5>
                             </div>
-                             <div className="d-flex ps-1 pe-1 justify-content-between" style={{marginTop:"-10px"}}>
-                              <p>{item?.description_en.slice(0,15) + "..."}</p>
+
+                            {/* <div className=" ps-1 pe-1 justify-content-between" style={{marginTop:"-10px"}}>
+                              <p>{item?.description_en.slice(0,10) + "..."}</p>
                              <p style={{fontWeight:"500"}}>SAR {item?.price}</p>
-                             </div>
+                             </div> */}
                           </div>
                         ))
                       ) : (
