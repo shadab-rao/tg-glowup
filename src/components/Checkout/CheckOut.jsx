@@ -44,14 +44,22 @@ const CheckOut = () => {
   const attribute = state?.selectedOptions?.attribute;
   const value = state?.selectedOptions?.value;
 
+  const handlePhoneChange = (value, country) => {
+    setPhoneNumber(value);
+    setFormData((prev) => ({
+      ...prev,
+      phoneNumber: value,
+      countryCode: country?.dialCode || "",
+    }));
+  };
+
  
 
   const handleCheckboxChange = (id) => {
-    // Only allow one address to be selected at a time
     if (selectedAddress === id) {
-      setSelectedAddress(null); // Deselect if it's already selected
+      setSelectedAddress(null); 
     } else {
-      setSelectedAddress(id); // Select the new address
+      setSelectedAddress(id);
     }
   };
 
@@ -109,9 +117,10 @@ const CheckOut = () => {
   };
 
   const handleAddress = async () => {
+    const rawPhoneNumber = phoneNumber.replace(formData.countryCode, "").trim();
     const payload = {
       fullName: formData.name,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: rawPhoneNumber,
       countryCode: formData.countryCode,
       city: formData.city,
       street: formData.street,
@@ -168,13 +177,7 @@ const CheckOut = () => {
   };
 
 
-  const handlePhoneChange = (value, country) => {
-    setPhoneNumber(value); 
-    setFormData({
-      phoneNumber: value,  
-      countryCode: country?.dialCode || '', 
-    });
-  };
+
 
   useEffect(() => {
     if (userToken) {
@@ -536,7 +539,7 @@ const CheckOut = () => {
                 <div className="form-group">
                   <label className="form-label">Phone Number (Optional)</label>
                   <PhoneInput
-                    containerClass="react-tel-input"
+                    containerClass="react-tel-input text-start"
                     inputClass="form-control"
                     country="sa"
                     value={phoneNumber}

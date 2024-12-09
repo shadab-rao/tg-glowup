@@ -64,12 +64,12 @@ const EditAddress = () => {
     }
   };
 
+ 
   const handlePhoneChange = (value, country) => {
-    setPhoneNumber(value);
+    setPhoneNumber(value); 
     setFormData((prev) => ({
       ...prev,
-      countryCode: country.dialCode,
-      phoneNumber: value,  
+      countryCode: country.dialCode, 
     }));
   };
 
@@ -84,9 +84,10 @@ const EditAddress = () => {
   };
 
   const handleAddress = async () => {
+    const rawPhoneNumber = phoneNumber.replace(formData.countryCode, "").trim();
     const payload = {
       name: formData.name,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: rawPhoneNumber,
       countryCode: formData.countryCode,
       city: formData.city,
       street: formData.street,

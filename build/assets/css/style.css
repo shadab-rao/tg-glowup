@@ -2613,7 +2613,18 @@ img {
     border: 1px solid #ccc; /* Default border color */
     background-color: white; /* Default background */
   }
+  .react-tel-input .country-list {
+    position: absolute !important; /* Ensure it's positioned above the parent */
+    z-index: 1050; /* Higher than the parent containers */
+    background-color: #fff; /* Prevent background bleed */
+  }
   
+  .login-box-wrapper {
+    position: relative; /* Ensure it doesn't interfere with absolute positioning */
+    overflow: visible; /* Allow overflow to show */
+  }
+  
+
   .custom-select-container .custom-select__control--is-focused {
     border-color: #333 !important; /* Focus border color */
   }

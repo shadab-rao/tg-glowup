@@ -7,7 +7,7 @@ import {
   productDetail,
   wishList,
 } from "../Api Services/glowHttpServices/glowLoginHttpServices";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCartCount, setWishlist } from "../Redux/cartSlice";
 import AllProduct from "../components/common/AllProduct";
@@ -23,6 +23,9 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const userToken = localStorage.getItem("token-user");
   const [selectedVariantId, setSelectedVariantId] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  
 
   const dispatch = useDispatch();
   const thumbnailsRef = useRef(null);
@@ -38,6 +41,10 @@ const ProductDetail = () => {
     setViewData(product);
     if (product?.varients?.length) {
       setSelectedVariantId(product.varients[0]._id);
+    }
+
+    if (product?.imagesWeb?.[0]) {
+      setSelectedImage(product.imagesWeb[0]);
     }
   };
 
@@ -112,6 +119,8 @@ const ProductDetail = () => {
     dispatch(setWishlist(wishlistData));
   };
 
+
+
   return (
     <>
       <Header />
@@ -120,18 +129,18 @@ const ProductDetail = () => {
           <div className="py-4">
             <div className="container">
               <div className="custom-breadcrum">
-                <div className="custom-breadcrum-list">Home</div>
-                <div className="custom-breadcrum-list">
+                <div className="custom-breadcrum-list" style={{cursor:"pointer"}} onClick={()=>navigate("/")}>Home</div>
+                <div className="custom-breadcrum-list ms-1">
                   {viewData?.category?.[0]?.name_en}
                 </div>
-                <div className="custom-breadcrum-list active">
+                <div className="custom-breadcrum-list active ms-1">
                   {viewData?.subCategory?.[0]?.name_en}
                 </div>
               </div>
               <div className="row mt-4">
                 <div className="col-lg-auto col-auto d-lg-block d-md-none d-none ">
                   <div className="position-relative">
-                    {viewData?.imagesWeb?.length >= 5 && (
+                  {getAllImages().length >= 5 && (
                       <div
                         className="slider-arrow slider-up"
                         onClick={scrollUp}
@@ -141,19 +150,23 @@ const ProductDetail = () => {
                     )}
                     <div
                       id="thumbnails"
-                      className="product-detail-height-overflow"
                       ref={thumbnailsRef}
+                      className="product-detail-height-overflow"
                     >
                       {getAllImages().map((image, index) => (
                         <div
                           key={index}
-                          className="thumbnail active product-detail-img-wrapper mt-5"
+                          className={`thumbnail ${
+                            selectedImage === image ? "active" : ""
+                          } product-detail-img-wrapper mt-5`}
+                          onClick={() => setSelectedImage(image)} 
+                          style={{ cursor: "pointer" }}
                         >
                           <img src={image} alt={`Thumbnail ${index + 1}`} />
                         </div>
                       ))}
                     </div>
-                    {viewData?.imagesWeb?.length >= 5 && (
+                  {getAllImages().length >= 5 && (
                       <div
                         className="slider-arrow slider-down"
                         onClick={scrollDown}
@@ -166,30 +179,28 @@ const ProductDetail = () => {
                 <div className="col-lg-5 col-md-7 col-12 me-5">
                   <div className="product-detail-main-img">
                     <img
-                      src={
-                        viewData?.varients?.find(
-                          (variant) => variant._id === selectedVariantId
-                        )?.imagesWeb?.[0] || viewData?.imagesWeb?.[0]
-                      }
-                      alt="Selected Variant"
+                      src={selectedImage || viewData?.imagesWeb?.[0]}
+                      alt="Selected"
                       style={{ width: "100%" }}
                     />
                   </div>
                   <div className="d-lg-none d-md-block mt-4 w-100">
                     <Swiper
+                    modules={[Navigation, Pagination]}
                       spaceBetween={10}
-                      slidesPerView={Math.min(products.length, 4)}
-                      navigation
-                      centeredSlides={viewData?.imagesWeb.length < 4}
-                      pagination={{ clickable: true }}
+                      slidesPerView={Math.min(getAllImages().length, 5)}
+                      navigation={getAllImages()?.length >= 5}
+                      centeredSlides={getAllImages()?.length < 4}
+                      // pagination={{ clickable: true }}
                     >
-                      {viewData?.imagesWeb?.map((image, index) => (
+                      {getAllImages()?.map((image, index) => (
                         <SwiperSlide key={index}>
                           <div className="product-detail-img">
                             <img
                               src={image}
                               alt={`Slide ${index + 1}`}
-                              style={{ width: "100%" }}
+                              style={{ width: "100%", cursor:"pointer"}}
+                              onClick={() => setSelectedImage(image)} 
                             />
                           </div>
                         </SwiperSlide>
@@ -201,9 +212,7 @@ const ProductDetail = () => {
                   <h2 className="product-main-heading">{viewData?.name_en}</h2>
                   <h6 className="small-heading">{viewData?.description_en}</h6>
                   <div className="list-span d-flex gap-3">
-                    <span>all types of skin</span>
-                    <span>am or pm</span>
-                    <span>brightening</span>
+                    <span style={{fontSize:"16px",fontWeight:"500",color:"gray"}}>{viewData?.brand?.brandName_en}</span>
                   </div>
                   <p className="light-text">VC_1521178</p>
                   <h5 className="price-text">

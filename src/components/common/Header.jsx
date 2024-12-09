@@ -208,14 +208,18 @@ const Header = () => {
                               <div className="ps-3">
                                 <ul className="p-0 list-unstyled mt-4 brand-list">
                                   {brandListing?.map((name) => (
-                                    <li
-                                      className
-                                      onClick={() => navigate(`/brands/${name?._id}`)}
-                                    >
-                                      <a href className="text">
-                                        {name?.brandName_en}
-                                      </a>
-                                    </li>
+                                  <li
+                                  className
+                                  onClick={() =>
+                                    navigate(`/brands/${name?._id}`, {
+                                      state: { brandName: name?.brandName_en }, 
+                                    })
+                                  }
+                                >
+                                  <a href className="text">
+                                    {name?.brandName_en}
+                                  </a>
+                                </li>
                                   ))}
                                 </ul>
                               </div>
@@ -230,6 +234,12 @@ const Header = () => {
                                           src={
                                             images?.image ||
                                             "../../../assets/img/brand/Lakme.png"
+                                          }
+                                          style={{cursor:"pointer"}}
+                                          onClick={() =>
+                                            navigate(`/brands/${images?._id}`, {
+                                              state: { brandName: images?.brandName_en }, 
+                                            })
                                           }
                                           alt
                                         />

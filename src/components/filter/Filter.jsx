@@ -20,6 +20,7 @@ const Filter = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(null);
   const [categoryName, setCategoryName] = useState("");
+  const [productLength, setProductLength] = useState(0);
   const { id } = useParams();
 
   useEffect(() => {
@@ -51,6 +52,10 @@ const Filter = () => {
     setSelectedSubcategoryId(subcategoryId);
   };
 
+  const updateProductLength = (length) => {
+    setProductLength(length);
+  };
+
   return (
     <>
       <Header />
@@ -60,7 +65,7 @@ const Filter = () => {
           <div className="custom-breadcrum-list active">{categoryName}</div>
         </div>
         <div className="row">
-          <FilterSidebar />
+          <FilterSidebar productLength={productLength} subcateogryLength = {subCategories?.length}  />
           <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4">
             <div className="d-md-block d-none">
               <div className="row mt-4">

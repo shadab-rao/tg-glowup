@@ -15,14 +15,18 @@ import { useNavigate } from "react-router-dom";
 const AddAdress = () => {
   const userPhone = localStorage.getItem("user-phone");
   const userCountryCode = localStorage.getItem("user-countryCode") || "sa";
+  const userData = JSON.parse(localStorage.getItem("glow-user"));
+
+  console.log(userData);
+  
   const [phoneNumber, setPhoneNumber] = useState(userCountryCode + userPhone);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
-    phoneNumber: "",
+    name: userData?.fullName || "",
+    phoneNumber: userPhone,
     street: "",
-    countryCode: "",
+    countryCode: userCountryCode,
     city: "",
     state: "",
     country: "",
@@ -30,11 +34,12 @@ const AddAdress = () => {
     type: "Home",
   });
 
+ 
   const handlePhoneChange = (value, country) => {
-    setPhoneNumber(value);
+    setPhoneNumber(value); 
     setFormData((prev) => ({
       ...prev,
-      countryCode: country.dialCode,
+      countryCode: country.dialCode, 
     }));
   };
 
@@ -47,9 +52,10 @@ const AddAdress = () => {
   };
 
   const handleAddress = async () => {
+    const rawPhoneNumber = phoneNumber.replace(formData.countryCode, "").trim();
     const payload = {
       name: formData.name,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: rawPhoneNumber || userPhone,
       countryCode: formData.countryCode,
       city: formData.city,
       street: formData.street,
