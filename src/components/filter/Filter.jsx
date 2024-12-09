@@ -22,6 +22,7 @@ const Filter = () => {
   const [categoryName, setCategoryName] = useState("");
   const [productLength, setProductLength] = useState(0);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     handleCategory();
@@ -61,7 +62,7 @@ const Filter = () => {
       <Header />
       <div className="container mb-4">
         <div className="custom-breadcrum mt-4">
-          <div className="custom-breadcrum-list">Home</div>
+          <div className="custom-breadcrum-list me-1" style={{cursor:"pointer"}} onClick={()=>navigate("/")}>Home</div>
           <div className="custom-breadcrum-list active">{categoryName}</div>
         </div>
         <div className="row">

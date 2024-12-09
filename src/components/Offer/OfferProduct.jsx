@@ -57,43 +57,12 @@ const OfferProduct = () => {
       <div className="container mb-4">
         <div className="custom-breadcrum mt-4">
           <div className="custom-breadcrum-list">Home</div>
-          <div className="custom-breadcrum-list active">{categoryName}</div>
+          {/* <div className="custom-breadcrum-list active">{categoryName}</div> */}
         </div>
         <div className="row">
           <FilterSidebar />
           <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4">
             <div className="d-md-block d-none">
-              <div className="row mt-4">
-                {/* <div className="col-auto text-center  "> */}
-                {subCategories.length > 0 ? (subCategories?.map((item) => (
-                  <div className="col-auto text-center">
-                    <div
-                      className="cate-img-slider-wrapper"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleSubcategoryClick(item?._id)}
-                    >
-                      <img
-                        style={{
-                          width: "60px",
-                          objectFit: "cover",
-                          background: "#c8c5c5",
-                          borderRadius: "10px",
-                          padding: "1px",
-                        }}
-                        src={item?.image}
-                        alt
-                      />
-                    </div>
-                    <p
-                      className="mt-1"
-                      style={{ fontSize: "14px", fontWeight: "400" }}
-                    >
-                      {item?.name_en}
-                    </p>
-                  </div>
-                ))) : <p style={{fontWeight:"500"}}>No Sub Categories Available</p>}
-              </div>
-              {/* </div> */}
             </div>
             <div className="d-md-none d-block mt-3">
               <div className="category-slider">

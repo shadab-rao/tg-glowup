@@ -657,6 +657,7 @@ img {
     }
 }
 
+
 .swiper-container-category {
     position: relative;
     padding: 0 3rem;
@@ -2606,9 +2607,7 @@ img {
     }
 }
 
-/* Custom styles for the Select component */
 
-/* Styling for the selected option */
 .custom-select-container .custom-select__control {
     border: 1px solid #ccc; /* Default border color */
     background-color: white; /* Default background */

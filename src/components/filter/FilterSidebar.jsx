@@ -40,7 +40,7 @@ const FilterSidebar = ({brandLength ,subcateogryLength}) => {
   return (
     <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
       <h3 className="heading-filter mb-0 text-start">
-      skincare <span>({brandLength || subcateogryLength })</span>
+      skincare <span>({brandLength || subcateogryLength || 0 })</span>
       </h3>
       <div className="mt-md-4">
         <h4 className="comman-heading mb-0 text-start">Sort By</h4>
