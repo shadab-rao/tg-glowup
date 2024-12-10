@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCategory, getSubcategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 
 
-const FilterSidebar = ({brandLength ,subcateogryLength}) => {
+const FilterSidebar = ({brandLength ,subcateogryLength,offerLength}) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -40,7 +40,7 @@ const FilterSidebar = ({brandLength ,subcateogryLength}) => {
   return (
     <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
       <h3 className="heading-filter mb-0 text-start">
-      skincare <span>({brandLength || subcateogryLength || 0 })</span>
+      skincare <span>({brandLength || subcateogryLength || offerLength })</span>
       </h3>
       <div className="mt-md-4">
         <h4 className="comman-heading mb-0 text-start">Sort By</h4>

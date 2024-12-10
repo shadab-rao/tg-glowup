@@ -784,6 +784,26 @@ export async function getUser() {
     return { error };
   }
 }
+export async function getOfferProducts() {
+  try {
+    const { data } = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/category/getTopDiscountedProducts`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function getAddress() {
   try {
     const { data } = await glowHttpServie.patch(
