@@ -127,21 +127,21 @@ const Bag = () => {
   // };
 
   const updateProduct = async (item, updatedFields) => {
-    const defaultAttribute = item.varient.values[0]?.attribute?._id;
-    const defaultValue = item.varient.values[0]?._id;
+    // const defaultAttribute = item.varient.values[0]?.attribute?._id;
+    // const defaultValue = item.varient.values[0]?._id;
 
     const payload = {
       cartId: item?.cart_id,
       product: item.product._id,
       varient: item.varient._id,
       quantity: updatedFields.quantity || item.quantity,
-      decrease: updatedFields.decrease || false,
-      attribute:
-        updatedFields.attribute?.length > 0
-          ? updatedFields.attribute
-          : [defaultAttribute],
-      value:
-        updatedFields.value?.length > 0 ? updatedFields.value : [defaultValue],
+      // decrease: updatedFields.decrease || false,
+      // attribute:
+      //   updatedFields.attribute?.length > 0
+      //     ? updatedFields.attribute
+      //     : [defaultAttribute],
+      // value:
+      //   updatedFields.value?.length > 0 ? updatedFields.value : [defaultValue],
     };
 
     console.log("Payload:", payload);

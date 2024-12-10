@@ -583,7 +583,7 @@ const CheckOut = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Pincode"
+                    placeholder="street"
                     name="street"
                     value={formData.street}
                     onChange={handleChange}
@@ -627,7 +627,7 @@ const CheckOut = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Pincode Name"
+                    placeholder="Pincode"
                     name="pinCode"
                     value={formData.pinCode}
                     onChange={handleChange}

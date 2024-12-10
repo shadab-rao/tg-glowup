@@ -55,11 +55,15 @@ const BestSellerProduct = () => {
     dispatch(setWishlist(wishlistData));
   };
 
-  const handleAddToCart = async ({ product, varient }) => {
+  const handleAddToCart = async ({ product, varient,attribute,value }) => {
+    console.log(value);
+    
     if (userToken) {
       const payload = {
         product,
         varient,
+        attribute,
+        value
       };
       const response = await addToCart(payload);
       handleCart();
@@ -113,7 +117,7 @@ const BestSellerProduct = () => {
                     <h3 className="title text-start">
                       {item?.name_en?.slice(0, 10) + "..."}
                     </h3>
-                    <h3 className="price">SAR {item?.price}</h3>
+                    <h3 className="price">SAR {item?.varients?.[0]?.price}</h3>
                   </div>
                   <p className="paragraph text-start" style={{cursor:"default"}}>
                     {item?.description_en?.slice(0, 10) + "..."}
@@ -132,6 +136,8 @@ const BestSellerProduct = () => {
                         handleAddToCart({
                           product: item?._id,
                           varient: item?.varients?.[0]?._id,
+                          attribute: item?.varients?.[0]?.attribute?.[0],
+                          value: item?.varients?.[0]?.value?.[0],
                         })
                       }
                     >

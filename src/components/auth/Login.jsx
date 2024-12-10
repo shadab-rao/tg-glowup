@@ -66,7 +66,7 @@ const Login = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="form-group">
                 <div className="form-group">
-                  <label className="form-label">Phone Number (Optional)</label>
+                  {/* <label className="form-label">Phone Number (Optional)</label> */}
                   <PhoneInput
                     containerClass="react-tel-input text-start"
                     inputClass="form-control"
