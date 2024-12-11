@@ -156,10 +156,10 @@ const OrderDetails = () => {
                           <h5 className="checkbox-price">SAR {item?.amount}</h5>
                           <div className="checkbox-span-text">
                             <span className="normal-text border-end pe-1">
-                              Size: 25 ML
+                              {item?.attributeAndValues?.[0]?.name_en || "N/A"}: {item?.attributeAndValues?.[1]?.name_en || "0"}
                             </span>
                             <span className="normal-text ps-1">
-                              Quantity: 1
+                              Quantity: {item?.quantity}
                             </span>
                           </div>
                           <p className="normal-text">Subtotal: SAR {item?.amount}</p>

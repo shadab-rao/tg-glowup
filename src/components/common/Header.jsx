@@ -550,7 +550,7 @@ const Header = () => {
                       </ul>
                     </div>
                     <div className="content">
-                      <h3 className="dropdown-heading">Your Recent Searches</h3>
+                      <h3 className="dropdown-heading text-start">Your Recent Searches</h3>
                       <ul className="dropdown-list text-start">
                         <li className="text-dark">
                           <a href>facial serum</a>

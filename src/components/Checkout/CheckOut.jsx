@@ -128,6 +128,7 @@ const CheckOut = () => {
       country: formData.country,
       pinCode: formData.pinCode,
       type: formData.type,
+      saveToProfile:formData.saveToProfile
     };
     try {
       const response = await address(payload);
@@ -146,6 +147,7 @@ const CheckOut = () => {
           country: "",
           pinCode: "",
           type: "Home",
+          saveToProfile:false
         });
       }
     } catch (error) {
@@ -525,7 +527,7 @@ const CheckOut = () => {
                 Enter New address
               </p>
               <div className="form-design">
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <label className="form-label">Full Name*</label>
                   <input
                     type="text"
@@ -536,7 +538,7 @@ const CheckOut = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group ">
                   <label className="form-label">Phone Number (Optional)</label>
                   <PhoneInput
                     containerClass="react-tel-input text-start"
@@ -565,7 +567,7 @@ const CheckOut = () => {
                       onChange={handleChange}
                     />
                   </div> */}
-                <div className="form-group mt-3">
+                <div className="form-group mt-3 mb-3">
                   <div className="d-flex gap-1 align-items-end">
                     <img
                       src="assets/img/icon/direction.png"
@@ -578,7 +580,7 @@ const CheckOut = () => {
                   </div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <label className="form-label">Street*</label>
                   <input
                     type="text"
@@ -589,7 +591,7 @@ const CheckOut = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <label className="form-label">City*</label>
                   <input
                     type="text"
@@ -600,7 +602,7 @@ const CheckOut = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <label className="form-label">State*</label>
                   <input
                     type="text"
@@ -611,7 +613,7 @@ const CheckOut = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <label className="form-label">Country*</label>
                   <input
                     type="text"
@@ -622,7 +624,7 @@ const CheckOut = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <label className="form-label">Pincode*</label>
                   <input
                     type="text"
@@ -643,16 +645,17 @@ const CheckOut = () => {
                   >
                     <option value="Home">Home</option>
                     <option value="Office">Office</option>
-                    {/* <option value="Work">Work</option> */}
                   </select>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
                   <input
-                    type="checkbox"
-                    className="form-checkbox"
-                    defaultChecked
+                     type="checkbox"
+                     className="form-checkbox"
+                     name="saveToProfile"
+                     checked={formData.saveToProfile}
+                     onChange={handleChange}
                   />
-                  <span className="form-label m-0">Save in address book</span>
+                  <span className="form-label mt-2">Save in my profile</span>
                 </div>
               </div>
             </div>

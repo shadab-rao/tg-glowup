@@ -25,8 +25,6 @@ const ProductDetail = () => {
   const [selectedVariantId, setSelectedVariantId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  
-
   const dispatch = useDispatch();
   const thumbnailsRef = useRef(null);
   const products = useSelector((state) => state.cart.products);
@@ -38,6 +36,7 @@ const ProductDetail = () => {
   const handleView = async () => {
     const response = await productDetail(id);
     const product = response?.data?.results?.product;
+
     setViewData(product);
     if (product?.varients?.length) {
       setSelectedVariantId(product.varients[0]._id);
@@ -51,12 +50,22 @@ const ProductDetail = () => {
   const handleVariantClick = (variantId) => {
     setSelectedVariantId(variantId);
   };
+ 
+  
 
   const handleAddToCart = async () => {
     if (userToken && selectedVariantId) {
+      const selectedVariant = viewData?.varients?.find(
+        (variant) => variant._id === selectedVariantId
+      );
+      const attribute = selectedVariant?.attribute?.[0]?._id;
+      const value = selectedVariant?.value?.[0]?._id;
+
       const payload = {
         product: id,
         varient: selectedVariantId,
+        attribute,
+        value,
       };
       const response = await addToCart(payload);
       handleCart();
@@ -119,8 +128,6 @@ const ProductDetail = () => {
     dispatch(setWishlist(wishlistData));
   };
 
-
-
   return (
     <>
       <Header />
@@ -128,19 +135,10 @@ const ProductDetail = () => {
         <section className="product-details">
           <div className="py-4">
             <div className="container">
-              <div className="custom-breadcrum">
-                <div className="custom-breadcrum-list" style={{cursor:"pointer"}} onClick={()=>navigate("/")}>Home</div>
-                <div className="custom-breadcrum-list ms-1">
-                  {viewData?.category?.[0]?.name_en}
-                </div>
-                <div className="custom-breadcrum-list active ms-1">
-                  {viewData?.subCategory?.[0]?.name_en}
-                </div>
-              </div>
               <div className="row mt-4">
                 <div className="col-lg-auto col-auto d-lg-block d-md-none d-none ">
                   <div className="position-relative">
-                  {getAllImages().length >= 5 && (
+                    {getAllImages().length >= 5 && (
                       <div
                         className="slider-arrow slider-up"
                         onClick={scrollUp}
@@ -159,14 +157,14 @@ const ProductDetail = () => {
                           className={`thumbnail ${
                             selectedImage === image ? "active" : ""
                           } product-detail-img-wrapper mt-5`}
-                          onClick={() => setSelectedImage(image)} 
+                          onClick={() => setSelectedImage(image)}
                           style={{ cursor: "pointer" }}
                         >
                           <img src={image} alt={`Thumbnail ${index + 1}`} />
                         </div>
                       ))}
                     </div>
-                  {getAllImages().length >= 5 && (
+                    {getAllImages().length >= 5 && (
                       <div
                         className="slider-arrow slider-down"
                         onClick={scrollDown}
@@ -186,7 +184,7 @@ const ProductDetail = () => {
                   </div>
                   <div className="d-lg-none d-md-block mt-4 w-100">
                     <Swiper
-                    modules={[Navigation, Pagination]}
+                      modules={[Navigation, Pagination]}
                       spaceBetween={10}
                       slidesPerView={Math.min(getAllImages().length, 5)}
                       navigation={getAllImages()?.length >= 5}
@@ -199,8 +197,8 @@ const ProductDetail = () => {
                             <img
                               src={image}
                               alt={`Slide ${index + 1}`}
-                              style={{ width: "100%", cursor:"pointer"}}
-                              onClick={() => setSelectedImage(image)} 
+                              style={{ width: "100%", cursor: "pointer" }}
+                              onClick={() => setSelectedImage(image)}
                             />
                           </div>
                         </SwiperSlide>
@@ -212,7 +210,15 @@ const ProductDetail = () => {
                   <h2 className="product-main-heading">{viewData?.name_en}</h2>
                   <h6 className="small-heading">{viewData?.description_en}</h6>
                   <div className="list-span d-flex gap-3">
-                    <span style={{fontSize:"16px",fontWeight:"500",color:"gray"}}>{viewData?.brand?.brandName_en}</span>
+                    <span
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        color: "gray",
+                      }}
+                    >
+                      {viewData?.brand?.brandName_en}
+                    </span>
                   </div>
                   <p className="light-text">VC_1521178</p>
                   <h5 className="price-text">
@@ -245,10 +251,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="d-flex gap-3 mt-4">
-                    <button
-                      className="comman-btn"
-                      onClick={handleAddToCart} // Call the function without passing arguments
-                    >
+                    <button className="comman-btn" onClick={handleAddToCart}>
                       Add to Bag
                     </button>
                     <button

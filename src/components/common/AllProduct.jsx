@@ -81,11 +81,13 @@ const AllProduct = ({subcategoryId,categoryId}) => {
     dispatch(setWishlist(wishlistData));
   };
 
-  const handleAddToCart = async ({ product, varient }) => {
+  const handleAddToCart = async ({  product, varient,attribute,value }) => {
     if (userToken) {
       const payload = {
         product,
         varient,
+        attribute,
+        value
       };
       const response = await addToCart(payload);
       handleCart();
@@ -157,6 +159,8 @@ const AllProduct = ({subcategoryId,categoryId}) => {
                       handleAddToCart({
                         product: item?._id,
                         varient: item?.varients?.[0]?._id,
+                        attribute: item?.varients?.[0]?.attribute?.[0]?._id,
+                        value: item?.varients?.[0]?.value?.[0]?._id,
                       })
                     }
                   >

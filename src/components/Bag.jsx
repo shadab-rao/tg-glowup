@@ -54,11 +54,11 @@ const Bag = () => {
 
   const handleQuantityChange = (id, newQuantity) => {
     const updatedData = data.map((item) =>
-      item.product._id === id ? { ...item, quantity: newQuantity } : item
+      item.cart_id === id ? { ...item, quantity: newQuantity } : item
     );
     setData(updatedData);
 
-    const updatedItem = updatedData.find((item) => item.product._id === id);
+    const updatedItem = updatedData.find((item) => item.cart_id === id);
     updateProduct(updatedItem, { quantity: newQuantity });
   };
 
@@ -92,7 +92,7 @@ const Bag = () => {
   };
 
   const handleRemove = async (id) => {
-    await removeCartItem({cartId:id});
+    await removeCartItem({ cartId: id });
     handleCart();
   };
 
@@ -104,7 +104,7 @@ const Bag = () => {
 
   const handlePayment = async (amount) => {
     const response = await payment(amount);
-    const payloadData = response?.data?.results?.obj
+    const payloadData = response?.data?.results?.obj;
     const address = addressId;
     const formData = {
       ...payloadData,
@@ -113,9 +113,6 @@ const Bag = () => {
     // handlePlaceOrder(formData);
     navigate("/checkout", { state: payloadData });
   };
-
-
-  
 
   // const handleAttributeChange = (itemId, attributeId, valueId) => {
   //   setSelectedAttributes((prevSelected) => ({
@@ -132,8 +129,8 @@ const Bag = () => {
 
     const payload = {
       cartId: item?.cart_id,
-      product: item.product._id,
-      varient: item.varient._id,
+      // product: item.product._id,
+      // varient: item.varient._id,
       quantity: updatedFields.quantity || item.quantity,
       // decrease: updatedFields.decrease || false,
       // attribute:
@@ -143,8 +140,6 @@ const Bag = () => {
       // value:
       //   updatedFields.value?.length > 0 ? updatedFields.value : [defaultValue],
     };
-
-    console.log("Payload:", payload);
 
     try {
       const response = await updateCart(payload);
@@ -168,14 +163,13 @@ const Bag = () => {
     );
   }
 
-
   const getQuantityOptions = () => {
     return [...Array(10).keys()].map((num) => ({
       value: num + 1,
       label: num + 1,
     }));
   };
-  
+
   const getAttributeOptions = (item) => {
     return item?.varient?.values?.map((value) => ({
       value: value._id,
@@ -204,35 +198,47 @@ const Bag = () => {
                   <div className="Checkout-box border-0 mt-3">
                     <div className="row">
                       <div className="col-md-auto col-4">
-                        <div className="Checkout-box-img"  style={{cursor:"pointer"}}
-                        onClick={() =>
-                          navigate(`/product-details/${item?.product?._id}`)
-                        }>
+                        <div
+                          className="Checkout-box-img"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            navigate(`/product-details/${item?.product?._id}`)
+                          }
+                        >
                           <img src={item?.varient?.imagesWeb?.[0]} alt="" />
                         </div>
                       </div>
                       <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
-                        <h6 className="Checkout-box-head"  style={{cursor:"pointer"}}
-                        onClick={() =>
-                          navigate(`/product-details/${item?.product?._id}`)
-                        }>
+                        <h6
+                          className="Checkout-box-head"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            navigate(`/product-details/${item?.product?._id}`)
+                          }
+                        >
                           {item?.product?.name_en}
                         </h6>
-                        <p className="normal-text"  style={{cursor:"pointer"}}
-                        onClick={() =>
-                          navigate(`/product-details/${item?.product?._id}`)
-                        }>
+                        <p
+                          className="normal-text"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            navigate(`/product-details/${item?.product?._id}`)
+                          }
+                        >
                           {capitalize(item?.product?.description_en)}
                         </p>
-                        <h5 className="checkbox-price"  style={{cursor:"pointer"}}
-                        onClick={() =>
-                          navigate(`/product-details/${item?.product?._id}`)
-                        }>
+                        <h5
+                          className="checkbox-price"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            navigate(`/product-details/${item?.product?._id}`)
+                          }
+                        >
                           {item?.product?.currency} {item?.varient?.price}
                         </h5>
                         <h5
                           className="checkbox-price mt-2"
-                          style={{cursor:"pointer",color:"gray"}}
+                          style={{ cursor: "pointer", color: "gray" }}
                           onClick={() =>
                             navigate(`/product-details/${item?.product?._id}`)
                           }
@@ -242,45 +248,78 @@ const Bag = () => {
                         </h5>
                         <div className="checkbox-span-text">
                           <div className="row mt-3">
-                            <div className="col-md-5 col-12">
+                            {/* <div className="col-md-5 col-12">
                             <Select
-                               value={
-                                selectedAttributes[item.product._id]
-                                  ? getAttributeOptions(item).find(
-                                      (option) =>
-                                        option.value ===
-                                        selectedAttributes[item.product._id]?.[item.varient.values[0]?.attribute?._id]
-                                    )
-                                  : getAttributeOptions(item)[0] 
-                              }
-                                onChange={(selectedOption) => {
-                                  const selectedValueId = selectedOption.value;
-                                  const selectedAttributeId =
-                                    item.varient.values.find(
-                                      (value) => value._id === selectedValueId
-                                    )?.attribute?._id;
-                                  handleAttributeChange(
-                                    item.product._id,
-                                    selectedAttributeId,
-                                    selectedValueId
-                                  );
-                                }}
+                              //  value={
+                                // selectedAttributes[item.product._id]
+                                  // ? getAttributeOptions(item).find(
+                                      // (option) =>
+                                      //   option.value ===
+                                      //   selectedAttributes[item.product._id]?.[item.varient.values[0]?.attribute?._id]
+                                    // )
+                                  // : getAttributeOptions(item)[0] 
+                              // }
+                                // onChange={(selectedOption) => {
+                                //   const selectedValueId = selectedOption.value;
+                                //   const selectedAttributeId =
+                                //     item.varient.values.find(
+                                //       (value) => value._id === selectedValueId
+                                //     )?.attribute?._id;
+                                //   handleAttributeChange(
+                                //     item.product._id,
+                                //     selectedAttributeId,
+                                //     selectedValueId
+                                //   );
+                                // }}
                                 options={getAttributeOptions(item)}
-                                className="custom-select-container"  
-                                classNamePrefix="custom-select" 
+                                // className="custom-select-container"  
+                                // classNamePrefix="custom-select" 
                               />
+                            </div> */}
+                            <div className="col-md-5 col-12">
+                              <select
+                                value={
+                                  selectedAttributes[item.product._id]?.[
+                                    item.varient.values[0]?.attribute?._id
+                                  ] || ""
+                                }
+                                disabled 
+                                style={{
+                                  appearance: "none", 
+                                  WebkitAppearance: "none",
+                                  MozAppearance: "none", 
+                                  background: "transparent",
+                                  paddingRight: "10px", 
+                                  border: "1px solid #ccc", 
+                                  borderRadius: "4px", 
+                                }}
+                                className="form-select custom-select-container"
+                              >
+                                {getAttributeOptions(item).map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
+
                             <div className="col-md-3 col-12 mt-md-0 mt-4">
-                            <Select
+                              <Select
                                 value={getQuantityOptions().find(
                                   (option) => option.value === item.quantity
                                 )}
                                 onChange={(selectedOption) =>
-                                  handleQuantityChange(item.product._id, selectedOption.value)
+                                  handleQuantityChange(
+                                    item.cart_id,
+                                    selectedOption.value
+                                  )
                                 }
                                 options={getQuantityOptions()}
-                                className="custom-select-container"  
-                                classNamePrefix="custom-select" 
+                                className="custom-select-container"
+                                classNamePrefix="custom-select"
                               />
                             </div>
                           </div>
