@@ -7,8 +7,8 @@ const Products = () => {
     <>
       <div className="container mb-5">
         <div className="heading-wrapper">
-          <h5 className="bold-heading">Beauty Must Haves</h5>
-          <p className="light-heading">Bestsellers Products</p>
+          <h5 className="bold-heading georgia-heading">Beauty Must Haves</h5>
+          <p className="light-heading nunito-text">Bestsellers Products</p>
         </div>
        <BestSellerProduct/>
       </div>

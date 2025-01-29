@@ -63,7 +63,7 @@ const Category = () => {
         <div className="swiper-wrapper justify-content-center">
           {categories?.map((cat, index) => (
             <div className="swiper-slide" style={{cursor:"pointer"}} key={index} onClick={()=>navigate(`/sub-category/${cat?._id}`)}>
-              <div className="cate-img-slider-wrapper">
+              <div className="cate-img-slider-wrapper .lato-text">
                 <img src={cat?.image} alt={cat?.name_en} />
               </div>
               <p className="slider-text">{cat?.name_en}</p>

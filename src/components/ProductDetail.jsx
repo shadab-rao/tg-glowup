@@ -16,6 +16,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+
 
 const ProductDetail = () => {
   const [viewData, setViewData] = useState();
@@ -24,6 +32,7 @@ const ProductDetail = () => {
   const userToken = localStorage.getItem("token-user");
   const [selectedVariantId, setSelectedVariantId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [openLight, setOpenLight] = useState(false);
 
   const dispatch = useDispatch();
   const thumbnailsRef = useRef(null);
@@ -128,6 +137,14 @@ const ProductDetail = () => {
     dispatch(setWishlist(wishlistData));
   };
 
+  const handleImageClick = () => {
+    console.log('Image clicked');
+    setOpenLight(true);
+  };
+  console.log("Images in viewData:", viewData);
+
+  
+
   return (
     <>
       <Header />
@@ -175,7 +192,7 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <div className="col-lg-5 col-md-7 col-12 me-5">
-                  <div className="product-detail-main-img">
+                  <div className="product-detail-main-img" onClick={handleImageClick}>
                     <img
                       src={selectedImage || viewData?.imagesWeb?.[0]}
                       alt="Selected"
@@ -319,6 +336,27 @@ const ProductDetail = () => {
           </div>
         </div>
       </section>
+
+      <Lightbox
+        open={openLight}
+        close={() => setOpenLight(false)}
+        plugins={[Slideshow, Fullscreen,Zoom,Thumbnails]}
+        slides={[
+          {
+            src: selectedImage || viewData?.imagesWeb?.[0], 
+            alt: "image 1",
+            width: 3840,
+            height: 2560,
+          },
+          ...viewData?.varients?.map((image, index) => ({
+            src: image?.imagesOg?.[0],
+            alt: `image ${index + 1}`,
+            width: 3840,
+            height: 2560,
+          })) || [],
+          
+        ]}
+      />
     </>
   );
 };

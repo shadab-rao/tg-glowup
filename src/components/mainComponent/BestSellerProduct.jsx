@@ -114,7 +114,7 @@ const BestSellerProduct = () => {
                     className="d-flex justify-content-between"
                     onClick={() => navigate(`/product-details/${item?._id}`)}
                   >
-                    <h3 className="title text-start">
+                    <h3 className="title text-start nunito-text">
                       {item?.name_en?.slice(0, 10) + "..."}
                     </h3>
                     <h3 className="price">SAR {item?.varients?.[0]?.price}</h3>

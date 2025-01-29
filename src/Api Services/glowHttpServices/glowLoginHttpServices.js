@@ -824,6 +824,26 @@ export async function getAddress() {
     return { error };
   }
 }
+export async function productFilter() {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/inventory/getFilters`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function viewAddress(id) {
   try {
     const { data } = await glowHttpServie.get(

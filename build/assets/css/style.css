@@ -2658,9 +2658,16 @@ img {
     outline: none !important; /* Remove the default outline on focus */
     box-shadow: none !important; /* Remove box-shadow */
   }
-
-
-
+  .georgia-heading {
+    font-family: Georgia, serif;
+  }
+  .nunito-text {
+    font-family: 'Nunito', sans-serif;
+  }
+  .lato-text{
+    font-family: 'Lato', sans-serif;
+  }
+  
 
   
   
