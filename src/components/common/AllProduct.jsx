@@ -11,32 +11,36 @@ import { useDispatch } from "react-redux";
 import { setCartCount, setProducts, setWishlist } from "../../Redux/cartSlice";
 import { Paginate } from "../Pagination/Paginate";
 
-const AllProduct = ({subcategoryId,categoryId}) => {
+const AllProduct = ({ subcategoryId, categoryId, priceSort,latest, minPrice, maxPrice }) => {
   const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageData, setPageData] = useState();
   const userToken = localStorage.getItem("token-user");
-  const {id} = useParams()
+  const { id } = useParams();
 
   useEffect(() => {
     handleProduct();
-  }, [dispatch, currentPage,id,subcategoryId,categoryId]);
+  }, [dispatch, currentPage, id, subcategoryId, minPrice, maxPrice, priceSort,latest, categoryId]);
 
   const handleProduct = async () => {
-      try {
-        const payload = {
-          search: "",
-          category: categoryId || id,
-          subCategory:subcategoryId,
-          // isFeatured: true,
-          // attribute: "6734a95f7ea8bf353ceade54",
-          // value: "6734a9817ea8bf353ceade63",
-          pageSize: 10,   
-          page: currentPage,
-        };
-      const response = await productList(payload)
+    try {
+      const payload = {
+        search: "",
+        category: categoryId || id,
+        subCategory: subcategoryId,
+        // isFeatured: true,
+        // attribute: "6734a95f7ea8bf353ceade54",
+        // value: "6734a9817ea8bf353ceade63",
+        pageSize: 10,
+        page: currentPage,
+        priceSort: priceSort,
+        latest: latest,
+        minPrice:minPrice, 
+        maxPrice:maxPrice
+      };
+      const response = await productList(payload);
       setPageData(response?.data?.results);
       const products = response?.data?.results?.products || [];
       setProductData(response?.data?.results?.products || []);
@@ -47,7 +51,6 @@ const AllProduct = ({subcategoryId,categoryId}) => {
   };
 
   console.log(productData);
-  
 
   const totalPages = pageData?.totalPages || 1;
   const totalDocs = pageData?.total || 1;
@@ -81,13 +84,13 @@ const AllProduct = ({subcategoryId,categoryId}) => {
     dispatch(setWishlist(wishlistData));
   };
 
-  const handleAddToCart = async ({  product, varient,attribute,value }) => {
+  const handleAddToCart = async ({ product, varient, attribute, value }) => {
     if (userToken) {
       const payload = {
         product,
         varient,
         attribute,
-        value
+        value,
       };
       const response = await addToCart(payload);
       handleCart();
@@ -104,73 +107,82 @@ const AllProduct = ({subcategoryId,categoryId}) => {
   return (
     <>
       <div className="row mt-4">
-        {productData?.length > 0 ?  (productData?.map((item) => (
-          <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
-            <div className="comman-card">
-              {userToken ? (
-                <div
-                  className="heart-icon"
-                  onClick={() =>
-                    handleAddWishlist({
-                      productId: item?._id,
-                      variantId: item?.variantId,
-                    })
-                  }
-                >
-                  {item?.isFavourite === true ? (
-                    <i className="fa fa-heart" />
-                  ) : (
-                    <i className="fa fa-heart-o" />
-                  )}
-                </div>
-              ) : null}
-              {/* <div className="new-label">
-                  <p className>New</p>
-                </div> */}
-              <div className="comman-card-header" onClick={() => navigate(`/product-details/${item?._id}`)}>
-                <div className="img-wrapper">
-                  <img src={item?.imagesWeb?.[0]} alt />
-                </div>
-              </div>
-              <div className="comman-card-body">
-                <div
-                  className="d-flex justify-content-between"
-                  onClick={() => navigate(`/product-details/${item?._id}`)}
-                >
-                  <h3 className="title text-start nunito-text">
-                    {item?.name_en?.slice(0, 10) + "..."}
-                  </h3>
-                  <h3 className="price">SAR {item?.varients?.[0]?.price}</h3>
-                </div>
-                <p className="paragraph text-start">
-                  {item?.description_en?.slice(0, 10) + "..."}
-                </p>
-                <div className="mt-4">
-                  <div className="review-wrapper">
-                    <i className="fa fa-star text-warning" />
-                    <span className="review-points">4.9</span>
-                    <span className="review-text">250+ Review</span>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <button
-                    className="comman-btn"
+        {productData?.length > 0 ? (
+          productData?.map((item) => (
+            <div className="col-lg-3 col-md-4 col-12 mt-md-0 mt-4">
+              <div className="comman-card">
+                {userToken ? (
+                  <div
+                    className="heart-icon"
                     onClick={() =>
-                      handleAddToCart({
-                        product: item?._id,
-                        varient: item?.varients?.[0]?._id,
-                        attribute: item?.varients?.[0]?.attribute?.[0]?._id,
-                        value: item?.varients?.[0]?.value?.[0]?._id,
+                      handleAddWishlist({
+                        productId: item?._id,
+                        variantId: item?.variantId,
                       })
                     }
                   >
-                    Add to Bag
-                  </button>
+                    {item?.isFavourite === true ? (
+                      <i className="fa fa-heart" />
+                    ) : (
+                      <i className="fa fa-heart-o" />
+                    )}
+                  </div>
+                ) : null}
+                {/* <div className="new-label">
+                  <p className>New</p>
+                </div> */}
+                <div
+                  className="comman-card-header"
+                  onClick={() => navigate(`/product-details/${item?._id}`)}
+                >
+                  <div className="img-wrapper">
+                    <img src={item?.imagesWeb?.[0]} alt />
+                  </div>
+                </div>
+                <div className="comman-card-body">
+                  <div
+                    className="d-flex justify-content-between"
+                    onClick={() => navigate(`/product-details/${item?._id}`)}
+                  >
+                    <h3 className="title text-start nunito-text">
+                      {item?.name_en?.slice(0, 10) + "..."}
+                    </h3>
+                    <h3 className="price">SAR {item?.varients?.[0]?.price || 0}</h3>
+                  </div>
+                  <p className="paragraph text-start">
+                    {item?.description_en?.slice(0, 10) + "..."}
+                  </p>
+                  <div className="mt-4">
+                    <div className="review-wrapper">
+                      <i className="fa fa-star text-warning" />
+                      <span className="review-points">4.9</span>
+                      <span className="review-text">250+ Review</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      className="comman-btn"
+                      onClick={() =>
+                        handleAddToCart({
+                          product: item?._id,
+                          varient: item?.varients?.[0]?._id,
+                          attribute: item?.varients?.[0]?.attribute?.[0]?._id,
+                          value: item?.varients?.[0]?.value?.[0]?._id,
+                        })
+                      }
+                    >
+                      Add to Bag
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))) : <p  style={{fontWeight:"500",fontSize:"18px"}}>No Product Available</p>}
+          ))
+        ) : (
+          <p style={{ fontWeight: "500", fontSize: "18px" }}>
+            No Product Available
+          </p>
+        )}
         <div className="d-flex align-items-center justify-content-between flex-wrap pt-3 pb-3">
           <Paginate
             currentPage={currentPage}

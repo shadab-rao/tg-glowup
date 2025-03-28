@@ -90,7 +90,7 @@ const BestSellerProduct = () => {
                     onClick={() =>
                       handleAddWishlist({
                         productId: item?._id,
-                        variantId: item?.variantId,
+                        variantId: item?.varients?.[0]?._id,
                       })
                     }
                   >

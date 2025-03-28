@@ -85,7 +85,7 @@ const MyWishlist = () => {
                       onClick={() =>
                         handleAddWishlist({
                           productId: item?.product?._id,
-                          variantId: item?.product?.variantId,
+                          variantId: item?.product?.varients?.[0]?._id,
                         })
                       }
                     >

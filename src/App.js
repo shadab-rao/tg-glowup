@@ -26,6 +26,7 @@ import OrderCancelReason from "./components/Order/OrderCancelReason.jsx";
 import AddAdress from "./components/Address/AddAdress.jsx";
 import Brand from "./components/Brands/Brand.jsx"
 import OfferProduct from "./components/Offer/OfferProduct.jsx";
+import WriteReview from "./rating/WriteReview.jsx";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           <Route path="/sub-category/:id" element={<Filter/>} />
           <Route path="/brands/:id" element={<Brand/>} />
           <Route path="/offers" element={<OfferProduct/>} />
+          <Route path="/review/:id" element={<WriteReview/>} />
         </Routes>
       </BrowserRouter>
     </div>

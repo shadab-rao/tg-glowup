@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Sidebar from "../common/Sidebar";
 import Footer from "../common/Footer";
-import { helpSupport } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
-import { useForm } from "react-hook-form";
+import {
+  getSubject,
+  getType,
+  helpSupport,
+} from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useForm, useWatch } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 const RaiseQuery = () => {
@@ -11,18 +15,44 @@ const RaiseQuery = () => {
   const userData = JSON.parse(localStorage.getItem("glow-user"));
   const userId = userData?._id;
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState([]);
+  const [subject, setSubject] = useState([]);
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm();
+  const selectedType = watch("type");
+
+  useEffect(() => {
+    handleType();
+  }, []);
+
+  
+useEffect(() => {
+  if (selectedType) {
+    handleSubject(selectedType);
+  }
+}, [selectedType]);
+
+  const handleSubject = async (typeId) => {
+    const response = await getSubject({ typeId: typeId });
+    setSubject(response?.data?.results?.subject);
+  };
+  
+  const handleType = async () => {
+    const response = await getType();
+    setType(response?.data?.results?.type);
+  };
 
   const onSubmit = async (data) => {
     const payload = {
       ...data,
       user: userId,
-      type: "Query",
+      type: selectedType,
+      // typeId: selectedType,
     };
     setLoading(true);
     try {
@@ -53,7 +83,7 @@ const RaiseQuery = () => {
                 </p>
               ) : (
                 <p className="text text-light col-lg-10 col-md-11">
-                    For adding query please login first...
+                  For adding query please login first...
                 </p>
               )}
               <div className="mt-4">
@@ -121,13 +151,34 @@ const RaiseQuery = () => {
                                 <label className="form-label">Type*</label>
                                 <select
                                   className="form-select"
-                                  {...register("type")}
-                                  defaultValue="Query"
+                                  {...register("type", {
+                                    required: "Type is required",
+                                  })}
+                                  defaultValue=""
                                 >
-                                  <option value="Query">Query</option>
+                                  <option value="" disabled>
+                                    Select type
+                                  </option>
+                                  {type?.map((item, index) => (
+                                    <option key={index} value={item._id}>
+                                      {item.type_en}
+                                    </option>
+                                  ))}
                                 </select>
+                                {errors.type && (
+                                  <span
+                                    className="text-danger ms-1"
+                                    style={{
+                                      fontSize: "14px",
+                                      fontWeight: "500",
+                                    }}
+                                  >
+                                    {errors.type.message}
+                                  </span>
+                                )}
                               </div>
                             </div>
+
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="form-group">
                                 <label className="form-label">Subject*</label>
@@ -136,9 +187,16 @@ const RaiseQuery = () => {
                                   {...register("subject", {
                                     required: "Subject is required",
                                   })}
-                                  defaultValue="Subject"
+                                  defaultValue=""
                                 >
-                                  <option value="Subject">Subject</option>
+                                  <option value="" disabled>
+                                    Select subject
+                                  </option>
+                                  {subject?.map((item, index) => (
+                                    <option key={index} value={item._id}>
+                                      {item.subject_en}
+                                    </option>
+                                  ))}
                                 </select>
                                 {errors.subject && (
                                   <span
@@ -153,6 +211,7 @@ const RaiseQuery = () => {
                                 )}
                               </div>
                             </div>
+
                             <div className="col-lg-12 col-md-12 col-12">
                               <div className="form-group">
                                 <label className="form-label">Message*</label>

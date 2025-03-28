@@ -41,7 +41,7 @@ const Sidebar = () => {
                   <img
                     src={
                       profileData?.profileImage ||
-                      "assets/img/user.jpg"
+                      "../../assets/img/user.jpg"
                     }
                     alt="image"
                   />

@@ -625,6 +625,52 @@ export async function address(formData) {
     return { error };
   }
 }
+export async function ratingAndReview(formData) {
+  try {
+    const response = await glowHttpServie.post(
+      `${process.env.REACT_APP_APIENDPOINT}/inventory/addRatingAndReview`,
+      formData
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      Swal.fire({
+        toast: true,
+        icon: "success",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    }
+    return { error };
+  }
+}
 export async function editAddress(id,formData) {
   try {
     const response = await glowHttpServie.put(
@@ -763,6 +809,51 @@ export async function getOrderDetails(id) {
     return { error };
   }
 }
+export async function getRatings(id) {
+  try {
+    const response = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/inventory/getUserRatings/${id}`,
+    );
+
+    const { data } = response;
+
+    if (!data.error) {
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "success",
+      //   position: "top-end",
+      //   title: data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
+    } else {
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "error",
+      //   position: "top-end",
+      //   title: data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
+    }
+    if (!data.error) return { data };
+  } catch (error) {
+    if (error.response) {
+      // Swal.fire({
+      //   toast: true,
+      //   icon: "error",
+      //   position: "top-end",
+      //   title: error.response.data.message,
+      //   showConfirmButton: false,
+      //   timerProgressBar: true,
+      //   timer: 3000,
+      // });
+    }
+    return { error };
+  }
+}
 
 export async function getUser() {
   try {
@@ -808,6 +899,47 @@ export async function getAddress() {
   try {
     const { data } = await glowHttpServie.patch(
       `${process.env.REACT_APP_APIENDPOINT}/user/getAddresses`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function getType() {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/platform/getType`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function getSubject(id) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/platform/getSubject`,
+      id
     );
     return { data };
   } catch (error) {

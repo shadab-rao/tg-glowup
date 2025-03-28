@@ -21,6 +21,12 @@ const Filter = () => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(null);
   const [categoryName, setCategoryName] = useState("");
   const [productLength, setProductLength] = useState(0);
+  const [priceSort, setPriceSort] = useState(null); // -1 or 1
+  const [latest, setLatest] = useState(null); // true or false
+  const [minPrice, setMinPrice] = useState(0);
+const [maxPrice, setMaxPrice] = useState(500);
+
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -33,7 +39,9 @@ const Filter = () => {
     try {
       const response = await getCategory();
       setCategories(response?.data?.results?.categories || []);
-      const currentCategory = response?.data?.results?.categories.find((cat) => cat._id === id);
+      const currentCategory = response?.data?.results?.categories.find(
+        (cat) => cat._id === id
+      );
       setCategoryName(currentCategory?.name_en || "Category not found");
     } catch (error) {
       console.error("Failed to fetch categories:", error);
@@ -57,47 +65,70 @@ const Filter = () => {
     setProductLength(length);
   };
 
+  const handlePriceChange = (min, max) => {
+    setMinPrice(min);
+    setMaxPrice(max);
+  };
   return (
     <>
       <Header />
       <div className="container mb-4">
         <div className="custom-breadcrum mt-4">
-          <div className="custom-breadcrum-list me-1" style={{cursor:"pointer"}} onClick={()=>navigate("/")}>Home</div>
+          <div
+            className="custom-breadcrum-list me-1"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          >
+            Home
+          </div>
           <div className="custom-breadcrum-list active">{categoryName}</div>
         </div>
         <div className="row">
-          <FilterSidebar productLength={productLength} subcateogryLength = {subCategories?.length}  />
+          <FilterSidebar
+            setPriceSort={setPriceSort}
+            setLatest={setLatest}
+            categoryName={categoryName}
+            productLength={productLength}
+            subcateogryLength={subCategories?.length}
+            onPriceChange={handlePriceChange}
+          />
           <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4">
             <div className="d-md-block d-none">
               <div className="row mt-4">
                 {/* <div className="col-auto text-center  "> */}
-                {subCategories.length > 0 ? (subCategories?.map((item) => (
-                  <div className="col-auto text-center">
-                    <div
-                      className="cate-img-slider-wrapper"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleSubcategoryClick(item?._id)}
-                    >
-                      <img
-                        style={{
-                          width: "60px",
-                          objectFit: "cover",
-                          background: "#c8c5c5",
-                          borderRadius: "10px",
-                          padding: "1px",
-                        }}
-                        src={item?.image}
-                        alt
-                      />
+                {subCategories.length > 0 ? (
+                  subCategories?.map((item) => (
+                    <div className="col-auto text-center">
+                      <div
+                        className="cate-img-slider-wrapper"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleSubcategoryClick(item?._id)}
+                      >
+                        <img
+                          style={{
+                            width: "60px",
+                            objectFit: "cover",
+                            background: "#c8c5c5",
+                            borderRadius: "10px",
+                            padding: "1px",
+                          }}
+                          src={item?.image}
+                          alt
+                        />
+                      </div>
+                      <p
+                        className="mt-1"
+                        style={{ fontSize: "14px", fontWeight: "400" }}
+                      >
+                        {item?.name_en}
+                      </p>
                     </div>
-                    <p
-                      className="mt-1"
-                      style={{ fontSize: "14px", fontWeight: "400" }}
-                    >
-                      {item?.name_en}
-                    </p>
-                  </div>
-                ))) : <p style={{fontWeight:"500"}}>No Sub Categories Available</p>}
+                  ))
+                ) : (
+                  <p style={{ fontWeight: "500" }}>
+                    No Sub Categories Available
+                  </p>
+                )}
               </div>
               {/* </div> */}
             </div>
@@ -195,11 +226,17 @@ const Filter = () => {
             {/* {selectedSubcategoryId && (
               <SubsubCategories subcategoryId={selectedSubcategoryId} />
             )} */}
-            <AllProduct subcategoryId={selectedSubcategoryId}/>
+            <AllProduct
+               priceSort={priceSort}
+               latest={latest}
+              subcategoryId={selectedSubcategoryId}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+            />
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

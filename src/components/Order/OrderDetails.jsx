@@ -9,9 +9,12 @@ import {
 import Footer from "../common/Footer";
 import { Link, useParams } from "react-router-dom";
 import moment from "moment";
+import Rating from "../../rating/Rating";
 
 const OrderDetails = () => {
   const [orderList, setOrderList] = useState([]);
+  const [varientId, setVarientId] = useState("");
+  const [productId, setProductId] = useState("");
   const { id } = useParams();
 
   // Fetch orders
@@ -21,13 +24,18 @@ const OrderDetails = () => {
 
   const handleOrders = async () => {
     const response = await getOrderDetails(id);
+    console.log(response);
     setOrderList(response?.data?.results?.orders);
+    setVarientId(response?.data?.results?.orders?.inventory?.[0]?.varient?._id)
   };
 
   const handleDelete = async (orderId) => {
     await orderDelete(orderId);
     handleOrders();
   };
+
+  console.log(varientId);
+  
 
   return (
     <>
@@ -165,6 +173,9 @@ const OrderDetails = () => {
                           <p className="normal-text">Subtotal: SAR {item?.amount}</p>
                         </div>
                       </div>
+                     <div className="mt-3">
+                     <Rating id = {id} variantId={varientId}/>
+                     </div>
                     </div>
                   ))}
                 </div>
