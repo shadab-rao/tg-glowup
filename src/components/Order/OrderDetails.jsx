@@ -102,10 +102,10 @@ const OrderDetails = () => {
                 <div className="mt-4">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <h5 className="text fw-bold">Expected Delivery Sept 30 </h5>
-                    <p className="m-0 comman-small-text text-dark">
+                    <Link className="m-0 comman-small-text text-dark" to={`/track-package/${id}`}>
                       Track
                       <i className="fa fa-arrow-right" />
-                    </p>
+                    </Link>
                   </div>
                 </div>
                 <div className="mt-4">

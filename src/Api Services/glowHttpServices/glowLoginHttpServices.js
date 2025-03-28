@@ -895,6 +895,26 @@ export async function getOfferProducts() {
     return { error };
   }
 }
+export async function getTrackOrders(id) {
+  try {
+    const { data } = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/order/trackOrder/${id}`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function getAddress() {
   try {
     const { data } = await glowHttpServie.patch(

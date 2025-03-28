@@ -13,6 +13,8 @@ import { capitalize } from "../utils/CapitalLetter";
 import { useDispatch, useSelector } from "react-redux";
 import { setWishlist } from "../../Redux/cartSlice";
 import useDebounce from "../CustomHook/UseDebounce";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -32,6 +34,18 @@ const Header = () => {
   const navigate = useNavigate();
   const [brandListing, setBrandListing] = useState([]);
   const dropdownRef = useRef(null);
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
+
+  useEffect(() => {
+    console.log("Current Language:", i18n.language);
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "en" ? "ar" : "en";
+    i18n.changeLanguage(newLang);
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
@@ -139,13 +153,25 @@ const Header = () => {
     <header id="header">
       <div className="top-header">
         <div className="container">
-          <div className="d-flex gap-2 align-items-center justify-content-end">
+          <div
+            className="d-flex gap-2 align-items-center justify-content-end" 
+          >
             <div className="border-end pe-2">
               <div className="lang-img-wrapper">
-                <img src="../../../assets/img/eng-flag.png" alt />
+                <img
+                  onClick={toggleLanguage}
+                  style={{ cursor: "pointer" }}
+                  src={
+                    i18n.language === "ar"
+                      ? "../../../assets/img/arFlag.jpg"
+                      : "../../../assets/img/eng-flag.png"
+                  }
+                  alt="Lang Flag"
+                />
               </div>
             </div>
-            <p className="m-0 lang-text">English</p>
+            <p   onClick={toggleLanguage}
+                 style={{ cursor: "pointer" }} className="m-0 lang-text">{i18n.language === "ar" ? "العربية" : "English"}</p>
           </div>
         </div>
       </div>
@@ -171,7 +197,7 @@ const Header = () => {
                           setIsDropdownOpen(false);
                         }}
                       >
-                        Home
+                        {t("Home")}
                       </Link>
                     </li>
                     <li className="nav-item">
@@ -183,7 +209,7 @@ const Header = () => {
                           toggleCategoryList();
                         }}
                       >
-                        Categories
+                        {t("Categories")}
                       </a>
                     </li>
                     <li className="nav-item brand-dropdown">
@@ -195,7 +221,7 @@ const Header = () => {
                           toggleDropdown();
                         }}
                       >
-                        Brands
+                        {t("Brands")}
                       </a>
                       <div
                         className={`brand-dropdown-content ${
@@ -208,18 +234,20 @@ const Header = () => {
                               <div className="ps-3">
                                 <ul className="p-0 list-unstyled mt-4 brand-list">
                                   {brandListing?.map((name) => (
-                                  <li
-                                  className
-                                  onClick={() =>
-                                    navigate(`/brands/${name?._id}`, {
-                                      state: { brandName: name?.brandName_en }, 
-                                    })
-                                  }
-                                >
-                                  <a href className="text">
-                                    {name?.brandName_en}
-                                  </a>
-                                </li>
+                                    <li
+                                      className
+                                      onClick={() =>
+                                        navigate(`/brands/${name?._id}`, {
+                                          state: {
+                                            brandName: name?.brandName_en,
+                                          },
+                                        })
+                                      }
+                                    >
+                                      <a href className="text">
+                                        {name?.brandName_en}
+                                      </a>
+                                    </li>
                                   ))}
                                 </ul>
                               </div>
@@ -235,10 +263,12 @@ const Header = () => {
                                             images?.image ||
                                             "../../../assets/img/brand/Lakme.png"
                                           }
-                                          style={{cursor:"pointer"}}
+                                          style={{ cursor: "pointer" }}
                                           onClick={() =>
                                             navigate(`/brands/${images?._id}`, {
-                                              state: { brandName: images?.brandName_en }, 
+                                              state: {
+                                                brandName: images?.brandName_en,
+                                              },
                                             })
                                           }
                                           alt
@@ -256,7 +286,7 @@ const Header = () => {
 
                     <li class="nav-item">
                       <Link class="nav-link" to={"/offers"}>
-                        Offers
+                        {t("Offers")}
                       </Link>
                     </li>
                   </ul>
@@ -269,7 +299,7 @@ const Header = () => {
                   <input
                     type="text"
                     className="search"
-                    placeholder="Search"
+                    // placeholder="Search"
                     // readOnly={!isSearchOpen}
                   />
                   <div className="search-icon">
@@ -518,7 +548,10 @@ const Header = () => {
                   <div className="col-12">
                     <div className="search-wrapper-2 d-flex">
                       <div className="dropdown-search-icon">
-                        <img src="../../../assets/img/svg/search-normal.svg" alt />
+                        <img
+                          src="../../../assets/img/svg/search-normal.svg"
+                          alt
+                        />
                       </div>
                       <input
                         type="search"
@@ -550,7 +583,9 @@ const Header = () => {
                       </ul>
                     </div>
                     <div className="content">
-                      <h3 className="dropdown-heading text-start">Your Recent Searches</h3>
+                      <h3 className="dropdown-heading text-start">
+                        Your Recent Searches
+                      </h3>
                       <ul className="dropdown-list text-start">
                         <li className="text-dark">
                           <a href>facial serum</a>
@@ -623,10 +658,10 @@ const Header = () => {
                                   display: "-webkit-box",
                                   overflow: "hidden",
                                   WebkitBoxOrient: "vertical",
-                                  WebkitLineClamp: 2, 
+                                  WebkitLineClamp: 2,
                                 }}
                               >
-                                 {capitalize(item?.description_en)}
+                                {capitalize(item?.description_en)}
                               </h5>
                             </div>
 

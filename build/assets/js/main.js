@@ -62,9 +62,9 @@ const swiperPopularRight = new Swiper('.swiper-container-popular-right', {
 window.addEventListener("scroll", function () {
     const header = document.getElementById("header");
     if (window.scrollY > 10) { // Adjust as needed
-        header.classList.add("fixed");
+        header?.classList?.add("fixed");
     } else {
-        header.classList.remove("fixed");
+        header?.classList?.remove("fixed");
     }
 });
 function opensearch() {

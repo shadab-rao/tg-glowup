@@ -27,6 +27,7 @@ import AddAdress from "./components/Address/AddAdress.jsx";
 import Brand from "./components/Brands/Brand.jsx"
 import OfferProduct from "./components/Offer/OfferProduct.jsx";
 import WriteReview from "./rating/WriteReview.jsx";
+import TrackOrder from "./components/track/TrackOrder.jsx";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="/brands/:id" element={<Brand/>} />
           <Route path="/offers" element={<OfferProduct/>} />
           <Route path="/review/:id" element={<WriteReview/>} />
+          <Route path="/track-package/:id" element={<TrackOrder/>} />
         </Routes>
       </BrowserRouter>
     </div>
