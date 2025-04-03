@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { allSubcategoriesList, getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import AllProduct from "../common/AllProduct";
+import { useTranslation } from "react-i18next";
 
 const ProductTabs = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [activeSubCategoryId, setActiveSubCategoryId] = useState(null);
+    const { i18n } = useTranslation();
+      const currentLang = i18n.language;
   
 
 
@@ -49,7 +52,7 @@ const ProductTabs = () => {
                   aria-controls={subCat.name_en.toLowerCase()}
                   aria-selected={activeSubCategoryId === subCat._id}
                 >
-                  {(subCat.name_en).slice(0,12)}
+                  {(currentLang === "en" ? subCat.name_en : subCat?.name_ar).slice(0,12)}
                 </button>
               </li>
             ))}

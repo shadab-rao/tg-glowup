@@ -8,10 +8,12 @@ import {
 import { Link } from "react-router-dom";
 import Footer from "../common/Footer";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const MyOrders = () => {
   const [orderList, setOrderList] = useState([]);
   const userToken = localStorage.getItem("token-user");
+  const {t} = useTranslation()
 
   // Fetch orders
   useEffect(() => {
@@ -46,7 +48,7 @@ const MyOrders = () => {
               <div className>
                 <div className>
                   <h5 className="text fw-bold  text-start">
-                    Your Orders
+                    {t("Your Orders")}
                   </h5>
                 </div>
                 <div className="mt-2">
@@ -114,7 +116,7 @@ const MyOrders = () => {
                         </div>
                       </div>
                     </Link>
-                  ))) : <p className="mt-5" style={{fontWeight:"500",fontSize:"18px"}}>Orders Not Found</p>}
+                  ))) : <p className="mt-5" style={{fontWeight:"500",fontSize:"18px"}}>{t("Orders Not Found")}</p>}
                 </div>
               </div>
             </div>

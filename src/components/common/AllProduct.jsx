@@ -10,6 +10,8 @@ import {
 import { useDispatch } from "react-redux";
 import { setCartCount, setProducts, setWishlist } from "../../Redux/cartSlice";
 import { Paginate } from "../Pagination/Paginate";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 const AllProduct = ({ subcategoryId, categoryId, priceSort,latest, minPrice, maxPrice }) => {
   const navigate = useNavigate();
@@ -19,6 +21,8 @@ const AllProduct = ({ subcategoryId, categoryId, priceSort,latest, minPrice, max
   const [pageData, setPageData] = useState();
   const userToken = localStorage.getItem("token-user");
   const { id } = useParams();
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     handleProduct();
@@ -145,7 +149,7 @@ const AllProduct = ({ subcategoryId, categoryId, priceSort,latest, minPrice, max
                     onClick={() => navigate(`/product-details/${item?._id}`)}
                   >
                     <h3 className="title text-start nunito-text">
-                      {item?.name_en?.slice(0, 10) + "..."}
+                      {currentLang === "en" ? item?.name_en : item?.name_ar?.slice(0, 10) + "..."}
                     </h3>
                     <h3 className="price">SAR {item?.varients?.[0]?.price || 0}</h3>
                   </div>
@@ -171,7 +175,7 @@ const AllProduct = ({ subcategoryId, categoryId, priceSort,latest, minPrice, max
                         })
                       }
                     >
-                      Add to Bag
+                      {t("Add to Bag")}
                     </button>
                   </div>
                 </div>

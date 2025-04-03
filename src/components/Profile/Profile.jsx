@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import "react-phone-input-2/lib/style.css";
 import Sidebar from "../common/Sidebar";
 import PhoneInput from "react-phone-input-2";
+import { t } from "i18next";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState("");
@@ -141,7 +142,7 @@ const Profile = () => {
           <div className="container mt-4 mb-4">
             <div className="text-center">
               <Link className="comman-btn" to={"/login"}>
-                Login to View Profile
+                {t("Login to View Profile")}
               </Link>
             </div>
           </div>
@@ -189,14 +190,14 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className>
-            <h5 className="text fw-semibold mb-1 mt-3 text-start">My Account</h5>
+            <h5 className="text fw-semibold mb-1 mt-3 text-start">{t("My Account")}</h5>
             <div className="list-box-wrapper">
               <Link to={"/my-order"} className="list-box">
                 <div className="icon active">
                   <img src="../../../assets/img/svg/box.svg" alt />
                 </div>
                 <div className="text-wrapper active active border-bottom border-2">
-                  <p className>My Order</p>
+                  <p className>{t("My Order")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -205,7 +206,7 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/location.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">
-                  <p className>My address</p>
+                  <p className>{t("My Address")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -214,21 +215,21 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/heart-light.svg" alt />
                 </div>
                 <div className="text-wrapper active">
-                  <p className>My Wishlist</p>
+                  <p className>{t("My Wishlist")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
             </div>
           </div>
           <div className>
-            <h5 className="text fw-semibold mb-1 mt-3 text-start">Others</h5>
+            <h5 className="text fw-semibold mb-1 mt-3 text-start">{t("Others")}</h5>
             <div className="list-box-wrapper">
               <Link to={"/referral-program"} className="list-box">
                 <div className="icon active">
                   <img src="../../../assets/img/svg/link-circle.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">
-                  <p className>Referral Program</p>
+                  <p className>{t("Referral Program")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -237,7 +238,7 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/setting-2.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">
-                  <p className>Settings</p>
+                  <p className>{t("Setting")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -246,7 +247,7 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/file-lines.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">
-                  <p className>About us</p>
+                  <p className>{t("About Us")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -255,7 +256,7 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/file-minus.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">
-                  <p className>Terms &amp; Conditions</p>
+                  <p className>{t("Terms & Conditions")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -264,7 +265,7 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/call.svg" alt />
                 </div>
                 <div className="text-wrapper active border-bottom border-2">
-                  <p className>Help &amp; Support</p>
+                  <p className>{t("Help & Support")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -273,7 +274,7 @@ const Profile = () => {
                   <img src="../../../assets/img/svg/file-sheild.svg" alt />
                 </div>
                 <div className="text-wrapper active">
-                  <p className>Privacy Policy</p>
+                  <p className>{t("Privacy Policy")}</p>
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
@@ -284,7 +285,7 @@ const Profile = () => {
             <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4">
               <form onSubmit={onSubmit}>
                 <h5 className="Checkout-main-heading mb-2 text-start">
-                  Your Profile Photo
+                  {t("Your Profile Photo")}
                 </h5>
                 <div className="position-relative w-fit h-fit">
                   <div className="profile-img-wrapper">
@@ -307,7 +308,7 @@ const Profile = () => {
                 </div>
                 <div className="mt-4">
                   <h5 className="Checkout-main-heading text-start">
-                    My Information's
+                    {t("My Information's")}
                   </h5>
                   <div className="mt-2">
                     <div className="card-box">
@@ -320,7 +321,7 @@ const Profile = () => {
                                 className="form-label text-start d-block"
                                 style={{ fontSize: "13px" }}
                               >
-                                First Name*
+                                {t("First Name")}*
                               </label>
                               <input
                                 type="text"
@@ -355,7 +356,7 @@ const Profile = () => {
                                 className="form-label text-start d-block"
                                 style={{ fontSize: "13px" }}
                               >
-                                Mail Address*
+                                {t("Mail Address")}*
                               </label>
                               <input
                                 type="text"
@@ -375,7 +376,7 @@ const Profile = () => {
                                 className="form-label text-start d-block"
                                 style={{ fontSize: "13px" }}
                               >
-                                Date of Birth*
+                                {t("Date of Birth")}*
                               </label>
                               <input
                                 type="date"
@@ -394,7 +395,7 @@ const Profile = () => {
                               className="form-label text-start d-block"
                               style={{ fontSize: "13px" }}
                             >
-                              Phone Number
+                              {t("Phone Number")}
                             </label>
                             <PhoneInput
                               containerClass="react-tel-input"
@@ -459,7 +460,7 @@ const Profile = () => {
                                 className="form-label text-start d-block"
                                 style={{ fontSize: "13px" }}
                               >
-                                Gender*
+                                {t("Gender")}*
                               </label>
                               <div className="d-flex gap-3">
                                 <div className="form-design">
@@ -480,7 +481,7 @@ const Profile = () => {
                                         : "text-light"
                                     }`}
                                   >
-                                    Male
+                                    {t("Male")}
                                   </label>
                                 </div>
                                 <div className="form-design">
@@ -501,7 +502,7 @@ const Profile = () => {
                                         : "text-light"
                                     }`}
                                   >
-                                    Female
+                                    {t("Female")}
                                   </label>
                                 </div>
                               </div>
@@ -513,10 +514,10 @@ const Profile = () => {
                   </div>
                   <div className="card-box rounded-3 mt-4">
                     <p className="text text-dark m-0 fw-semibold text-start">
-                      Delete Account{" "}
+                     {t("Delete Account")}
                     </p>
                     <p className="comman-small-text text-light m-0 text-start">
-                      Delete your account and data permanently
+                      {t("Delete your account and data permanently")}
                     </p>
                   </div>
                   {isEditing && (

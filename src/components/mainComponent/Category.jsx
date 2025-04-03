@@ -6,10 +6,14 @@ import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { getCategory } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+
+   const { i18n } = useTranslation();
+    const currentLang = i18n.language;
 
   useEffect(() => {
     handleCategory();
@@ -66,7 +70,7 @@ const Category = () => {
               <div className="cate-img-slider-wrapper .lato-text">
                 <img src={cat?.image} alt={cat?.name_en} />
               </div>
-              <p className="slider-text">{cat?.name_en}</p>
+              <p className="slider-text">{currentLang === "en" ? cat?.name_en : cat?.name_ar}</p>
             </div>
           ))}
         </div>

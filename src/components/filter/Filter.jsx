@@ -14,6 +14,8 @@ import { setCartCount } from "../../Redux/cartSlice";
 import AllProduct from "../common/AllProduct";
 import SubsubCategories from "../SubsubCategories";
 import Footer from "../common/Footer";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const Filter = () => {
   const [categories, setCategories] = useState([]);
@@ -30,6 +32,9 @@ const [maxPrice, setMaxPrice] = useState(500);
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
+
   useEffect(() => {
     handleCategory();
     handleSubcatgeory();
@@ -38,11 +43,13 @@ const [maxPrice, setMaxPrice] = useState(500);
   const handleCategory = async () => {
     try {
       const response = await getCategory();
+      console.log(response);
+      
       setCategories(response?.data?.results?.categories || []);
       const currentCategory = response?.data?.results?.categories.find(
         (cat) => cat._id === id
       );
-      setCategoryName(currentCategory?.name_en || "Category not found");
+      setCategoryName(currentLang === "en" ? currentCategory?.name_en : currentCategory?.name_ar || "Category not found");
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     }
@@ -69,6 +76,9 @@ const [maxPrice, setMaxPrice] = useState(500);
     setMinPrice(min);
     setMaxPrice(max);
   };
+
+  console.log(categoryName);
+  
   return (
     <>
       <Header />
@@ -79,7 +89,7 @@ const [maxPrice, setMaxPrice] = useState(500);
             style={{ cursor: "pointer" }}
             onClick={() => navigate("/")}
           >
-            Home
+            {t("Home")}
           </div>
           <div className="custom-breadcrum-list active">{categoryName}</div>
         </div>

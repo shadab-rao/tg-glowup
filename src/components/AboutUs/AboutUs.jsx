@@ -3,31 +3,45 @@ import Sidebar from "../common/Sidebar";
 import { getContent } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
+import { useTranslation } from "react-i18next";
+import { changeLanguage } from "i18next";
 
 const AboutUs = () => {
-  const [content,setContent] = useState("")
-  const [heading,setHeading] = useState("")
+  const [content, setContent] = useState("");
+  const [heading, setHeading] = useState("");
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
 
-  useEffect(()=>{
-    handleAbout()
-  },[])
+  useEffect(() => {
+    handleAbout();
+  }, [currentLang]);
 
-  const handleAbout = async()=>{
-    const response = await getContent({type:"About Us"});
-    const contentWithHTML = response?.data?.results?.content?.[0]?.contents_en?.[0]?.content;
-    const headings = response?.data?.results?.content?.[0]?.contents_en?.[0]?.heading;
+  const handleAbout = async () => {
+    const response = await getContent({ type: "About Us" });
+    const contentWithHTML =
+      currentLang == "en"
+        ? response?.data?.results?.content?.[0]?.contents_en?.[0]?.content
+        : response?.data?.results?.content?.[0]?.contents_ar?.[0]?.content;
+
+    const headings =
+      currentLang == "en"
+        ? response?.data?.results?.content?.[0]?.contents_en?.[0]?.heading
+        : response?.data?.results?.content?.[0]?.contents_ar?.[0]?.heading;
     const cleanContent = contentWithHTML.replace(/<\/?[^>]+(>|$)/g, "");
     const cleanHeading = headings.replace(/<\/?[^>]+(>|$)/g, "");
-    setContent(cleanContent)
-    setHeading(cleanHeading)
-  }
+    setContent(cleanContent);
+    setHeading(cleanHeading);
+  };
+
+  console.log(currentLang);
+  
   return (
     <>
-    <Header/>
+      <Header />
       <section className="about-us">
         <div className="container mt-4 mb-5">
           <div className="row">
-            <Sidebar/>
+            <Sidebar />
             <div className="col-lg-9 col-md-8 col-12">
               <div className="card-box px-0 py-0 rounded-3 overflow-hidden">
                 <div className="about-us-img">
@@ -35,14 +49,12 @@ const AboutUs = () => {
                 </div>
                 <div className="py-4 px-4">
                   <div className="mt-2">
-                    <h5 className="text fw-semibold text-start">
-                      {heading}
-                    </h5>
+                    <h5 className="text fw-semibold text-start">{heading}</h5>
                     {/* <p className="text  text-light">
                       For the Young. And the Young at heart.
                     </p> */}
                     <p className="text  text-light mt-3 mb-3 text-start">
-                     {content}
+                      {content}
                     </p>
                     {/* <p className="text  text-light m-0 mt-3">
                       Virtual Try-On: Using augmented reality (AR), some apps
@@ -76,7 +88,9 @@ const AboutUs = () => {
                             <img src="assets/img/icon/category.png" alt />
                           </div>
                           <div className>
-                            <p className="text text-primary m-0 text-start">12+</p>
+                            <p className="text text-primary m-0 text-start">
+                              12+
+                            </p>
                             <p className="text m-0">Categories</p>
                           </div>
                         </div>
@@ -108,7 +122,7 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </>
   );
 };

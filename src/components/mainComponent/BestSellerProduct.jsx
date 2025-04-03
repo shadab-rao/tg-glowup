@@ -11,12 +11,16 @@ import {
 import { useDispatch } from "react-redux";
 import { setCartCount, setProducts, setWishlist } from "../../Redux/cartSlice";
 import { Paginate } from "../Pagination/Paginate";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 const BestSellerProduct = () => {
   const navigate = useNavigate();
   const [productData, setProductData] = useState([]);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("token-user");
+   const { i18n } = useTranslation();
+    const currentLang = i18n.language;
 
   useEffect(() => {
     handleProduct();
@@ -115,12 +119,12 @@ const BestSellerProduct = () => {
                     onClick={() => navigate(`/product-details/${item?._id}`)}
                   >
                     <h3 className="title text-start nunito-text">
-                      {item?.name_en?.slice(0, 10) + "..."}
+                      {currentLang === "en" ? item?.name_en?.slice(0, 10) + "..."  :  item?.name_ar?.slice(0, 10) }
                     </h3>
-                    <h3 className="price">SAR {item?.varients?.[0]?.price}</h3>
+                    <h3 className="price">{t("SAR")} {item?.varients?.[0]?.price}</h3>
                   </div>
                   <p className="paragraph text-start" style={{cursor:"default"}}>
-                    {item?.description_en?.slice(0, 10) + "..."}
+                    {currentLang === "en" ? item?.description_en?.slice(0, 10) + "..." : item?.description_ar?.slice(0, 10)}
                   </p>
                   <div className="mt-4">
                     <div className="review-wrapper">
@@ -141,7 +145,7 @@ const BestSellerProduct = () => {
                         })
                       }
                     >
-                      Add to Bag
+                     {t("Add to Bag")}
                     </button>
                   </div>
                 </div>
@@ -150,7 +154,7 @@ const BestSellerProduct = () => {
           ))
         ) : (
           <p className="comman-heading text-center text-danger">
-            Data Not Found
+            {t("Data Not Found")}
           </p>
         )}
       </div>

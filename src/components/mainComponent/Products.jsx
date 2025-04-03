@@ -1,5 +1,7 @@
 import React from "react";
 import BestSellerProduct from "./BestSellerProduct";
+import { t } from "i18next";
+
 
 const Products = () => {
 
@@ -7,8 +9,8 @@ const Products = () => {
     <>
       <div className="container mb-5">
         <div className="heading-wrapper">
-          <h5 className="bold-heading georgia-heading">Beauty Must Haves</h5>
-          <p className="light-heading nunito-text">Bestsellers Products</p>
+          <h5 className="bold-heading georgia-heading">{t("Beauty Must Haves")}</h5>
+          <p className="light-heading nunito-text">{t("Bestsellers Products")}</p>
         </div>
        <BestSellerProduct/>
       </div>

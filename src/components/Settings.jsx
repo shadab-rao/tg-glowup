@@ -1,17 +1,22 @@
 import React from "react";
 import Sidebar from "./common/Sidebar";
+import Header from "./common/Header";
+import { useTranslation } from "react-i18next";
+import Footer from "./common/Footer";
 
 const Settings = () => {
+  const {t} = useTranslation()
   return (
     <>
       <section className="setting">
+        <Header/>
         <div className="container mt-4 mb-5">
           <div className="row">
           <Sidebar/>
             <div className="col-lg-9 col-md-8 col-12">
               <div className>
                 <div className>
-                  <h5 className="text fw-bold mb-4">Settings</h5>
+                  <h5 className="text fw-bold mb-4">{t("Setting")}</h5>
                 </div>
               </div>
               <div className="products-tabs">
@@ -32,7 +37,7 @@ const Settings = () => {
                           aria-controls="makeup"
                           aria-selected="true"
                         >
-                          Password Change
+                          {t("Password Change")}
                         </a>
                       </li>
                       <li className="nav-item w-33" role="presentation">
@@ -45,7 +50,7 @@ const Settings = () => {
                           aria-controls="skin"
                           aria-selected="false"
                         >
-                          Language
+                          {t("Language")}
                         </a>
                       </li>
                       <li className="nav-item w-33" role="presentation">
@@ -58,7 +63,7 @@ const Settings = () => {
                           aria-controls="hair"
                           aria-selected="false"
                         >
-                          Notification
+                          {t("Notification")}
                         </a>
                       </li>
                     </ul>
@@ -75,12 +80,12 @@ const Settings = () => {
                               <div className="col-lg-6 col-md-12 col-12">
                                 <div className="form-group">
                                   <label htmlFor className="form-label">
-                                    Current Password*
+                                    {t("Current Password")}*
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="Current Password"
+                                    placeholder={t("Current Password")}
                                   />
                                 </div>
                               </div>
@@ -88,24 +93,24 @@ const Settings = () => {
                               <div className="col-lg-6 col-md-12 col-12">
                                 <div className="form-group">
                                   <label htmlFor className="form-label">
-                                    New Password**
+                                    {t("New Password")}**
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="New Password*"
+                                    placeholder={t("New Password")}
                                   />
                                 </div>
                               </div>
                               <div className="col-lg-6 col-md-12 col-12">
                                 <div className="form-group">
                                   <label htmlFor className="form-label">
-                                    Confirm New Password**
+                                    {t("Confirm New Password")}**
                                   </label>
                                   <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="Confirm New Password*"
+                                    placeholder={t("Confirm New Password")}
                                   />
                                 </div>
                               </div>
@@ -115,7 +120,7 @@ const Settings = () => {
                         <div className="mt-4">
                           <div className="col-lg-6 col-md-8 col-12">
                             <button className="comman-btn">
-                              Save Password
+                              {t("Save Password")}
                             </button>
                           </div>
                         </div>
@@ -318,6 +323,7 @@ const Settings = () => {
             </div>
           </div>
         </div>
+        <Footer/>
       </section>
     </>
   );

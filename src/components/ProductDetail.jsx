@@ -23,6 +23,8 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 
 const ProductDetail = () => {
@@ -37,6 +39,9 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const thumbnailsRef = useRef(null);
   const products = useSelector((state) => state.cart.products);
+
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     handleView();
@@ -224,8 +229,8 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <div className="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-4 mt-4 text-start">
-                  <h2 className="product-main-heading">{viewData?.name_en}</h2>
-                  <h6 className="small-heading">{viewData?.description_en}</h6>
+                  <h2 className="product-main-heading">{currentLang === "en" ? viewData?.name_en : viewData?.name_ar}</h2>
+                  <h6 className="small-heading">{currentLang === "en" ? viewData?.description_en : viewData?.description_ar }</h6>
                   <div className="list-span d-flex gap-3">
                     <span
                       style={{
@@ -234,7 +239,7 @@ const ProductDetail = () => {
                         color: "gray",
                       }}
                     >
-                      {viewData?.brand?.brandName_en}
+                      {currentLang === "en" ? viewData?.brand?.brandName_en : viewData?.brand?.brandName_ar }
                     </span>
                   </div>
                   <p className="light-text">VC_1521178</p>
@@ -259,7 +264,7 @@ const ProductDetail = () => {
                             onClick={() => handleVariantClick(variant._id)}
                           >
                             <div>
-                              <p>{variant.value?.[0]?.name_en}</p>
+                              <p>{currentLang === "en" ? variant.value?.[0]?.name_en : variant?.value?.[0]?.name_ar}</p>
                               <p>SAR {variant.price}</p>
                             </div>
                           </div>
@@ -269,7 +274,7 @@ const ProductDetail = () => {
                   </div>
                   <div className="d-flex gap-3 mt-4">
                     <button className="comman-btn" onClick={handleAddToCart}>
-                      Add to Bag
+                      {t("Add to Bag")}
                     </button>
                     <button
                       className="comman-border-btn"
@@ -280,7 +285,7 @@ const ProductDetail = () => {
                         })
                       }
                     >
-                      Add To wishlist
+                      {t("Add To Wishlist")}
                     </button>
                   </div>
                   <div className="mt-4">
@@ -291,7 +296,7 @@ const ProductDetail = () => {
                         alt
                       />
                       <p className="text-icon m-0">
-                        Estimated Delivery 4-7 Working Days
+                        {t("Estimated Delivery 4-7 Working Days")}
                       </p>
                     </div>
                     <div className="d-flex gap-2">
@@ -300,7 +305,7 @@ const ProductDetail = () => {
                         className="icon"
                         alt
                       />
-                      <p className="text-icon m-0">Non- Returnable</p>
+                      <p className="text-icon m-0">{t("Non- Returnable")}</p>
                     </div>
                   </div>
                 </div>
@@ -312,10 +317,10 @@ const ProductDetail = () => {
           <div className="container mt-lg-5 mt-md-0 mt-4">
             <div className="row">
               <div className="col-lg-10 col-md-11 col-12 text-start">
-                <h4 className="text-start mt-4">Description</h4>
+                <h4 className="text-start mt-4">{t("Description")}</h4>
                 <div>
                   <div className="mb-4">
-                    <p className>{viewData?.description_en}</p>
+                    <p className>{currentLang === "en" ? viewData?.description_en : viewData?.description_ar}</p>
                   </div>
                 </div>
               </div>

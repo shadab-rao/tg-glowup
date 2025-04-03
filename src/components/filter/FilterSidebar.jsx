@@ -4,6 +4,7 @@ import {
   getSubcategory,
   productFilter,
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { t } from "i18next";
 
 const FilterSidebar = ({ setLatest, setPriceSort, categoryName,onPriceChange }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -63,7 +64,7 @@ const FilterSidebar = ({ setLatest, setPriceSort, categoryName,onPriceChange }) 
         {/* <span>({brandLength || subcateogryLength || offerLength || 0 })</span> */}
       </h3>
       <div className="mt-md-4">
-        <h4 className="comman-heading mb-0 text-start">Sort By</h4>
+        <h4 className="comman-heading mb-0 text-start">{t("Sort By")}</h4>
       </div>
       <div className="mt-md-4">
         <div className="py-4 px-4 bg-white">
@@ -79,7 +80,7 @@ const FilterSidebar = ({ setLatest, setPriceSort, categoryName,onPriceChange }) 
                 htmlFor="test2"
                 className="form-label fs-6 fw-semibold text-dark"
               >
-                Latest Arrivals
+                {t("Latest Arrivals")}
               </label>
 
               <input
@@ -92,7 +93,7 @@ const FilterSidebar = ({ setLatest, setPriceSort, categoryName,onPriceChange }) 
                 htmlFor="test3"
                 className="form-label fs-6 fw-semibold text-dark"
               >
-                Price Low to High
+                {t("Price Low to High")}
               </label>
 
               <input
@@ -105,7 +106,7 @@ const FilterSidebar = ({ setLatest, setPriceSort, categoryName,onPriceChange }) 
                 htmlFor="test4"
                 className="form-label fs-6 fw-semibold text-dark"
               >
-                Price High to Low
+                {t("Price High to Low")}
               </label>
             </div>
           </div>
@@ -113,7 +114,7 @@ const FilterSidebar = ({ setLatest, setPriceSort, categoryName,onPriceChange }) 
       </div>
 
       <div className="mt-4">
-        <h4 className="comman-heading text-start">Filter</h4>
+        <h4 className="comman-heading text-start">{t("Filter")}</h4>
       </div>
 
       {[ "color", "price"].map((dropdown, index) => (

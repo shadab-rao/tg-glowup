@@ -37,10 +37,10 @@ const Header = () => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
 
-  useEffect(() => {
-    console.log("Current Language:", i18n.language);
-    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
-  }, [i18n.language]);
+  // useEffect(() => {
+  //   console.log("Current Language:", i18n.language);
+  //   document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  // }, [i18n.language]);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "en" ? "ar" : "en";
@@ -347,7 +347,7 @@ const Header = () => {
                           // If no token, show login button
                           <div className="text-center">
                             <Link to="/login" className="btn btn-dark">
-                              Login
+                              {t("Login")}
                             </Link>
                           </div>
                         ) : profileData?.fullName ? (
@@ -364,7 +364,7 @@ const Header = () => {
                               </div>
                               <div className="mt-2">
                                 <Link to={"/my-profile"} className="edit-btn">
-                                  Edit
+                                  {t("Edit")}
                                 </Link>
                               </div>
                             </div>
@@ -373,13 +373,13 @@ const Header = () => {
                           // If user token exists and completeProfile is false, show profile data
                           <div className="text-center">
                             <Link to="/my-profile" className="btn btn-dark">
-                              Complete Profile
+                              {t("Complete Profile")}
                             </Link>
                           </div>
                         )}
 
                         <div className>
-                          <h5 className="text fw-semibold mb-1">My Account</h5>
+                          <h5 className="text fw-semibold mb-1">{t("My Account")}</h5>
                           <div className="list-box-wrapper">
                             <Link to={"/my-order"} className="list-box">
                               <div className="icon active">
@@ -389,7 +389,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>My Order</p>
+                                <p className>{t("My Order")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -401,7 +401,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>My address</p>
+                                <p className>{t("My Address")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -413,14 +413,14 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active">
-                                <p className>My Wishlist</p>
+                                <p className>{t("My Wishlist")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
                           </div>
                         </div>
                         <div className>
-                          <h5 className="text fw-semibold mb-1">Others</h5>
+                          <h5 className="text fw-semibold mb-1">{t("Others")}</h5>
                           <div className="list-box-wrapper">
                             <Link to={"/referral-program"} className="list-box">
                               <div className="icon active">
@@ -430,7 +430,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>Referral Program</p>
+                                <p className>{t("Referral Program")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -442,7 +442,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>Settings</p>
+                                <p className>{t("Setting")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -454,7 +454,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>About us</p>
+                                <p className>{t("About Us")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -466,7 +466,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>Terms &amp; Conditions</p>
+                                <p className>{t("Terms & Conditions")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -478,7 +478,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active border-bottom border-2">
-                                <p className>Help &amp; Support</p>
+                                <p className>{t("Help & Support")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -490,7 +490,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="text-wrapper active">
-                                <p className>Privacy Policy</p>
+                                <p className>{t("Privacy Policy")}</p>
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
@@ -503,7 +503,7 @@ const Header = () => {
                               <i className="fa fa-sign-out ms-1" />
                               {/* </div> */}
                               <div className="text-wrapper ms-1">
-                                <p className="text-dark">Logout</p>
+                                <p className="text-dark">{t("Logout")}</p>
                               </div>
                             </div>
                           </div>
@@ -556,7 +556,7 @@ const Header = () => {
                       <input
                         type="search"
                         className="form-control"
-                        placeholder="What are you looking for?"
+                        placeholder={t("What are you looking for?")}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
@@ -566,7 +566,7 @@ const Header = () => {
                 <div className="mt-4 row">
                   <div className="col-lg-3 col-md-4">
                     <div className="content">
-                      <h3 className="dropdown-heading">Trending Now</h3>
+                      <h3 className="dropdown-heading">{t("Trending Now")}</h3>
                       <ul className="dropdown-list text-start">
                         <li className="text-dark">
                           <a href>advanced night repair</a>
@@ -584,7 +584,7 @@ const Header = () => {
                     </div>
                     <div className="content">
                       <h3 className="dropdown-heading text-start">
-                        Your Recent Searches
+                        {t("Your Recent Searches")}
                       </h3>
                       <ul className="dropdown-list text-start">
                         <li className="text-dark">
@@ -600,10 +600,10 @@ const Header = () => {
                     <div className="d-flex justify-content-between align-items-center">
                       <div className="content">
                         <h3 className="dropdown-heading mb-0">
-                          Popular Products{" "}
+                          {t("Popular Products")}
                         </h3>
                       </div>
-                      <p className="view-all-text mb-0">View All</p>
+                      <p className="view-all-text mb-0">{t("View All")}</p>
                     </div>
                     <div
                       className="row mt-4"
@@ -627,7 +627,7 @@ const Header = () => {
                             color: "#888",
                           }}
                         >
-                          Search Your Products here....
+                          {t("Search Your Products here....")}
                         </p>
                       ) : searchResults.length > 0 ? (
                         searchResults.map((item) => (
@@ -673,7 +673,7 @@ const Header = () => {
                         ))
                       ) : (
                         <p style={{ fontSize: "25px", fontWeight: "400" }}>
-                          Product Not Found
+                          {t("Product Not Found")}
                         </p>
                       )}
                     </div>
@@ -788,7 +788,7 @@ const Header = () => {
                           }}
                           className="nav-link"
                         >
-                          {cat?.name_en}
+                          {currentLang === "en" ? cat?.name_en : cat?.name_ar}
                         </Link>
                       </li>
                     </ul>

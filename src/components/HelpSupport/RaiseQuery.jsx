@@ -9,6 +9,7 @@ import {
 } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
 import { useForm, useWatch } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const RaiseQuery = () => {
   const userToken = localStorage.getItem("token-user");
@@ -17,6 +18,8 @@ const RaiseQuery = () => {
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState([]);
   const [subject, setSubject] = useState([]);
+  const { i18n,t } = useTranslation();
+  const currentLang = i18n.language;
   const {
     register,
     handleSubmit,
@@ -27,8 +30,10 @@ const RaiseQuery = () => {
   const selectedType = watch("type");
 
   useEffect(() => {
+    console.log(currentLang);
+    
     handleType();
-  }, []);
+  }, [currentLang]);
 
   
 useEffect(() => {
@@ -75,15 +80,14 @@ useEffect(() => {
           <div className="row">
             <Sidebar />
             <div className="col-lg-9 col-md-8 col-12 mt-md-0 mt-4 text-start">
-              <h5 className="Checkout-main-heading">Help &amp; Support</h5>
+              <h5 className="Checkout-main-heading">{t("Help & Support")}</h5>
               {userToken ? (
                 <p className="text text-light col-lg-10 col-md-11">
-                  We would love to hear from you and answer any questions you
-                  may have. You can contact us by filling out the form below...
+                  {t("We would love to hear from you and answer any questions you may have. You can contact us by filling out the form below...")}
                 </p>
               ) : (
                 <p className="text text-light col-lg-10 col-md-11">
-                  For adding query please login first...
+                  {t("For adding query please login first...")}
                 </p>
               )}
               <div className="mt-4">
@@ -95,11 +99,11 @@ useEffect(() => {
                           <div className="row">
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="form-group">
-                                <label className="form-label">Name*</label>
+                                <label className="form-label">{t("Name")}*</label>
                                 <input
                                   type="text"
                                   className="form-control"
-                                  placeholder="Name*"
+                                  placeholder={t("Name")}
                                   {...register("name", {
                                     required: "Name is required",
                                   })}
@@ -119,11 +123,11 @@ useEffect(() => {
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="form-group">
-                                <label className="form-label">Email ID*</label>
+                                <label className="form-label">{t("Email ID")}*</label>
                                 <input
                                   type="email"
                                   className="form-control"
-                                  placeholder="Email ID*"
+                                  placeholder={t("Email ID")}
                                   {...register("email", {
                                     required: "Email is required",
                                     pattern: {
@@ -148,7 +152,7 @@ useEffect(() => {
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="form-group">
-                                <label className="form-label">Type*</label>
+                                <label className="form-label">{t("Type")}*</label>
                                 <select
                                   className="form-select"
                                   {...register("type", {
@@ -157,11 +161,11 @@ useEffect(() => {
                                   defaultValue=""
                                 >
                                   <option value="" disabled>
-                                    Select type
+                                    {t("Select Type")}
                                   </option>
                                   {type?.map((item, index) => (
                                     <option key={index} value={item._id}>
-                                      {item.type_en}
+                                      {currentLang == "en" ? item?.type_en : item?.type_ar}
                                     </option>
                                   ))}
                                 </select>
@@ -181,7 +185,7 @@ useEffect(() => {
 
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="form-group">
-                                <label className="form-label">Subject*</label>
+                                <label className="form-label">{t("Subject")}*</label>
                                 <select
                                   className="form-select"
                                   {...register("subject", {
@@ -190,7 +194,7 @@ useEffect(() => {
                                   defaultValue=""
                                 >
                                   <option value="" disabled>
-                                    Select subject
+                                    {t("Select Subject")}
                                   </option>
                                   {subject?.map((item, index) => (
                                     <option key={index} value={item._id}>
@@ -214,11 +218,11 @@ useEffect(() => {
 
                             <div className="col-lg-12 col-md-12 col-12">
                               <div className="form-group">
-                                <label className="form-label">Message*</label>
+                                <label className="form-label">{t("Message")}*</label>
                                 <textarea
                                   className="form-control h-100"
                                   rows={2}
-                                  placeholder="Please enter a brief description"
+                                  placeholder={t("Please enter a brief description")}
                                   {...register("message", {
                                     required: "Message is required",
                                   })}
@@ -253,7 +257,7 @@ useEffect(() => {
                             aria-hidden="true"
                           ></span>
                         ) : null}
-                        {loading ? "Sending..." : "Send"}
+                        {loading ? t("Sending...") : t("Send")}
                       </button>
                     </div>
                   </form>

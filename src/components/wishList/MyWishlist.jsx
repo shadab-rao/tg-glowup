@@ -10,12 +10,17 @@ import { useDispatch } from "react-redux";
 import { setWishlist } from "../../Redux/cartSlice";
 import EmptyWisList from "./EmptyWisList";
 import Footer from "../common/Footer";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 const MyWishlist = () => {
   const [wishData, setWishData] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("token-user");
+
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     handleWishList();
@@ -104,14 +109,14 @@ const MyWishlist = () => {
                         }
                       >
                         <h3 className="title text-start">
-                          {item?.product?.name_en?.slice(0, 10) + "..."}
+                          {currentLang === "en" ? item?.product?.name_en?.slice(0, 10) + "..." :item?.product?.name_ar}
                         </h3>
                         <h3 className="price">
                           {item?.product?.currency} {item?.product?.price}
                         </h3>
                       </div>
                       <p className="paragraph text-start">
-                        {item?.product?.description_en?.slice(0, 20) + "..."}
+                        {currentLang === "en" ? item?.product?.description_en?.slice(0, 20) + "..." : item?.product?.description_ar?.slice(0,20)}
                       </p>
                       <div className="mt-4">
                         <div className="review-wrapper">
@@ -137,7 +142,7 @@ const MyWishlist = () => {
                             })
                           }
                         >
-                          Add to Bag
+                          {t("Add to Bag")}
                         </button>
                       </div>
                     </div>
