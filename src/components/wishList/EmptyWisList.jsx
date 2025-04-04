@@ -1,7 +1,9 @@
 import React from 'react'
 import Header from '../common/Header'
+import { useTranslation } from 'react-i18next'
 
 const EmptyWisList = () => {
+  const {t} = useTranslation();
   return (
    <>
    <section className="mb-5">
@@ -14,8 +16,8 @@ const EmptyWisList = () => {
           </div>
         </div>
         <h5 className="comman-heading text-center">
-          You have no items in your <br />
-          Wishlist
+          {t("You have no items in your")} <br />
+          {t("Wishlist")}
         </h5>
       </div>
     </div>

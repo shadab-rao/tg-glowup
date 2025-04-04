@@ -61,7 +61,7 @@ const MyOrders = () => {
                               <div className="row">
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
                                   <p className="comman-small-text m-0 text-light">
-                                    Order Date
+                                    {t("Order Date")}
                                   </p>
                                   <p className="comman-small-text ms-1 m-0 text-dark fw-semibold">
                                     {moment(item?.createdAt).format("YYYY-MM-DD") || "..."}
@@ -69,7 +69,7 @@ const MyOrders = () => {
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
                                   <p className="comman-small-text m-0 text-light">
-                                    Price
+                                    {t("Price")}
                                   </p>
                                   <p className="comman-small-text m-0 text-dark fw-semibold">
                                     SAR {parseFloat(item?.totalAmount).toFixed(2)}
@@ -77,7 +77,7 @@ const MyOrders = () => {
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
                                   <p className="comman-small-text m-0 text-light">
-                                    Order
+                                    {t("Order")}
                                   </p>
                                   <p className="comman-small-text m-0 text-dark fw-semibold">
                                     {item?.order_id?.length > 10
@@ -87,7 +87,7 @@ const MyOrders = () => {
                                 </div>
                                 <div className="col-md-3 col-6 mt-md-0 mt-3 px-lg-auto px-0  text-start">
                                   <p className="comman-small-text m-0 text-light">
-                                    Status
+                                    {t("Status")}
                                   </p>
                                   <p className="comman-small-text m-0 text-success fw-semibold">
                                     {item?.transactionStatus || "..."}

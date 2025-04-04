@@ -312,6 +312,8 @@ export async function editProfile(formData) {
     return { error };
   }
 }
+
+
 export async function brnadProduct(id,formData) {
   try {
     const response = await glowHttpServie.put(
@@ -915,6 +917,26 @@ export async function getTrackOrders(id) {
     return { error };
   }
 }
+export async function getReferrals() {
+  try {
+    const { data } = await glowHttpServie.get(
+      `${process.env.REACT_APP_APIENDPOINT}/user/getReferralLink`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
 export async function getAddress() {
   try {
     const { data } = await glowHttpServie.patch(
@@ -939,6 +961,46 @@ export async function getType() {
   try {
     const { data } = await glowHttpServie.patch(
       `${process.env.REACT_APP_APIENDPOINT}/platform/getType`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function allNotification(id) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/user/allNotification/${id}`
+    );
+    return { data };
+  } catch (error) {
+    if (error.response)
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        position: "top-end",
+        title: error.response.data.message,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
+      });
+    return { error };
+  }
+}
+export async function orderNotifi(id) {
+  try {
+    const { data } = await glowHttpServie.patch(
+      `${process.env.REACT_APP_APIENDPOINT}/user/orderToggle/${id}`
     );
     return { data };
   } catch (error) {

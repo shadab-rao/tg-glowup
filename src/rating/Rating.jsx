@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { getRatings, ratingAndReview } from "../Api Services/glowHttpServices/glowLoginHttpServices";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Rating = ({ variantId,id }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const[ratingCount,setRatingCount] = useState();
+  const {t} = useTranslation();
 
   useEffect(()=>{
     ratingData()
@@ -44,7 +46,7 @@ const Rating = ({ variantId,id }) => {
   return (
     <div className="d-flex justify-content-between" style={{ padding: "4px" }}>
       <div>
-        <p style={{ marginBottom: "4px" }}>Rate this Product</p>
+        <p style={{ marginBottom: "4px" }}>{t("Rate this Product")}</p>
         <div style={{ display: "flex", cursor: "pointer" }}>
         {[...Array(5)].map((_, index) => {
             const starValue = index + 1;
@@ -82,7 +84,7 @@ const Rating = ({ variantId,id }) => {
             fontWeight: "400",
           }}
         >
-          Write Review
+          {t("Write Review")}
         </Link>
       </div>
     </div>

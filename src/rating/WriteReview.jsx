@@ -11,6 +11,7 @@ import {
   orderDelete,
   ratingAndReview,
 } from "../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useTranslation } from "react-i18next";
 
 const WriteReview = () => {
   const [orderList, setOrderList] = useState([]);
@@ -23,6 +24,8 @@ const WriteReview = () => {
   const [existingImage, setExistingImage] = useState("");
 
   const { id } = useParams();
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language;
 
   const handleOrders = async () => {
     const response = await getOrderDetails(id);
@@ -78,12 +81,12 @@ const WriteReview = () => {
               <div className>
                 <div className>
                   <h5 className="text fw-bold mb-4 text-start">
-                    Order Details
+                    {t("Order Details")}
                   </h5>
                   <div className="mt-4">
                     {orderList?.inventory?.map((item) => (
                       <div className="Checkout-box mt-3 bg-white">
-                        <div className="row">
+                        <div className="row" style={{textAlign:"end"}}>
                           <div className="col-md-auto col-4">
                             <div className="Checkout-box-img">
                               <img src={item?.product?.imagesWeb?.[0]} alt />
@@ -91,27 +94,35 @@ const WriteReview = () => {
                           </div>
                           <div className="col-lg-8 col-md-7 col-8 px-lg-auto px-md-0 text-start">
                             <h6 className="Checkout-box-head">
-                              {item?.product?.name_en}
+                            {currentLang === "en"
+                              ? item?.product?.name_en
+                              : item?.product?.name_ar}
                             </h6>
                             <p className="normal-text">
-                              {item?.product?.description_en}
+                            {currentLang === "en"
+                              ? item?.product?.description_en
+                              : item?.product?.description_ar}
                             </p>
                             <h5 className="checkbox-price">
                               SAR {item?.amount}
                             </h5>
                             <div className="checkbox-span-text">
                               <span className="normal-text border-end pe-1">
-                                {item?.attributeAndValues?.[0]?.name_en ||
-                                  "N/A"}
-                                :{" "}
-                                {item?.attributeAndValues?.[1]?.name_en || "0"}
+                              {currentLang === "en"
+                                ? item?.attributeAndValues?.[0]?.name_en || "N/A"
+                                : item?.attributeAndValues?.[0]?.name_ar ||
+                                  "N/A"}{" "}
+                              :
+                              {currentLang === "en"
+                                ? item?.attributeAndValues?.[1]?.name_en || "0"
+                                : item?.attributeAndValues?.[1]?.name_ar || "0"}
                               </span>
                               <span className="normal-text ps-1">
-                                Quantity: {item?.quantity}
+                                {t("Quantity")}: {item?.quantity}
                               </span>
                             </div>
                             <p className="normal-text">
-                              Subtotal: SAR {item?.amount}
+                              {t("Subtotal")}: SAR {item?.amount}
                             </p>
                           </div>
                         </div>
@@ -131,7 +142,7 @@ const WriteReview = () => {
                                   <div className="bg-white rounded-3 p-3">
                                     <div className="mb-4 pb-2 border-bottom">
                                       <h2 className="text fw-semibold">
-                                        How would you rate this product?
+                                        {t("How would you rate this product?")}
                                       </h2>
                                       <div className="d-flex">
                                         {[1, 2, 3, 4, 5].map((star) => (
@@ -158,7 +169,7 @@ const WriteReview = () => {
                                     </div>
                                     <div>
                                       <h2 className="text fw-semibold">
-                                        Share Photo now!
+                                        {t("Share Photo now!")}
                                         <span>
                                           <img
                                             src="../../assets/img/info-circle.svg"
@@ -167,7 +178,7 @@ const WriteReview = () => {
                                         </span>
                                       </h2>
                                       <p className="text-light fw-normal text-sm">
-                                        Add your product experiences with photo
+                                        {t("Add your product experiences with photo")}
                                       </p>
                                     </div>
                                     <div className="mt-2">
@@ -202,12 +213,12 @@ const WriteReview = () => {
                                         htmlFor
                                         className="text fw-semibold"
                                       >
-                                        Write Review
+                                        {t("Write Review")}
                                       </label>
                                       <textarea
                                         className="mt-2 form-control border-dark"
                                         rows={4}
-                                        placeholder="Write your review here..."
+                                        placeholder={t("Write your review here...")}
                                         value={existingComment || comment}
                                         onChange={(e) =>
                                           setComment(e.target.value)
@@ -224,7 +235,7 @@ const WriteReview = () => {
                                         !!existingRating || !!existingComment
                                       }
                                     >
-                                      Submit
+                                      {t("Submit")}
                                     </button>
                                   </div>
                                 </div>

@@ -4,11 +4,13 @@ import Footer from "../common/Footer";
 import Sidebar from "../common/Sidebar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cancelOrder } from "../../Api Services/glowHttpServices/glowLoginHttpServices";
+import { useTranslation } from "react-i18next";
 
 const OrderCancelReason = () => {
   const [selectedReason, setSelectedReason] = useState("Change of Preference");
   const navigate = useNavigate();
   const { state } = useLocation();
+  const {t} = useTranslation();
 
   // useEffect(() => {
   //   const handleModalClose = () => {
@@ -45,11 +47,11 @@ const OrderCancelReason = () => {
             <Sidebar />
             <div className="col-lg-4 col-md-6 col-12 mt-md-0 mt-4 text-start">
               {[
-                "Change of Preference",
-                "Wrong Shade/Color",
-                "Allergic Reaction Concern",
-                "Price Concerns",
-                "Something Else",
+                t("Change of Preference"),
+              t("Wrong Shade/Color"),
+                t("Allergic Reaction Concern"),
+                t("Price Concerns"),
+                t("Something Else"),
               ].map((reason, index) => (
                 <div
                   key={index}
@@ -72,15 +74,15 @@ const OrderCancelReason = () => {
                     </label>
                   </div>
                   <p className="comman-small-text text-dark">
-                    {reason === "Change of Preference"
-                      ? "I changed my mind and no longer want the makeup product."
-                      : reason === "Wrong Shade/Color"
-                      ? "I accidentally ordered the wrong shade or color."
-                      : reason === "Allergic Reaction Concern"
-                      ? "I realized I might be allergic to the ingredients in the product."
-                      : reason === "Price Concerns"
-                      ? "I found the same makeup product at a lower price elsewhere."
-                      : "I have another reason for canceling this order, which is not listed above."}
+                    {reason === t("Change of Preference")
+                      ? t("I changed my mind and no longer want the makeup product.")
+                      : reason === t("Wrong Shade/Color")
+                      ? t("I accidentally ordered the wrong shade or color.")
+                      : reason === t("Allergic Reaction Concern")
+                      ? t("I realized I might be allergic to the ingredients in the product.")
+                      : reason === t("Price Concerns")
+                      ? t("I found the same makeup product at a lower price elsewhere.")
+                      : t("I have another reason for canceling this order, which is not listed above.")}
                   </p>
                 </div>
               ))}
@@ -90,12 +92,12 @@ const OrderCancelReason = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
-                  Cancel Now
+                  {t("Cancel Now")}
                 </button>
               </div>
               <Link className="mt-3" onClick={() => navigate(-1)}>
                 <button className="comman-border-btn bg-transparent">
-                  I don’t want to Cancel
+                  {t("I don’t want to Cancel")}
                 </button>
               </Link>
             </div>
@@ -116,9 +118,9 @@ const OrderCancelReason = () => {
               <div class="logout-img">
                 <img src="../../../assets/img/cancel.png" alt="" />
               </div>
-              <h5 class="comman-header mt-4 text-start">Cancel Order</h5>
+              <h5 class="comman-header mt-4 text-start">{t("Cancel Order")}</h5>
               <p class="comman-small-text text-dark text-start">
-                Cancel Order, Are you sure you want to cancel this order?
+                {t("Cancel Order, Are you sure you want to cancel this order?")}
               </p>
             </div>
             <div class="modal-footer">
@@ -130,7 +132,7 @@ const OrderCancelReason = () => {
                 data-bs-dismiss="modal"
                 onClick={handleCancel}
               >
-                Yes, I want to cancel
+                {t("Yes, I want to cancel")}
               </button>
 
               <button
@@ -138,7 +140,7 @@ const OrderCancelReason = () => {
                 class="comman-border-btn mt-3"
                 data-bs-dismiss="modal"
               >
-                No
+                {t("No")}
               </button>
             </div>
           </div>
@@ -155,9 +157,9 @@ const OrderCancelReason = () => {
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-body text-start">
-              <h5 class="comman-header mt-4">Order Canceled</h5>
+              <h5 class="comman-header mt-4">{t("Order Canceled")}</h5>
               <p class="comman-small-text text-dark">
-                Your order was cancelled. We’re sorry for any inconvenience.
+                {t("Your order was cancelled. We’re sorry for any inconvenience.")}
               </p>
             </div>
             <div class="modal-footer border-0">
@@ -169,7 +171,7 @@ const OrderCancelReason = () => {
                   window.location.href = "/";
                 }}
               >
-                Shop for More
+                {t("Shop for More")}
               </button>
             </div>
           </div>

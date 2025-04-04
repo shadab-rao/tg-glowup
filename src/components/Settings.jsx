@@ -1,18 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./common/Sidebar";
 import Header from "./common/Header";
 import { useTranslation } from "react-i18next";
 import Footer from "./common/Footer";
+import {
+  allNotification,
+  getUser,
+  orderNotifi,
+} from "../Api Services/glowHttpServices/glowLoginHttpServices";
 
 const Settings = () => {
-  const {t} = useTranslation()
+  const { t, i18n } = useTranslation();
+  const [profileData, setProfileData] = useState("");
+  const [allNoti, setAllNotifi] = useState();
+  const [orderNotification, setOrderNotifiaction] = useState();
+  const userToken = localStorage.getItem("token-user");
+
+  useEffect(() => {
+    response();
+  }, []);
+
+  const response = async () => {
+    if (userToken) {
+      const getData = await getUser(userToken);
+      if (getData?.data) {
+        const userData = getData?.data?.results?.user;
+        setProfileData(userData);
+        setAllNotifi(userData?.allNotification);
+        setOrderNotifiaction(userData?.orderNotification);
+      }
+    }
+  };
+
+  console.log(allNoti);
+  
+
+  const handleAllNotification = async () => {
+    const { data } = await allNotification(profileData?._id);
+  };
+  const handleOrderNotifi = async () => {
+    const response = await orderNotifi(profileData?._id);
+  };
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "en" ? "ar" : "en";
+    i18n.changeLanguage(newLang);
+  };
+
   return (
     <>
       <section className="setting">
-        <Header/>
+        <Header />
         <div className="container mt-4 mb-5">
           <div className="row">
-          <Sidebar/>
+            <Sidebar />
             <div className="col-lg-9 col-md-8 col-12">
               <div className>
                 <div className>
@@ -27,7 +68,7 @@ const Settings = () => {
                       id="myTab"
                       role="tablist"
                     >
-                      <li className="nav-item w-33" role="presentation">
+                      {/* <li className="nav-item w-33" role="presentation">
                         <a
                           className="nav-link active"
                           id="makeup-tab"
@@ -39,16 +80,16 @@ const Settings = () => {
                         >
                           {t("Password Change")}
                         </a>
-                      </li>
+                      </li> */}
                       <li className="nav-item w-33" role="presentation">
                         <a
-                          className="nav-link"
+                          className="nav-link active"
                           id="skin-tab"
                           data-toggle="tab"
                           href="#skin"
                           role="tab"
                           aria-controls="skin"
-                          aria-selected="false"
+                          aria-selected="true"
                         >
                           {t("Language")}
                         </a>
@@ -68,7 +109,7 @@ const Settings = () => {
                       </li>
                     </ul>
                     <div className="tab-content mt-3" id="myTabContent">
-                      <div
+                      {/* <div
                         className="tab-pane fade show active"
                         id="makeup"
                         role="tabpanel"
@@ -124,9 +165,9 @@ const Settings = () => {
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div
-                        className="tab-pane fade"
+                        className="tab-pane fade show active"
                         id="skin"
                         role="tabpanel"
                         aria-labelledby="skin-tab"
@@ -135,32 +176,50 @@ const Settings = () => {
                           <div className="row">
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="form-group">
-                                <div className="card-box bg-white border border-dark rounded-3">
+                                <div
+                                  className={`card-box bg-white border rounded-3 p-2 ${
+                                    i18n.language === "en" ? "border-dark" : ""
+                                  }`}
+                                  onClick={() => i18n.changeLanguage("en")}
+                                  style={{ cursor: "pointer" }}
+                                >
                                   <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex gap-2 align-items-center">
                                       <img
-                                        src="assets/img/saudi_enaya.png"
-                                        alt
+                                        src="assets/img/eng-flag.png"
+                                        alt="English"
+                                        width="30"
                                       />
                                       <p className="comman-small-text m-0">
                                         English
                                       </p>
                                     </div>
-                                    <i className="fa fa-check" />
+                                    {i18n.language === "en" && (
+                                      <i className="fa fa-check" />
+                                    )}
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <div className="col-lg-6" />
                             <div className="col-lg-6 col-md-12 col-12">
-                              <div className="card-box bg-white border rounded-3 mt-2">
+                              <div
+                                className={`card-box bg-white border rounded-3 p-2 ${
+                                  i18n.language === "ar" ? "border-dark" : ""
+                                }`}
+                                onClick={() => i18n.changeLanguage("ar")}
+                                style={{ cursor: "pointer" }}
+                              >
                                 <div className="d-flex justify-content-between align-items-center">
                                   <div className="d-flex gap-2 align-items-center">
                                     <img src="assets/img/saudi_enaya.png" alt />
-                                    <p className="comman-small-text m-0 text-light">
+                                    <p className="comman-small-text m-0 text-dark">
                                       Arabic
                                     </p>
                                   </div>
+                                  {i18n.language === "ar" && (
+                                    <i className="fa fa-check" />
+                                  )}
                                   {/* <i class="fa fa-check"></i> */}
                                 </div>
                               </div>
@@ -182,10 +241,10 @@ const Settings = () => {
                                   <div className="d-flex justify-content-between align-items-center">
                                     <div className>
                                       <h5 className="text m-0">
-                                        Turn All Notifications
+                                        {t("Turn All Notifications")}
                                       </h5>
                                       <p className="comman-small-text m-0 text-light">
-                                        For daily update you will get it
+                                        {t("For daily update you will get it")}
                                       </p>
                                     </div>
                                     <div className="form-check form-switch">
@@ -194,7 +253,8 @@ const Settings = () => {
                                         type="checkbox"
                                         role="switch"
                                         id="flexSwitchCheckDefault"
-                                        defaultChecked
+                                        defaultChecked={allNoti == true}
+                                        onClick={() => handleAllNotification()}
                                       />
                                       <label
                                         className="form-check-label"
@@ -205,7 +265,7 @@ const Settings = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="col-lg-12 col-md-12 col-12">
+                            {/* <div className="col-lg-12 col-md-12 col-12">
                               <div className>
                                 <div className="card-box bg-white border-bottom rounded-0">
                                   <div className="d-flex justify-content-between align-items-center">
@@ -231,15 +291,15 @@ const Settings = () => {
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                             <div className="col-lg-12 col-md-12 col-12">
                               <div className>
                                 <div className="card-box bg-white border-bottom rounded-0">
                                   <div className="d-flex justify-content-between align-items-center">
                                     <div className>
-                                      <h5 className="text m-0">Order</h5>
+                                      <h5 className="text m-0">{t("Order")}</h5>
                                       <p className="comman-small-text m-0 text-light">
-                                        Not affect any order updates
+                                        {t("Not affect any order updates")}
                                       </p>
                                     </div>
                                     <div className="form-check form-switch">
@@ -248,7 +308,8 @@ const Settings = () => {
                                         type="checkbox"
                                         role="switch"
                                         id="flexSwitchCheckDefault"
-                                        defaultChecked
+                                        defaultChecked={orderNotification}
+                                        onClick={() => handleOrderNotifi()}
                                       />
                                       <label
                                         className="form-check-label"
@@ -259,7 +320,7 @@ const Settings = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="col-lg-12 col-md-12 col-12">
+                            {/* <div className="col-lg-12 col-md-12 col-12">
                               <div className>
                                 <div className="card-box bg-white border-bottom rounded-0">
                                   <div className="d-flex justify-content-between align-items-center">
@@ -285,8 +346,8 @@ const Settings = () => {
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="col-lg-12 col-md-12 col-12">
+                            </div> */}
+                            {/* <div className="col-lg-12 col-md-12 col-12">
                               <div className>
                                 <div className="card-box bg-white ">
                                   <div className="d-flex justify-content-between align-items-center">
@@ -312,7 +373,7 @@ const Settings = () => {
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -323,7 +384,7 @@ const Settings = () => {
             </div>
           </div>
         </div>
-        <Footer/>
+        <Footer />
       </section>
     </>
   );

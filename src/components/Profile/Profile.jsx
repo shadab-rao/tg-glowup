@@ -10,10 +10,11 @@ import { Link } from "react-router-dom";
 import "react-phone-input-2/lib/style.css";
 import Sidebar from "../common/Sidebar";
 import PhoneInput from "react-phone-input-2";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState("");
+  const {t} = useTranslation();
   const [info, setInfo] = useState({
     fullName: "",
     email: "",
