@@ -53,11 +53,9 @@ const CheckOut = () => {
     }));
   };
 
- 
-
   const handleCheckboxChange = (id) => {
     if (selectedAddress === id) {
-      setSelectedAddress(null); 
+      setSelectedAddress(null);
     } else {
       setSelectedAddress(id);
     }
@@ -93,13 +91,9 @@ const CheckOut = () => {
   //   }
   // };
 
-
   useEffect(() => {
     handleListAddress();
   }, []);
-
-
- 
 
   const handleListAddress = async () => {
     if (userToken) {
@@ -128,7 +122,7 @@ const CheckOut = () => {
       country: formData.country,
       pinCode: formData.pinCode,
       type: formData.type,
-      saveToProfile:formData.saveToProfile
+      saveToProfile: formData.saveToProfile,
     };
     try {
       const response = await address(payload);
@@ -136,7 +130,7 @@ const CheckOut = () => {
       setAddressId(newAddressId);
       handleListAddress();
 
-      if(response){
+      if (response) {
         setFormData({
           name: "",
           phoneNumber: "",
@@ -147,7 +141,7 @@ const CheckOut = () => {
           country: "",
           pinCode: "",
           type: "Home",
-          saveToProfile:false
+          saveToProfile: false,
         });
       }
     } catch (error) {
@@ -156,7 +150,6 @@ const CheckOut = () => {
   };
 
   console.log(state);
-  
 
   const handlePlaceOrder = async () => {
     const payload = {
@@ -177,9 +170,6 @@ const CheckOut = () => {
       console.error("Error placing order:", error);
     }
   };
-
-
-
 
   useEffect(() => {
     if (userToken) {
@@ -226,7 +216,7 @@ const CheckOut = () => {
                   Select address from your address book or enter new address.
                 </p>
 
-                <div className="form-group mb-4">
+                {/* <div className="form-group mb-4">
                   <div className="d-flex gap-1 align-items-end">
                     <img
                       src="assets/img/icon/direction.png"
@@ -237,15 +227,15 @@ const CheckOut = () => {
                       Use My Current location
                     </a>
                   </div>
-                </div>
+                </div> */}
 
                 <div
                   className="col-lg-12  col-md-12 col-12 mt-lg-0 mt-4 d-flex gap-4"
                   style={{ flexWrap: "wrap" }}
                   // style={{
                   //   flexWrap: "wrap",
-                  //   maxHeight: "300px",  
-                  //   overflowY: "auto",  
+                  //   maxHeight: "300px",
+                  //   overflowY: "auto",
                   // }}
                 >
                   {myAddressList?.map((item) => (
@@ -253,13 +243,17 @@ const CheckOut = () => {
                       className="card-box col-lg-8 col-md-8 col-12"
                       style={{ background: "rgb(227 226 226)", color: "white" }}
                     >
-                      <h5 className="mb-3" style={{color:"black"}}>{item?.type}</h5>
+                      <h5 className="mb-3" style={{ color: "black" }}>
+                        {item?.type}
+                      </h5>
                       <div className="border-bottom" style={{ color: "white" }}>
                         {/* <button className="btn btn-dark mb-2">
                             Default
                           </button> */}
                         <p className="text text-dark fw-semibold"></p>
-                        <p className="text-dark mb-0">{capitalize(item?.street)},</p>
+                        <p className="text-dark mb-0">
+                          {capitalize(item?.street)},
+                        </p>
                         <p className="text-dark mb-0">{item?.pinCode}</p>
                         <p className="text-dark mb-2">
                           +{item?.user?.countryCode} {item?.user?.phoneNumber}
@@ -270,8 +264,8 @@ const CheckOut = () => {
                           <input
                             type="checkbox"
                             className="form-checkbox"
-                            checked={selectedAddress === item._id} 
-                            onChange={() => handleCheckboxChange(item._id)} 
+                            checked={selectedAddress === item._id}
+                            onChange={() => handleCheckboxChange(item._id)}
                           />
                         </div>
                         <div>
@@ -285,7 +279,9 @@ const CheckOut = () => {
                           </button>
                           <button
                             className="bg-transparent text-primary fw-semibold"
-                            onClick={() => navigate(`/edit-address/${item?._id}`)}
+                            onClick={() =>
+                              navigate(`/edit-address/${item?._id}`)
+                            }
                           >
                             Edit
                           </button>
@@ -386,7 +382,7 @@ const CheckOut = () => {
                     </div>
                   </div>
                   <div className="form-group">
-                    <div className="form-design">
+                    {/* <div className="form-design">
                       <input type="radio" id="test1" name="radio-group" />
                       <label
                         htmlFor="test1"
@@ -395,8 +391,8 @@ const CheckOut = () => {
                         Apple Pay
                       </label>
                       <img src="assets/img/a-pay.png" alt className="pay-img" />
-                    </div>
-                    <div className="form-design">
+                    </div> */}
+                    {/* <div className="form-design">
                       <input type="radio" id="test1" name="radio-group" />
                       <label
                         htmlFor="test1"
@@ -409,7 +405,7 @@ const CheckOut = () => {
                         alt
                         className="pay-pal-img"
                       />
-                    </div>
+                    </div> */}
                     <div className="form-design">
                       <input type="radio" id="test1" name="radio-group" />
                       <label
@@ -500,7 +496,12 @@ const CheckOut = () => {
                   </div>
                   <div className="mt-4">
                     <div className="mb-4">
-                      <button className="comman-btn"  style={{ opacity: selectedAddress ? 1 : 0.5 }}  onClick={handlePlaceOrder} disabled={!selectedAddress}>
+                      <button
+                        className="comman-btn"
+                        style={{ opacity: selectedAddress ? 1 : 0.5 }}
+                        onClick={handlePlaceOrder}
+                        disabled={!selectedAddress}
+                      >
                         Checkout Now
                       </button>
                     </div>
@@ -523,9 +524,7 @@ const CheckOut = () => {
           <div class="modal-content">
             <div class="modal-body text-start">
               <h5 class="comman-header mt-4">Add Address</h5>
-              <p class="comman-small-text text-dark">
-                Enter New address
-              </p>
+              <p class="comman-small-text text-dark">Enter New address</p>
               <div className="form-design">
                 <div className="form-group mb-3">
                   <label className="form-label">Full Name*</label>
@@ -649,11 +648,11 @@ const CheckOut = () => {
                 </div>
                 <div className="d-flex gap-2 align-items-center">
                   <input
-                     type="checkbox"
-                     className="form-checkbox"
-                     name="saveToProfile"
-                     checked={formData.saveToProfile}
-                     onChange={handleChange}
+                    type="checkbox"
+                    className="form-checkbox"
+                    name="saveToProfile"
+                    checked={formData.saveToProfile}
+                    onChange={handleChange}
                   />
                   <span className="form-label mt-2">Save in my profile</span>
                 </div>
