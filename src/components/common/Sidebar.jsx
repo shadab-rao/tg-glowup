@@ -81,7 +81,7 @@ const Sidebar = () => {
               {t("My Account")}
             </h5>
             <div className="list-box-wrapper">
-              <Link to={"/my-order"} className="list-box">
+              <Link to={userToken ? "/my-order" : "/login"} className="list-box">
                 <div className="icon">
                   <img src="../../../assets/img/svg/box.svg" alt />
                 </div>
@@ -90,7 +90,7 @@ const Sidebar = () => {
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
-              <Link to={"/my-address"} className="list-box">
+              <Link to={userToken ? "/my-address" : "/login"} className="list-box">
                 <div className="icon active">
                   <img src="../../../assets/img/svg/location.svg" alt />
                 </div>
@@ -99,7 +99,7 @@ const Sidebar = () => {
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
-              <Link to={"/my-wishlist"} className="list-box mb-2">
+              <Link to={userToken ? "/my-wishlist" : "/login"} className="list-box mb-2">
                 <div className="icon active">
                   <img src="../../../assets/img/svg/heart-light.svg" alt />
                 </div>
@@ -113,7 +113,7 @@ const Sidebar = () => {
           <div className>
             <h5 className="text fw-semibold mb-1 mt-3 text-start">{t("Others")}</h5>
             <div className="list-box-wrapper">
-              <Link to={"/referral-program"} className="list-box">
+              <Link to= {userToken ? "/referral-program" : "/login"} className="list-box">
                 <div className="icon active">
                   <img src="../../../assets/img/svg/link-circle.svg" alt />
                 </div>
@@ -122,7 +122,7 @@ const Sidebar = () => {
                   <i className="fa fa-angle-right" />
                 </div>
               </Link>
-              <Link to={"/settings"} className="list-box">
+              <Link to= {userToken ? "/settings" : "/login"} className="list-box">
                 <div className="icon active">
                   <img src="../../../assets/img/svg/setting-2.svg" alt />
                 </div>

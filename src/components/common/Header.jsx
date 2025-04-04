@@ -381,7 +381,7 @@ const Header = () => {
                         <div className>
                           <h5 className="text fw-semibold mb-1">{t("My Account")}</h5>
                           <div className="list-box-wrapper">
-                            <Link to={"/my-order"} className="list-box">
+                            <Link to={userToken ? "/my-order" : "/login"} className="list-box">
                               <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/box.svg"
@@ -393,7 +393,7 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <Link to={"/my-address"} className="list-box">
+                            <Link to= {userToken ? "/my-address" : "/login"} className="list-box">
                               <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/location.svg"
@@ -405,7 +405,7 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <Link to={"/my-wishlist"} className="list-box mb-2">
+                            <Link to={userToken ? "/my-wishlist" : "/login"} className="list-box mb-2">
                               <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/heart-light.svg"
@@ -422,7 +422,7 @@ const Header = () => {
                         <div className>
                           <h5 className="text fw-semibold mb-1">{t("Others")}</h5>
                           <div className="list-box-wrapper">
-                            <Link to={"/referral-program"} className="list-box">
+                            <Link to= {userToken ? "/referral-program" : "/login"} className="list-box">
                               <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/link-circle.svg"
@@ -434,7 +434,7 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <Link to={"/settings"} className="list-box">
+                            <Link to  = {userToken ? "/settings" : "/login"} className="list-box">
                               <div className="icon active">
                                 <img
                                   src="../../../assets/img/svg/setting-2.svg"
@@ -494,18 +494,20 @@ const Header = () => {
                                 <i className="fa fa-angle-right" />
                               </div>
                             </Link>
-                            <div
-                              className="list-box active align-items-center "
-                              style={{ cursor: "pointer" }}
-                              onClick={handleLogout}
-                            >
-                              {/* <div className="icon"> */}
-                              <i className="fa fa-sign-out ms-1" />
-                              {/* </div> */}
-                              <div className="text-wrapper ms-1">
-                                <p className="text-dark">{t("Logout")}</p>
-                              </div>
-                            </div>
+                            {userToken ? (
+                               <div
+                               className="list-box active align-items-center "
+                               style={{ cursor: "pointer" }}
+                               onClick={handleLogout}
+                             >
+                               {/* <div className="icon"> */}
+                               <i className="fa fa-sign-out ms-1" />
+                               {/* </div> */}
+                               <div className="text-wrapper ms-1">
+                                 <p className="text-dark">{t("Logout")}</p>
+                               </div>
+                             </div>
+                            ) : null}
                           </div>
                         </div>
                       </div>
