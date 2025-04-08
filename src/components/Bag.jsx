@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { incrementCartCount, setCartCount } from "../Redux/cartSlice";
 import { capitalize } from "./utils/CapitalLetter";
 import Select from "react-select";
+import { useTranslation } from "react-i18next";
 
 const Bag = () => {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const Bag = () => {
   const addressId = localStorage.getItem("address_id");
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const [quantity, setQuantity] = useState(0);
+   const { t, i18n } = useTranslation();
+   const currentLang = i18n.language;
 
   useEffect(() => {
     if (userToken) {
@@ -184,9 +187,9 @@ const Bag = () => {
         <div className="container">
           <div className="d-flex gap-4 mt-4 mb-3">
             <div className="fs-6 fw-semibold text-capitalize text-start">
-              Your Bag
+              {t("Your Bag")}
             </div>
-            <div className="fs-6 fw-light">{count || "0"} Items</div>
+            <div className="fs-6 fw-light">{count || "0"} {t("Items")}</div>
           </div>
           <div className="row mt-md-0 mt-0 mb-4">
             <div
@@ -216,7 +219,7 @@ const Bag = () => {
                             navigate(`/product-details/${item?.product?._id}`)
                           }
                         >
-                          {item?.product?.name_en}
+                          {currentLang === "en" ? item?.product?.name_en : item?.product?.name_ar}
                         </h6>
                         <p
                           className="normal-text"
@@ -225,7 +228,7 @@ const Bag = () => {
                             navigate(`/product-details/${item?.product?._id}`)
                           }
                         >
-                          {capitalize(item?.product?.description_en)}
+                          {capitalize(currentLang === "en" ? item?.product?.description_en : item?.product?.description_ar)}
                         </p>
                         <h5
                           className="checkbox-price"
@@ -243,7 +246,7 @@ const Bag = () => {
                             navigate(`/product-details/${item?.product?._id}`)
                           }
                         >
-                          Price After Discount: {item?.product?.currency}{" "}
+                          {t("Price After Discount")}: {item?.product?.currency}{" "}
                           {item?.varient?.discount}
                         </h5>
                         <div className="checkbox-span-text">
@@ -333,13 +336,13 @@ const Bag = () => {
                         >
                           <i className="fa fa-trash trash-icon" />
                           <p className="text" style={{ cursor: "pointer" }}>
-                            Remove
+                            {t("Remove")}
                           </p>
                         </div>
                         <div className="d-flex gap-2 align-items-center">
                           <i className="fa fa-heart-o trash-icon" />
                           <p className="text" style={{ cursor: "pointer" }}>
-                            Add To Wishlist
+                            {t("Add To Wishlist")}
                           </p>
                         </div>
                       </div>
@@ -349,12 +352,12 @@ const Bag = () => {
               ))}
               <div className="col-lg-6 col-md-8 col-12 mx-auto mt-md-5 mt-3">
                 <Link to="/" className="comman-btn">
-                  Continue Shopping
+                  {t("Continue Shopping")}
                 </Link>
               </div>
             </div>
             <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4">
-              <h5 className="text fw-bold text-start">Payment Methods</h5>
+              <h5 className="text fw-bold text-start">{t("Payment Methods")}</h5>
               <div className="d-flex justify-content-around">
                 <div className="payment-img-wrapper">
                   <img src="assets/img/Visa2.png" alt="" />
@@ -370,11 +373,11 @@ const Bag = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <h5 className="text fw-bold text-start">Price Details</h5>
+                <h5 className="text fw-bold text-start">{t("Price Details")}</h5>
                 <div className="Checkout-box mt-3 px-3 py-3 bg-white">
                   <div className="row">
                     <div className="col-6">
-                      <p className="light-text text-start">Subtotal</p>
+                      <p className="light-text text-start">{t("Subtotal")}</p>
                     </div>
                     <div className="col-6">
                       <p className="bold-text">SAR {getTotalPrice()}</p>
@@ -382,7 +385,7 @@ const Bag = () => {
                   </div>
                   <div className="row">
                     <div className="col-6">
-                      <p className="light-text text-start">Total Discount</p>
+                      <p className="light-text text-start">{t("Total Discount")}</p>
                     </div>
                     <div className="col-6">
                       <p className="bold-text">SAR {getTotalDiscount()}</p>
@@ -390,7 +393,7 @@ const Bag = () => {
                   </div>
                   <div className="row">
                     <div className="col-6">
-                      <p className="light-text text-start">Tax</p>
+                      <p className="light-text text-start">{t("Tax")}</p>
                     </div>
                     <div className="col-6">
                       <p className="bold-text">SAR 0</p>
@@ -398,7 +401,7 @@ const Bag = () => {
                   </div>
                   <div className="row">
                     <div className="col-6">
-                      <p className="light-text text-start">Grand Total</p>
+                      <p className="light-text text-start">{t("Grand Total")}</p>
                     </div>
                     <div className="col-6">
                       <p className="bold-text">
@@ -413,7 +416,7 @@ const Bag = () => {
                       className="comman-btn"
                       onClick={() => handlePayment({ amount: getTotalPrice() })}
                     >
-                      Checkout Now
+                      {t("Checkout Now")}
                     </button>
                   </div>
                 </div>

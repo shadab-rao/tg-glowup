@@ -14,6 +14,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { capitalize } from "../utils/CapitalLetter";
 import PhoneInput from "react-phone-input-2";
+import { useTranslation } from "react-i18next";
 
 const CheckOut = () => {
   const [addressId, setAddressId] = useState(null);
@@ -39,7 +40,8 @@ const CheckOut = () => {
     type: "Home",
   });
 
-  console.log(state);
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   const attribute = state?.selectedOptions?.attribute;
   const value = state?.selectedOptions?.value;
@@ -199,7 +201,7 @@ const CheckOut = () => {
           <div className="container pt-4 mb-4">
             <div className="d-flex justify-content-center">
               <div className="mt-4">
-                <h3 className="Checkout-heading">Checkout</h3>
+                <h3 className="Checkout-heading">{t("Checkout")}</h3>
                 <div className="d-flex rounded-box-wrapper">
                   <div className="rounded-box">1</div>
                   <div className="rounded-box">2</div>
@@ -210,10 +212,10 @@ const CheckOut = () => {
             <div className="row mt-5">
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">
-                  1. Delivery Information
+                  {t("1. Delivery Information")}
                 </h5>
                 <p className="Checkout-paragraph">
-                  Select address from your address book or enter new address.
+                  {t("Select address from your address book or enter new address.")}
                 </p>
 
                 {/* <div className="form-group mb-4">
@@ -275,7 +277,7 @@ const CheckOut = () => {
                             // data-target="#exampleModal"
                             onClick={() => handleDeleteAddress(item?._id)}
                           >
-                            Delete
+                            {t("Delete")}
                           </button>
                           <button
                             className="bg-transparent text-primary fw-semibold"
@@ -283,7 +285,7 @@ const CheckOut = () => {
                               navigate(`/edit-address/${item?._id}`)
                             }
                           >
-                            Edit
+                            {t("Edit")}
                           </button>
                         </div>
                       </div>
@@ -296,7 +298,7 @@ const CheckOut = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                   >
-                    Add New Address
+                    {t("Add New Address")}
                   </button>
                 </div>
                 {/* {myAddress  && myAddress.length > 0  ?  ( */}
@@ -311,9 +313,9 @@ const CheckOut = () => {
 
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
                 <h5 className="Checkout-main-heading">
-                  2. Payment Information
+                  {t("2. Payment Information")}
                 </h5>
-                <p className="Checkout-paragraph">Select Payment mode</p>
+                <p className="Checkout-paragraph">{t("Select Payment mode")}</p>
                 <div className="form-design">
                   <input
                     type="radio"
@@ -325,7 +327,7 @@ const CheckOut = () => {
                     htmlFor="test1"
                     className="form-label fs-6 fw-semibold text-dark"
                   >
-                    Credit/Debit Card
+                    {t("Credit/Debit Card")}
                   </label>
                 </div>
                 <div className="form-design">
@@ -377,7 +379,7 @@ const CheckOut = () => {
                         defaultChecked
                       />
                       <span className="form-label m-0">
-                        Securely save details for future purchases.{" "}
+                        {t("Securely save details for future purchases.")}
                       </span>
                     </div>
                   </div>
@@ -412,18 +414,18 @@ const CheckOut = () => {
                         htmlFor="test1"
                         className="form-label fs-6 fw-semibold text-dark"
                       >
-                        Cash On Delivery
+                        {t("Cash On Delivery")}
                       </label>
                       <p className="ps-4 light-text">
-                        The additional fee fo this service is SAR 50
+                        {t("The additional fee fo this service is SAR 50")}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
-                <h5 className="Checkout-main-heading">3. Order Review</h5>
-                <p className="Checkout-paragraph">Review your order here</p>
+                <h5 className="Checkout-main-heading">{t("3. Order Review")}</h5>
+                <p className="Checkout-paragraph">{t("Review your order here")}</p>
                 <div
                   style={{
                     maxHeight: "600px",
@@ -441,25 +443,25 @@ const CheckOut = () => {
                         </div>
                         <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
                           <h6 className="Checkout-box-head">
-                            {items?.product?.name_en}
+                            {currentLang === "en" ? items?.product?.name_en : items?.product?.name_ar}
                           </h6>
                           <p className="normal-text">
-                            {(items?.product?.description_en).slice(0, 20)}
+                            {(currentLang === "en" ? items?.product?.description_en : items?.product?.description_en).slice(0, 20)}
                           </p>
                           <h5 className="checkbox-price">
                             {items?.product?.currency} {items?.varient?.price}
                           </h5>
                           <div className="checkbox-span-text">
                             <span className="normal-text border-end pe-1">
-                              {items?.varient?.attribute?.[0]?.name_en}:{" "}
-                              {items?.varient?.values?.[0]?.name_en}
+                              {currentLang === "en" ? items?.varient?.attribute?.[0]?.name_en : items?.varient?.attribute?.[0]?.name_ar} : {" "}
+                              {currentLang === "en" ? items?.varient?.values?.[0]?.name_en : items?.varient?.values?.[0]?.name_ar}
                             </span>
                             <span className="normal-text ps-1">
-                              Quantity: {items?.quantity}
+                              {t("Quantity")}: {items?.quantity}
                             </span>
                           </div>
                           <p className="normal-text">
-                            Subtotal: {items?.product?.currency} {items?.amount}
+                            {t("Subtotal")}: {items?.product?.currency} {items?.amount}
                           </p>
                         </div>
                       </div>
@@ -467,11 +469,11 @@ const CheckOut = () => {
                   ))}
                 </div>
                 <div className="mt-3">
-                  <h5 className="Checkout-main-heading">Price Details</h5>
+                  <h5 className="Checkout-main-heading">{t("Price Details")}</h5>
                   <div className="Checkout-box mt-3 px-3 py-3">
                     <div className="row">
                       <div className="col-6">
-                        <p className="light-text">Subtotal</p>
+                        <p className="light-text">{t("Subtotal")}</p>
                       </div>
                       <div className="col-6">
                         <p className="bold-text">SAR {totalPrice}</p>
@@ -479,7 +481,7 @@ const CheckOut = () => {
                     </div>
                     <div className="row">
                       <div className="col-6">
-                        <p className="light-text">Tax</p>
+                        <p className="light-text">{t("Tax")}</p>
                       </div>
                       <div className="col-6">
                         <p className="bold-text">SAR 0</p>
@@ -487,7 +489,7 @@ const CheckOut = () => {
                     </div>
                     <div className="row">
                       <div className="col-6">
-                        <p className="light-text">Grand Total</p>
+                        <p className="light-text">{t("Grand Total")}</p>
                       </div>
                       <div className="col-6">
                         <p className="bold-text">SAR {totalPrice}</p>
@@ -502,7 +504,7 @@ const CheckOut = () => {
                         onClick={handlePlaceOrder}
                         disabled={!selectedAddress}
                       >
-                        Checkout Now
+                        {t("Checkout Now")}
                       </button>
                     </div>
                   </div>
