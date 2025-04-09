@@ -234,11 +234,11 @@ const CheckOut = () => {
                 <div
                   className="col-lg-12  col-md-12 col-12 mt-lg-0 mt-4 d-flex gap-4"
                   style={{ flexWrap: "wrap" }}
-                  // style={{
-                  //   flexWrap: "wrap",
-                  //   maxHeight: "300px",
-                  //   overflowY: "auto",
-                  // }}
+                // style={{
+                //   flexWrap: "wrap",
+                //   maxHeight: "300px",
+                //   overflowY: "auto",
+                // }}
                 >
                   {myAddressList?.map((item) => (
                     <div
@@ -638,16 +638,38 @@ const CheckOut = () => {
                 </div>
                 <div className="form-group">
                   <label className="form-label">Address Type*</label>
-                  <select
-                    className="form-select"
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                  >
-                    <option value="Home">Home</option>
-                    <option value="Office">Office</option>
-                  </select>
+                  <div className="d-flex">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="type"
+                        value="Home"
+                        checked={formData.type === "Home"}
+                        onChange={handleChange}
+                        id="typeHome"
+                      />
+                      <label className="form-check-label" htmlFor="typeHome">
+                        Home
+                      </label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="type"
+                        value="Office"
+                        checked={formData.type === "Office"}
+                        onChange={handleChange}
+                        id="typeOffice"
+                      />
+                      <label className="form-check-label" htmlFor="typeOffice">
+                        Office
+                      </label>
+                    </div>
+                  </div>
                 </div>
+
                 <div className="d-flex gap-2 align-items-center">
                   <input
                     type="checkbox"
