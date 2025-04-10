@@ -32,6 +32,9 @@ const OrderDetails = () => {
     setVarientId(response?.data?.results?.orders?.inventory?.[0]?.varient?._id);
   };
 
+  console.log(varientId);
+  
+
   const handleDelete = async (orderId) => {
     await orderDelete(orderId);
     handleOrders();

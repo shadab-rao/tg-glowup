@@ -27,6 +27,16 @@ const WriteReview = () => {
     const { t, i18n } = useTranslation();
     const currentLang = i18n.language;
 
+    const ratingData = async () => {
+      const response = await getRatings(varientId);
+  
+      setExistingRating(response?.data?.results?.data?.[0]?.rating);
+      setExistingComment(response?.data?.results?.data?.[0]?.comment);
+  
+      console.log(response);
+      
+    };
+
   const handleOrders = async () => {
     const response = await getOrderDetails(id);
     setOrderList(response?.data?.results?.orders);
@@ -63,12 +73,7 @@ const WriteReview = () => {
     handleOrders();
   };
 
-  const ratingData = async () => {
-    const response = await getRatings(varientId);
-
-    setExistingRating(response?.data?.results?.data?.[0]?.rating);
-    setExistingComment(response?.data?.results?.data?.[0]?.comment);
-  };
+  
 
   return (
     <>

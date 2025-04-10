@@ -4,15 +4,17 @@ import Footer from "./common/Footer";
 import Products from "./mainComponent/Products";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  addWishlist,
   getCart,
   payment,
   placeOrder,
   removeCartItem,
   updateCart,
+  wishList,
 } from "../Api Services/glowHttpServices/glowLoginHttpServices";
 import EmptyBag from "./cart/EmptyBag";
 import { useDispatch } from "react-redux";
-import { incrementCartCount, setCartCount } from "../Redux/cartSlice";
+import { incrementCartCount, setCartCount, setWishlist } from "../Redux/cartSlice";
 import { capitalize } from "./utils/CapitalLetter";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
@@ -27,8 +29,8 @@ const Bag = () => {
   const addressId = localStorage.getItem("address_id");
   const [selectedAttributes, setSelectedAttributes] = useState({});
   const [quantity, setQuantity] = useState(0);
-   const { t, i18n } = useTranslation();
-   const currentLang = i18n.language;
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     if (userToken) {
@@ -152,6 +154,31 @@ const Bag = () => {
     }
   };
 
+  console.log(data);
+
+  const handleAddWishlist = async ({ productId = null, variantId = null }) => {
+    try {
+      const formData = {
+        productId,
+        variantId,
+      };
+
+      const response = await addWishlist(formData);
+      if (response) {
+        console.log("Wishlist updated successfully!");
+        handleWishList();
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist:", error);
+    }
+  };
+
+   const handleWishList = async () => {
+      const response = await wishList();
+      const wishlistData = response?.data?.results?.wishlist?.products || [];
+      dispatch(setWishlist(wishlistData));
+    };
+
   if (data.length === 0 || !userToken) {
     return (
       <>
@@ -189,7 +216,9 @@ const Bag = () => {
             <div className="fs-6 fw-semibold text-capitalize text-start">
               {t("Your Bag")}
             </div>
-            <div className="fs-6 fw-light">{count || "0"} {t("Items")}</div>
+            <div className="fs-6 fw-light">
+              {count || "0"} {t("Items")}
+            </div>
           </div>
           <div className="row mt-md-0 mt-0 mb-4">
             <div
@@ -219,7 +248,9 @@ const Bag = () => {
                             navigate(`/product-details/${item?.product?._id}`)
                           }
                         >
-                          {currentLang === "en" ? item?.product?.name_en : item?.product?.name_ar}
+                          {currentLang === "en"
+                            ? item?.product?.name_en
+                            : item?.product?.name_ar}
                         </h6>
                         <p
                           className="normal-text"
@@ -228,7 +259,11 @@ const Bag = () => {
                             navigate(`/product-details/${item?.product?._id}`)
                           }
                         >
-                          {capitalize(currentLang === "en" ? item?.product?.description_en : item?.product?.description_ar)}
+                          {capitalize(
+                            currentLang === "en"
+                              ? item?.product?.description_en
+                              : item?.product?.description_ar
+                          )}
                         </p>
                         <h5
                           className="checkbox-price"
@@ -286,15 +321,15 @@ const Bag = () => {
                                     item.varient.values[0]?.attribute?._id
                                   ] || ""
                                 }
-                                disabled 
+                                disabled
                                 style={{
-                                  appearance: "none", 
+                                  appearance: "none",
                                   WebkitAppearance: "none",
-                                  MozAppearance: "none", 
+                                  MozAppearance: "none",
                                   background: "transparent",
-                                  paddingRight: "10px", 
-                                  border: "1px solid #ccc", 
-                                  borderRadius: "4px", 
+                                  paddingRight: "10px",
+                                  border: "1px solid #ccc",
+                                  borderRadius: "4px",
                                 }}
                                 className="form-select custom-select-container"
                               >
@@ -339,12 +374,23 @@ const Bag = () => {
                             {t("Remove")}
                           </p>
                         </div>
-                        <div className="d-flex gap-2 align-items-center">
-                          <i className="fa fa-heart-o trash-icon" />
-                          <p className="text" style={{ cursor: "pointer" }}>
-                            {t("Add To Wishlist")}
-                          </p>
-                        </div>
+                       {userToken ? (
+                         <div style={{cursor:"pointer"}} className="d-flex gap-2 align-items-center"  onClick={() =>
+                          handleAddWishlist({
+                            productId: item?.product?._id,
+                            variantId: item?.varient?._id,
+                          })
+                        }>
+                         {item?.isFavourite === true ? (
+                            <i className="fa fa-heart" />
+                          ) : (
+                            <i className="fa fa-heart-o" />
+                          )}
+                         <p className="text" style={{ cursor: "pointer" }}>
+                           {t("Add To Wishlist")}
+                         </p>
+                       </div>
+                       ): null}
                       </div>
                     </div>
                   </div>
@@ -357,7 +403,9 @@ const Bag = () => {
               </div>
             </div>
             <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4">
-              <h5 className="text fw-bold text-start">{t("Payment Methods")}</h5>
+              <h5 className="text fw-bold text-start">
+                {t("Payment Methods")}
+              </h5>
               <div className="d-flex justify-content-around">
                 <div className="payment-img-wrapper">
                   <img src="assets/img/Visa2.png" alt="" />
@@ -373,7 +421,9 @@ const Bag = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <h5 className="text fw-bold text-start">{t("Price Details")}</h5>
+                <h5 className="text fw-bold text-start">
+                  {t("Price Details")}
+                </h5>
                 <div className="Checkout-box mt-3 px-3 py-3 bg-white">
                   <div className="row">
                     <div className="col-6">
@@ -385,7 +435,9 @@ const Bag = () => {
                   </div>
                   <div className="row">
                     <div className="col-6">
-                      <p className="light-text text-start">{t("Total Discount")}</p>
+                      <p className="light-text text-start">
+                        {t("Total Discount")}
+                      </p>
                     </div>
                     <div className="col-6">
                       <p className="bold-text">SAR {getTotalDiscount()}</p>
@@ -401,7 +453,9 @@ const Bag = () => {
                   </div>
                   <div className="row">
                     <div className="col-6">
-                      <p className="light-text text-start">{t("Grand Total")}</p>
+                      <p className="light-text text-start">
+                        {t("Grand Total")}
+                      </p>
                     </div>
                     <div className="col-6">
                       <p className="bold-text">

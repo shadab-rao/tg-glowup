@@ -245,7 +245,7 @@ const Header = () => {
                                       }
                                     >
                                       <a href className="text">
-                                        {name?.brandName_en}
+                                        {currentLang === "en" ? name?.brandName_en : name?.brandName_ar}
                                       </a>
                                     </li>
                                   ))}

@@ -15,6 +15,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { capitalize } from "../utils/CapitalLetter";
 import PhoneInput from "react-phone-input-2";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
+import Geocode from "react-geocode";
 
 const CheckOut = () => {
   const [addressId, setAddressId] = useState(null);
@@ -28,6 +30,23 @@ const CheckOut = () => {
   const [phoneNumber, setPhoneNumber] = useState(userCountryCode + userPhone);
   const [cartData, setCartData] = useState([]);
   const [totalPrice, setTotalPrice] = useState("");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    watch,
+  } = useForm();
+  const [location, setLocation] = useState({
+    latitude: null,
+    longitude: null,
+    address: "",
+    pincode: "",
+    street: "",
+  });
+
+  
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -151,7 +170,6 @@ const CheckOut = () => {
     }
   };
 
-  console.log(state);
 
   const handlePlaceOrder = async () => {
     const payload = {
@@ -192,6 +210,114 @@ const CheckOut = () => {
     const response = await addressDelete(id);
     handleListAddress();
   };
+
+
+  const handleGetLocation = () => {
+    const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
+    Geocode.setApiKey(apiKey);
+    Geocode.setLanguage("en");
+    Geocode.setRegion("sa");
+  
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser");
+      return;
+    }
+  
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords: { latitude, longitude } }) => {
+        setLocation((prev) => ({
+          ...prev,
+          latitude,
+          longitude,
+          address: "Fetching address...",
+        }));
+  
+        try {
+          const response = await Geocode.fromLatLng(latitude, longitude);
+          console.log(response);
+          
+          const address = response.results[0]?.formatted_address || "";
+          const components = response.results[0]?.address_components || [];
+  
+          let street = "";
+          let city = "";
+          let state = "";
+          let country = "";
+          let pinCode = "";
+  
+          components.forEach((component) => {
+            if (component.types.includes("route")) {
+              street = component.long_name;
+            } else if (
+              component.types.includes("locality") ||
+              component.types.includes("sublocality_level_1")
+            ) {
+              city = component.long_name;
+            } else if (component.types.includes("administrative_area_level_1")) {
+              state = component.long_name;
+            } else if (component.types.includes("country")) {
+              country = component.long_name;
+            } else if (component.types.includes("postal_code")) {
+              pinCode = component.long_name;
+            }
+          });
+  
+          setLocation((prev) => ({
+            ...prev,
+            address,
+            pincode: pinCode,
+            street,
+          }));
+  
+          setFormData((prev) => ({
+            ...prev,
+            street,
+            city,
+            state,
+            country,
+            pinCode,
+          }));
+  
+        
+          setValue("street", street);
+          setValue("city", city);
+          setValue("state", state);
+          setValue("country", country);
+          setValue("pinCode", pinCode);
+        } catch (error) {
+          console.error("Geocode error:", error);
+          setLocation((prev) => ({
+            ...prev,
+            address: "Failed to fetch address",
+          }));
+        }
+      },
+      (error) => {
+        let errorMsg = "";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMsg = "Location access denied";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMsg = "Location info unavailable";
+            break;
+          case error.TIMEOUT:
+            errorMsg = "Request to get location timed out";
+            break;
+          default:
+            errorMsg = "An unknown error occurred";
+        }
+        setError(errorMsg);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+  
+  
+
+
+  console.log(location);
+  
 
   return (
     <>
@@ -569,7 +695,7 @@ const CheckOut = () => {
                     />
                   </div> */}
                 <div className="form-group mt-3 mb-3">
-                  <div className="d-flex gap-1 align-items-end">
+                  <div className="d-flex gap-1 align-items-end"  onClick={handleGetLocation}>
                     <img
                       src="assets/img/icon/direction.png"
                       alt
