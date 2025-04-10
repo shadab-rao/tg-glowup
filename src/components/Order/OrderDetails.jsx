@@ -20,6 +20,12 @@ const OrderDetails = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
 
+  const statusFlow = ["Placed", "Confirmed", "Out For Delivery", "Delivered"];
+
+  const getStatusIndex = (status) => {
+    return statusFlow.indexOf(status);
+  };
+
   // Fetch orders
   useEffect(() => {
     handleOrders();
@@ -33,7 +39,6 @@ const OrderDetails = () => {
   };
 
   console.log(varientId);
-  
 
   const handleDelete = async (orderId) => {
     await orderDelete(orderId);
@@ -121,30 +126,45 @@ const OrderDetails = () => {
                         <div className="row">
                           <div className="col-lg-12 col-md-12 col-12">
                             <div className="row justify-content-between position-relative circle-point-wrapper">
-                              <div className="col-auto px-0 position-relative">
-                                <div className="circle-point first active" />
-                                <p className="comman-small-text m-0 text-light">
-                                  Processing
-                                </p>
-                              </div>
-                              <div className="col-auto px-0 position-relative">
-                                <div className="circle-point" />
-                                <p className="comman-small-text m-0 text-light">
-                                  Shipped
-                                </p>
-                              </div>
-                              <div className="col-auto px-0 position-relative">
-                                <div className="circle-point" />
-                                <p className="comman-small-text m-0 text-light">
-                                  Out for Delivery
-                                </p>
-                              </div>
-                              <div className="col-auto px-0 position-relative">
-                                <div className="circle-point end" />
-                                <p className="comman-small-text m-0 text-light">
-                                  Delivered
-                                </p>
-                              </div>
+                              {statusFlow.map((step, index) => {
+                                const currentStatusIndex = getStatusIndex(
+                                  orderList?.status
+                                );
+                                const isActive = index <= currentStatusIndex;
+                                const isLast = index === statusFlow.length - 1;
+
+                                return (
+                                  <div
+                                    key={index}
+                                    className="col-auto px-0 position-relative"
+                                  >
+                                    <div
+                                      className={`circle-point ${
+                                        index === 0 ? "first" : ""
+                                      } ${isLast ? "end" : ""} ${
+                                        isActive ? "active" : ""
+                                      }`}
+                                    />
+                                    <p className="comman-small-text m-0 text-light">
+                                      {step === "Out For Delivery"
+                                        ? "Out for Delivery"
+                                        : step}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+
+                              {/* Show a special message for Cancelled or Returned */}
+                              {(orderList?.status === "Cancelled" ||
+                                orderList?.status === "Returned") && (
+                                <div className="col-12 mt-3">
+                                  <p className="text-danger fw-bold">
+                                    {orderList?.status === "Cancelled"
+                                      ? "Order has been Cancelled"
+                                      : "Order was Returned"}
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -176,7 +196,8 @@ const OrderDetails = () => {
                           <div className="checkbox-span-text">
                             <span className="normal-text border-end pe-1">
                               {currentLang === "en"
-                                ? item?.attributeAndValues?.[0]?.name_en || "N/A"
+                                ? item?.attributeAndValues?.[0]?.name_en ||
+                                  "N/A"
                                 : item?.attributeAndValues?.[0]?.name_ar ||
                                   "N/A"}{" "}
                               :
@@ -203,7 +224,9 @@ const OrderDetails = () => {
             </div>
             <div className="col-lg-3 col-md-6  col-12 mt-lg-0 mt-md-4 mt-4 text-start">
               <div className>
-                <h5 className="text fw-bold mb-2 ms-1">{t("Payment Method")}</h5>
+                <h5 className="text fw-bold mb-2 ms-1">
+                  {t("Payment Method")}
+                </h5>
               </div>
               <div className="card-box rounded-3 mb-3">
                 <p className="comman-small-text m-0">

@@ -17,6 +17,7 @@ import PhoneInput from "react-phone-input-2";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import Geocode from "react-geocode";
+import Swal from "sweetalert2";
 
 const CheckOut = () => {
   const [addressId, setAddressId] = useState(null);
@@ -30,6 +31,11 @@ const CheckOut = () => {
   const [phoneNumber, setPhoneNumber] = useState(userCountryCode + userPhone);
   const [cartData, setCartData] = useState([]);
   const [totalPrice, setTotalPrice] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("online");
+  const [cardNumber, setCardNumber] = useState("");
+  const [validThru, setValidThru] = useState("");
+  const [cvv, setCvv] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -45,7 +51,6 @@ const CheckOut = () => {
     street: "",
   });
 
-  
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -65,6 +70,8 @@ const CheckOut = () => {
   const attribute = state?.selectedOptions?.attribute;
   const value = state?.selectedOptions?.value;
 
+  
+
   const handlePhoneChange = (value, country) => {
     setPhoneNumber(value);
     setFormData((prev) => ({
@@ -81,6 +88,8 @@ const CheckOut = () => {
       setSelectedAddress(id);
     }
   };
+
+  
 
   // useEffect(() => {
   //   if (myAddress) {
@@ -170,13 +179,24 @@ const CheckOut = () => {
     }
   };
 
-
   const handlePlaceOrder = async () => {
+    if (paymentMethod === "online") {
+      if (!cardNumber.trim() || !validThru.trim() || !cvv.trim()) {
+        Swal.fire({
+          icon: "warning",
+          title: "Missing Card Info",
+          text: "Please fill in all credit card details before proceeding.",
+          confirmButtonColor: "#3085d6",
+        });
+        return;
+      }
+    }
     const payload = {
       ...state,
       address: selectedAddress,
       attribute,
       value,
+      paymentMethod: paymentMethod === "cod" ? "COD" : "Online",
     };
 
     try {
@@ -211,18 +231,17 @@ const CheckOut = () => {
     handleListAddress();
   };
 
-
   const handleGetLocation = () => {
     const apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
     Geocode.setApiKey(apiKey);
     Geocode.setLanguage("en");
     Geocode.setRegion("sa");
-  
+
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by your browser");
       return;
     }
-  
+
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
         setLocation((prev) => ({
@@ -231,20 +250,20 @@ const CheckOut = () => {
           longitude,
           address: "Fetching address...",
         }));
-  
+
         try {
           const response = await Geocode.fromLatLng(latitude, longitude);
           console.log(response);
-          
+
           const address = response.results[0]?.formatted_address || "";
           const components = response.results[0]?.address_components || [];
-  
+
           let street = "";
           let city = "";
           let state = "";
           let country = "";
           let pinCode = "";
-  
+
           components.forEach((component) => {
             if (component.types.includes("route")) {
               street = component.long_name;
@@ -253,7 +272,9 @@ const CheckOut = () => {
               component.types.includes("sublocality_level_1")
             ) {
               city = component.long_name;
-            } else if (component.types.includes("administrative_area_level_1")) {
+            } else if (
+              component.types.includes("administrative_area_level_1")
+            ) {
               state = component.long_name;
             } else if (component.types.includes("country")) {
               country = component.long_name;
@@ -261,14 +282,14 @@ const CheckOut = () => {
               pinCode = component.long_name;
             }
           });
-  
+
           setLocation((prev) => ({
             ...prev,
             address,
             pincode: pinCode,
             street,
           }));
-  
+
           setFormData((prev) => ({
             ...prev,
             street,
@@ -277,8 +298,7 @@ const CheckOut = () => {
             country,
             pinCode,
           }));
-  
-        
+
           setValue("street", street);
           setValue("city", city);
           setValue("state", state);
@@ -312,12 +332,6 @@ const CheckOut = () => {
       { enableHighAccuracy: true }
     );
   };
-  
-  
-
-
-  console.log(location);
-  
 
   return (
     <>
@@ -341,7 +355,9 @@ const CheckOut = () => {
                   {t("1. Delivery Information")}
                 </h5>
                 <p className="Checkout-paragraph">
-                  {t("Select address from your address book or enter new address.")}
+                  {t(
+                    "Select address from your address book or enter new address."
+                  )}
                 </p>
 
                 {/* <div className="form-group mb-4">
@@ -360,11 +376,11 @@ const CheckOut = () => {
                 <div
                   className="col-lg-12  col-md-12 col-12 mt-lg-0 mt-4 d-flex gap-4"
                   style={{ flexWrap: "wrap" }}
-                // style={{
-                //   flexWrap: "wrap",
-                //   maxHeight: "300px",
-                //   overflowY: "auto",
-                // }}
+                  // style={{
+                  //   flexWrap: "wrap",
+                  //   maxHeight: "300px",
+                  //   overflowY: "auto",
+                  // }}
                 >
                   {myAddressList?.map((item) => (
                     <div
@@ -445,12 +461,14 @@ const CheckOut = () => {
                 <div className="form-design">
                   <input
                     type="radio"
-                    id="test1"
-                    name="radio-group"
-                    defaultChecked
+                    id="card"
+                    name="payment"
+                    value="online"
+                    checked={paymentMethod === "online"}
+                    onChange={() => setPaymentMethod("online")}
                   />
                   <label
-                    htmlFor="test1"
+                    htmlFor="card"
                     className="form-label fs-6 fw-semibold text-dark"
                   >
                     {t("Credit/Debit Card")}
@@ -475,6 +493,8 @@ const CheckOut = () => {
                       type="text"
                       className="form-control"
                       placeholder="Card Number"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
                     />
                   </div>
                   <div className="row">
@@ -484,6 +504,8 @@ const CheckOut = () => {
                           type="text"
                           className="form-control"
                           placeholder="Valid Thru"
+                          value={validThru}
+                          onChange={(e) => setValidThru(e.target.value)}
                         />
                       </div>
                     </div>
@@ -493,6 +515,8 @@ const CheckOut = () => {
                           type="text"
                           className="form-control"
                           placeholder="CVV"
+                          value={cvv}
+                          onChange={(e) => setCvv(e.target.value)}
                         />
                       </div>
                     </div>
@@ -535,9 +559,16 @@ const CheckOut = () => {
                       />
                     </div> */}
                     <div className="form-design">
-                      <input type="radio" id="test1" name="radio-group" />
+                      <input
+                        type="radio"
+                        id="cod"
+                        name="payment"
+                        value="cod"
+                        checked={paymentMethod === "cod"}
+                        onChange={() => setPaymentMethod("cod")}
+                      />
                       <label
-                        htmlFor="test1"
+                        htmlFor="cod"
                         className="form-label fs-6 fw-semibold text-dark"
                       >
                         {t("Cash On Delivery")}
@@ -550,8 +581,12 @@ const CheckOut = () => {
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 mt-md-0 mt-4 text-start">
-                <h5 className="Checkout-main-heading">{t("3. Order Review")}</h5>
-                <p className="Checkout-paragraph">{t("Review your order here")}</p>
+                <h5 className="Checkout-main-heading">
+                  {t("3. Order Review")}
+                </h5>
+                <p className="Checkout-paragraph">
+                  {t("Review your order here")}
+                </p>
                 <div
                   style={{
                     maxHeight: "600px",
@@ -569,25 +604,36 @@ const CheckOut = () => {
                         </div>
                         <div className="col-xl-7 col-lg-6 col-md-6 col-8 px-lg-auto px-md-0">
                           <h6 className="Checkout-box-head">
-                            {currentLang === "en" ? items?.product?.name_en : items?.product?.name_ar}
+                            {currentLang === "en"
+                              ? items?.product?.name_en
+                              : items?.product?.name_ar}
                           </h6>
                           <p className="normal-text">
-                            {(currentLang === "en" ? items?.product?.description_en : items?.product?.description_en).slice(0, 20)}
+                            {(currentLang === "en"
+                              ? items?.product?.description_en
+                              : items?.product?.description_en
+                            ).slice(0, 20)}
                           </p>
                           <h5 className="checkbox-price">
                             {items?.product?.currency} {items?.varient?.price}
                           </h5>
                           <div className="checkbox-span-text">
                             <span className="normal-text border-end pe-1">
-                              {currentLang === "en" ? items?.varient?.attribute?.[0]?.name_en : items?.varient?.attribute?.[0]?.name_ar} : {" "}
-                              {currentLang === "en" ? items?.varient?.values?.[0]?.name_en : items?.varient?.values?.[0]?.name_ar}
+                              {currentLang === "en"
+                                ? items?.varient?.attribute?.[0]?.name_en
+                                : items?.varient?.attribute?.[0]?.name_ar}{" "}
+                              :{" "}
+                              {currentLang === "en"
+                                ? items?.varient?.values?.[0]?.name_en
+                                : items?.varient?.values?.[0]?.name_ar}
                             </span>
                             <span className="normal-text ps-1">
                               {t("Quantity")}: {items?.quantity}
                             </span>
                           </div>
                           <p className="normal-text">
-                            {t("Subtotal")}: {items?.product?.currency} {items?.amount}
+                            {t("Subtotal")}: {items?.product?.currency}{" "}
+                            {items?.amount}
                           </p>
                         </div>
                       </div>
@@ -595,7 +641,9 @@ const CheckOut = () => {
                   ))}
                 </div>
                 <div className="mt-3">
-                  <h5 className="Checkout-main-heading">{t("Price Details")}</h5>
+                  <h5 className="Checkout-main-heading">
+                    {t("Price Details")}
+                  </h5>
                   <div className="Checkout-box mt-3 px-3 py-3">
                     <div className="row">
                       <div className="col-6">
@@ -695,7 +743,10 @@ const CheckOut = () => {
                     />
                   </div> */}
                 <div className="form-group mt-3 mb-3">
-                  <div className="d-flex gap-1 align-items-end"  onClick={handleGetLocation}>
+                  <div
+                    className="d-flex gap-1 align-items-end"
+                    onClick={handleGetLocation}
+                  >
                     <img
                       src="assets/img/icon/direction.png"
                       alt

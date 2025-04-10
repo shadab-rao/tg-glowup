@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const {t} = useTranslation();
   return (
     <>
       <footer>
@@ -13,7 +15,7 @@ const Footer = () => {
                   <div className="img-wrapper">
                     <img src="../../../assets/img/svg/bunny.svg" alt />
                   </div>
-                  <p className="text">No tests on animals</p>
+                  <p className="text">{t("No tests on animals")}</p>
                 </div>
               </div>
               <div className="col-md-3 col-12 mt-md-0 mt-4">
@@ -21,7 +23,7 @@ const Footer = () => {
                   <div className="img-wrapper">
                     <img src="../../../assets/img/svg/leave.svg" alt />
                   </div>
-                  <p className="text">No animal-derived ingredients</p>
+                  <p className="text">{t("No animal-derived ingredients")}</p>
                 </div>
               </div>
               <div className="col-md-3 col-12 mt-md-0 mt-4">
@@ -29,7 +31,7 @@ const Footer = () => {
                   <div className="img-wrapper">
                     <img src="../../../assets/img/svg/leaves.svg" alt />
                   </div>
-                  <p className="text">No gluten, or gluten byproducts</p>
+                  <p className="text">{t("No gluten, or gluten byproducts")}</p>
                 </div>
               </div>
               <div className="col-md-3 col-12 mt-md-0 mt-4">
@@ -37,7 +39,7 @@ const Footer = () => {
                   <div className="img-wrapper">
                     <img src="../../../assets/img/svg/bulp.svg" alt />
                   </div>
-                  <p className="text">Recyclable packaging</p>
+                  <p className="text">{t("Recyclable packaging")}</p>
                 </div>
               </div>
             </div>
@@ -52,11 +54,10 @@ const Footer = () => {
                   <div className="h-parent w-100 d-flex align-items-center">
                     <div className>
                       <p className="subscribe-heading text-start">
-                        Subscribe To latest updates
+                        {t("Subscribe To latest updates")}
                       </p>
                       <p className="subscribe-text">
-                        Stay connected for exclusive offers &amp; latest
-                        updates, delivered straight to your inbox
+                        {t("Stay connected for exclusive offers & lates updates, delivered straight to your inbox")}
                       </p>
                     </div>
                   </div>
@@ -68,7 +69,7 @@ const Footer = () => {
                       className="subscribe-input"
                       placeholder="Enter your email"
                     />
-                    <button className="subscribe-btn">Subscribe Now</button>
+                    <button className="subscribe-btn">{t("Subscribe Now")}</button>
                   </div>
                 </div>
               </div>
@@ -127,7 +128,7 @@ const Footer = () => {
               </div>
               <div className="col-lg-3 col-md-3 col-12 mt-lg-0 mt-md-4 mt-4 mb-lg-0 mb-md-4 mb-4">
                 <div className>
-                  <h5 className="footer-heading text-start">Experience App On Mobile</h5>
+                  <h5 className="footer-heading text-start">{t("Experience App On Mobile")}</h5>
                 </div>
                 <div className="d-flex gap-md-3 gap-1 mt-4">
                   <a href className="download-link">
