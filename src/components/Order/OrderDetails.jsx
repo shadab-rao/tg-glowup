@@ -15,7 +15,6 @@ import { useTranslation } from "react-i18next";
 const OrderDetails = () => {
   const [orderList, setOrderList] = useState([]);
   const [varientId, setVarientId] = useState("");
-  const [productId, setProductId] = useState("");
   const { id } = useParams();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
@@ -26,16 +25,14 @@ const OrderDetails = () => {
     return statusFlow.indexOf(status);
   };
 
-  // Fetch orders
   useEffect(() => {
     handleOrders();
   }, []);
 
   const handleOrders = async () => {
     const response = await getOrderDetails(id);
-    console.log(response);
     setOrderList(response?.data?.results?.orders);
-    setVarientId(response?.data?.results?.orders?.inventory?.[0]?.varient?._id);
+    // setVarientId(response?.data?.results?.orders?.inventory?.[0]?.varient?._id);
   };
 
   console.log(varientId);
@@ -215,7 +212,7 @@ const OrderDetails = () => {
                         </div>
                       </div>
                       <div className="mt-3">
-                        <Rating id={id} variantId={varientId} />
+                        <Rating id={id} variantId={item?.varient?._id} />
                       </div>
                     </div>
                   ))}

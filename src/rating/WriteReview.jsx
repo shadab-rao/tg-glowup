@@ -27,15 +27,6 @@ const WriteReview = () => {
     const { t, i18n } = useTranslation();
     const currentLang = i18n.language;
 
-    const ratingData = async () => {
-      const response = await getRatings(varientId);
-  
-      setExistingRating(response?.data?.results?.data?.[0]?.rating);
-      setExistingComment(response?.data?.results?.data?.[0]?.comment);
-  
-      console.log(response);
-      
-    };
 
   const handleOrders = async () => {
     const response = await getOrderDetails(id);
@@ -63,14 +54,31 @@ const WriteReview = () => {
     }
   };
 
-  useEffect(() => {
-    handleOrders();
+ useEffect(() => {
+  handleOrders();
+}, []);
+
+useEffect(() => {
+  if (varientId) {
     ratingData();
-  }, []);
+  }
+}, [varientId]);
+
 
   const handleDelete = async (orderId) => {
     await orderDelete(orderId);
     handleOrders();
+  };
+
+  
+  const ratingData = async () => {
+    const response = await getRatings(varientId);
+
+    setExistingRating(response?.data?.results?.data?.[0]?.rating);
+    setExistingComment(response?.data?.results?.data?.[0]?.comment);
+
+    console.log(response);
+    
   };
 
   

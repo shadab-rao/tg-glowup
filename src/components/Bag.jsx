@@ -167,6 +167,7 @@ const Bag = () => {
       if (response) {
         console.log("Wishlist updated successfully!");
         handleWishList();
+        handleCart();
       }
     } catch (error) {
       console.error("Failed to update wishlist:", error);

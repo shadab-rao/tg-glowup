@@ -27,7 +27,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [imageData, setImageData] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
 
   const userToken = localStorage.getItem("token-user");
 
@@ -46,7 +45,9 @@ const Profile = () => {
       const getData = await getUser(userToken);
       if (getData?.data) {
         const userData = getData?.data?.results?.user;
-        if (!userData?.fullName) {
+        console.log(userData);
+
+        if (!userData) {
           setProfileData(dummyData);
           setInfo(dummyData);
           setIsEditing(true);
@@ -54,15 +55,20 @@ const Profile = () => {
           localStorage.setItem("glow-user", JSON.stringify(userData));
 
           setProfileData(userData);
+          
           setInfo({
             fullName: userData?.fullName,
             email: userData?.email,
-            phoneNumber: userData?.phoneNumber,
+            phoneNumber:
+            userData?.countryCode && userData?.phoneNumber
+              ? `${userData.countryCode}${userData.phoneNumber}`
+              : "",
             countryCode: userData?.countryCode,
             gender: userData?.gender || "",
             dateOfBirth: userData?.dateOfBirth || "",
             profileImage: userData?.profileImage || null,
           });
+          
         }
       }
     } else {
@@ -70,6 +76,7 @@ const Profile = () => {
       setInfo(dummyData);
     }
   };
+
 
   useEffect(() => {
     getProfile();
@@ -126,13 +133,16 @@ const Profile = () => {
   };
 
   const handlePhoneChange = (value, country) => {
-    setPhoneNumber(value); 
+    // setPhoneNumber(value); 
     setInfo({
       ...info,
       phoneNumber: value,  
       countryCode: country?.dialCode || '', 
     });
   };
+
+  
+  console.log(info);
   
 
   if (!userToken) {
