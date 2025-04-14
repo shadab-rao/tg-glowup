@@ -2712,6 +2712,48 @@ input[type="range"].form-range {
     cursor: pointer;
     border: 2px solid white;
   }
+
+  .accordion-item {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .accordion-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .accordion-header h6 {
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .accordion-icon {
+    font-size: 24px;
+    transition: transform 0.3s ease;
+  }
+  
+  .accordion-icon.open {
+    transform: rotate(180deg);
+  }
+  
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+  }
+  
+  .accordion-content.open {
+    max-height: 500px; /* large enough to fit your content */
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
   
   
   

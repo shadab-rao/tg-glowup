@@ -21,11 +21,11 @@ import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
-import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/styles.css';
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-
+import Accordion from "./common/Accordion";
 
 const ProductDetail = () => {
   const [viewData, setViewData] = useState();
@@ -47,6 +47,15 @@ const ProductDetail = () => {
     handleView();
   }, [id]);
 
+  const [activeIndex, setActiveIndex] = useState(null);
+
+const accordionData = [
+  { title: "Ingredients", content: currentLang === "en" ? viewData?.ingredients_en : viewData?.ingredients_ar },
+  { title: "Key Details", content: currentLang === "en" ? viewData?.details_en : viewData?.details_ar },
+  { title: "Delivery", content: currentLang === "en" ? viewData?.delivery_en : viewData?.deivery_ar },
+  { title: "Returns", content: t("Non- Returnable") },
+];
+
   const handleView = async () => {
     const response = await productDetail(id);
     const product = response?.data?.results?.product;
@@ -64,8 +73,6 @@ const ProductDetail = () => {
   const handleVariantClick = (variantId) => {
     setSelectedVariantId(variantId);
   };
- 
-  
 
   const handleAddToCart = async () => {
     if (userToken && selectedVariantId) {
@@ -143,12 +150,10 @@ const ProductDetail = () => {
   };
 
   const handleImageClick = () => {
-    console.log('Image clicked');
+    console.log("Image clicked");
     setOpenLight(true);
   };
   console.log("Images in viewData:", viewData);
-
-  
 
   return (
     <>
@@ -197,7 +202,10 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <div className="col-lg-5 col-md-7 col-12 me-5">
-                  <div className="product-detail-main-img" onClick={handleImageClick}>
+                  <div
+                    className="product-detail-main-img"
+                    onClick={handleImageClick}
+                  >
                     <img
                       src={selectedImage || viewData?.imagesWeb?.[0]}
                       alt="Selected"
@@ -229,8 +237,16 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <div className="col-lg-5 col-md-5 col-12 mt-lg-0 mt-md-4 mt-4 text-start">
-                  <h2 className="product-main-heading">{currentLang === "en" ? viewData?.name_en : viewData?.name_ar}</h2>
-                  <h6 className="small-heading">{currentLang === "en" ? viewData?.description_en : viewData?.description_ar }</h6>
+                  <h2 className="product-main-heading">
+                    {currentLang === "en"
+                      ? viewData?.name_en
+                      : viewData?.name_ar}
+                  </h2>
+                  <h6 className="small-heading">
+                    {currentLang === "en"
+                      ? viewData?.description_en
+                      : viewData?.description_ar}
+                  </h6>
                   <div className="list-span d-flex gap-3">
                     <span
                       style={{
@@ -239,7 +255,9 @@ const ProductDetail = () => {
                         color: "gray",
                       }}
                     >
-                      {currentLang === "en" ? viewData?.brand?.brandName_en : viewData?.brand?.brandName_ar }
+                      {currentLang === "en"
+                        ? viewData?.brand?.brandName_en
+                        : viewData?.brand?.brandName_ar}
                     </span>
                   </div>
                   <p className="light-text">VC_1521178</p>
@@ -264,7 +282,11 @@ const ProductDetail = () => {
                             onClick={() => handleVariantClick(variant._id)}
                           >
                             <div>
-                              <p>{currentLang === "en" ? variant.value?.[0]?.name_en : variant?.value?.[0]?.name_ar}</p>
+                              <p>
+                                {currentLang === "en"
+                                  ? variant.value?.[0]?.name_en
+                                  : variant?.value?.[0]?.name_ar}
+                              </p>
                               <p>SAR {variant.price}</p>
                             </div>
                           </div>
@@ -320,10 +342,29 @@ const ProductDetail = () => {
                 <h4 className="text-start mt-4">{t("Description")}</h4>
                 <div>
                   <div className="mb-4">
-                    <p className>{currentLang === "en" ? viewData?.description_en : viewData?.description_ar}</p>
+                    <p className>
+                      {currentLang === "en"
+                        ? viewData?.description_en
+                        : viewData?.description_ar}
+                    </p>
                   </div>
                 </div>
               </div>
+
+              <section className="accordion-section mt-4">
+                <div className="container text-start">
+                  {accordionData.map((item, index) => (
+                    <Accordion
+                      key={index}
+                      index={index}
+                      title={item.title}
+                      content={item.content}
+                      activeIndex={activeIndex}
+                      setActiveIndex={setActiveIndex}
+                    />
+                  ))}
+                </div>
+              </section>
             </div>
           </div>
         </section>
@@ -345,21 +386,20 @@ const ProductDetail = () => {
       <Lightbox
         open={openLight}
         close={() => setOpenLight(false)}
-        plugins={[Slideshow, Fullscreen,Zoom,Thumbnails]}
+        plugins={[Slideshow, Fullscreen, Zoom, Thumbnails]}
         slides={[
           {
-            src: selectedImage || viewData?.imagesWeb?.[0], 
+            src: selectedImage || viewData?.imagesWeb?.[0],
             alt: "image 1",
             width: 3840,
             height: 2560,
           },
-          ...viewData?.varients?.map((image, index) => ({
+          ...(viewData?.varients?.map((image, index) => ({
             src: image?.imagesOg?.[0],
             alt: `image ${index + 1}`,
             width: 3840,
             height: 2560,
-          })) || [],
-          
+          })) || []),
         ]}
       />
     </>
