@@ -52,8 +52,8 @@ const ProductDetail = () => {
 const accordionData = [
   { title: "Ingredients", content: currentLang === "en" ? viewData?.ingredients_en : viewData?.ingredients_ar },
   { title: "Key Details", content: currentLang === "en" ? viewData?.details_en : viewData?.details_ar },
-  { title: "Delivery", content: currentLang === "en" ? viewData?.delivery_en : viewData?.deivery_ar },
-  { title: "Returns", content: t("Non- Returnable") },
+  { title: "Delivery & Returns", content: currentLang === "en" ? viewData?.delivery_en : viewData?.deivery_ar },
+  // { title: "Returns", content: t("Non- Returnable") },
 ];
 
   const handleView = async () => {
